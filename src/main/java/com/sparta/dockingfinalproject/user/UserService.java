@@ -1,9 +1,12 @@
 package com.sparta.dockingfinalproject.user;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-@Service
+import java.util.Optional;
+
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
@@ -11,8 +14,8 @@ public class UserService {
 
     //회원 등록
     public void registerUser(SignupRequestDto requestDto) {
-       String email = requestDto.getEmail();
-       Optional<User> found = userRepository.findByEmail(email);
+       String username = requestDto.getUsername();
+       Optional<User> found = userRepository.findByUsername(username);
        if (found.isPresent()){
            throw new IllegalArgumentException("중복된 이메일 존재합니다");
        }
@@ -26,8 +29,6 @@ public class UserService {
        password = passwordEncoder.encode(password);
        String nickname = requestDto.getNickname();
 
-       User user = new User(email, password, nickname);
-       userRepository.save(user);
 
     }
 }
