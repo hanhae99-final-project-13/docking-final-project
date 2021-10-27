@@ -63,4 +63,8 @@ public class Pet {
 
   @OneToOne(mappedBy = "pet")
   private Post post;
+
+  public void addPost(Post post) {
+    this.post = post;
+  }
 }
