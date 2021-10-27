@@ -45,6 +45,9 @@ public class Pet {
   private String ownerType;
 
   @Column(nullable = false)
+  private String condition;
+
+  @Column(nullable = false)
   private String address;
 
   @Column(nullable = false)
@@ -77,6 +80,7 @@ public class Pet {
     this.lostLocation = petRequestDto.getLostLocation();
     this.ownerType = petRequestDto.getOwnerType();
     this.address = petRequestDto.getAddress();
+    this.condition = petRequestDto.getCondition();
     this.phone = petRequestDto.getPhone();
     this.tag = petRequestDto.getTag();
     this.url = petRequestDto.getUrl();
