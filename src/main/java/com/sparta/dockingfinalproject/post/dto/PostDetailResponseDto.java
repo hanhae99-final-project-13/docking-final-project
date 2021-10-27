@@ -19,10 +19,10 @@ public class PostDetailResponseDto {
   private String tag;
   private String url;
   private String img;
-  private String isAdopted;
+  private boolean isAdopted;
   private boolean heart;
 
-  public PostDetailResponseDto getPostDetailResponseDto(Pet pet, boolean heart) {
+  public static PostDetailResponseDto getPostDetailResponseDto(Pet pet, boolean heart) {
     return PostDetailResponseDto.builder()
             .petName(pet.getPetName())
             .breed(pet.getBreed())
@@ -34,9 +34,8 @@ public class PostDetailResponseDto {
             .tag(pet.getTag())
             .url(pet.getUrl())
             .img(pet.getImg())
-            .isAdopted(pet.getIsAdopted())
+            .isAdopted(pet.isAdopted())
             .heart(heart)
             .build();
-
   }
 }

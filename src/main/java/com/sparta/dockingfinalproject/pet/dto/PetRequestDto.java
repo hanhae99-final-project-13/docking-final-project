@@ -16,10 +16,11 @@ public class PetRequestDto {
   private String lostLocation;
   private String ownerType;
   private String address;
+  private String condition;
   private String phone;
   private String tag;
   private String url;
   private String img;
   private String extra;
-  private String isAdopted;
+  private boolean isAdopted;
 }
