@@ -40,9 +40,9 @@ public class Post extends Timestamped {
   @JoinColumn(name = "USER_ID", nullable = false)
   private User user;
 
-  @OneToMany(mappedBy = "post", orphanRemoval = true)
-  @JsonIgnore
-  private List<Comment> commentList;
+//  @OneToMany(mappedBy = "post", orphanRemoval = true)
+//  @JsonIgnore
+//  private List<Comment> commentList;
 
   @OneToMany(mappedBy = "post", orphanRemoval = true)
   @JsonIgnore

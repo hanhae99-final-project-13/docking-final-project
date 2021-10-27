@@ -1,4 +1,4 @@
-package com.sparta.dockingfinalproject.user;
+package com.sparta.dockingfinalproject.user.dto;
 
 public class UserResponseDto {
 
