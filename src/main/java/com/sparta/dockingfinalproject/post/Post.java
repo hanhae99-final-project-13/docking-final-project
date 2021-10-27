@@ -6,6 +6,7 @@ import com.sparta.dockingfinalproject.common.Timestamped;
 import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.user.User;
 import com.sparta.dockingfinalproject.wish.Wish;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,6 +48,14 @@ public class Post extends Timestamped {
   @OneToMany(mappedBy = "post", orphanRemoval = true)
   @JsonIgnore
   private List<Wish> wishList;
+
+  public Post(Pet pet, User user) {
+    this.pet = pet;
+    this.viewCount = 0L;
+    this.user = user;
+    this.commentList = new ArrayList<>();
+    this.wishList = new ArrayList<>();
+  }
 
   public void addPet(Pet pet) {
     this.pet = pet;
