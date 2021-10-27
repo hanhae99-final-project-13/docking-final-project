@@ -22,5 +22,5 @@ public class PetRequestDto {
   private String url;
   private String img;
   private String extra;
-  private String isAdopted;
+  private boolean isAdopted;
 }
