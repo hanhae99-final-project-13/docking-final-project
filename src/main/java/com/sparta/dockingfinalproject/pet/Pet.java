@@ -1,5 +1,6 @@
 package com.sparta.dockingfinalproject.pet;
 
+import com.sparta.dockingfinalproject.pet.dto.PetRequestDto;
 import com.sparta.dockingfinalproject.post.Post;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -63,6 +64,12 @@ public class Pet {
 
   @OneToOne(mappedBy = "pet")
   private Post post;
+
+  public Pet(String petName, String breed, String sex, int age)
+
+  public Pet(PetRequestDto petRequestDto) {
+
+  }
 
   public void addPost(Post post) {
     this.post = post;
