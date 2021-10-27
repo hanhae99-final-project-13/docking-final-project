@@ -47,4 +47,21 @@ public class Post extends Timestamped {
   @OneToMany(mappedBy = "post", orphanRemoval = true)
   @JsonIgnore
   private List<Wish> wishList;
+
+  public void addPet(Pet pet) {
+    this.pet = pet;
+    pet.addPost(this);
+  }
+
+  public void addUser(User user) {
+    this.user = user;
+  }
+
+  public void addComment(Comment comment) {
+    this.commentList.add(comment);
+  }
+
+  public void addWish(Wish wish) {
+    this.wishList.add(wish);
+  }
 }

@@ -2,6 +2,7 @@ package com.sparta.dockingfinalproject.wish;
 
 import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.post.Post;
+import com.sparta.dockingfinalproject.user.User;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -26,10 +27,19 @@ public class Wish {
   private User user;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "PET_ID", nullable = false)
-  private Pet pet;
-
-  @ManyToOne
   @JoinColumn(name = "POST_ID", nullable = false)
   private Post post;
+
+  public void addUser(User user) {
+    this.user = user;
+  }
+
+  public void addPost(Post post) {
+    if (this.post != null) {
+      this.post.getWishList().remove(this);
+    }
+
+    this.post = post;
+    post.addWish(this);
+  }
 }
