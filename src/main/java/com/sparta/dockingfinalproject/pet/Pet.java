@@ -4,6 +4,8 @@ import com.sparta.dockingfinalproject.pet.dto.PetRequestDto;
 import com.sparta.dockingfinalproject.post.Post;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,7 +29,8 @@ public class Pet {
   private String breed;
 
   @Column(nullable = false)
-  private String sex;
+  @Enumerated(value = EnumType.STRING)
+  private PetSex sex;
 
   @Column(nullable = false)
   private int age;
@@ -65,10 +68,21 @@ public class Pet {
   @OneToOne(mappedBy = "pet")
   private Post post;
 
-  public Pet(String petName, String breed, String sex, int age)
-
   public Pet(PetRequestDto petRequestDto) {
-
+    this.petName = petRequestDto.getPetName();
+    this.breed = petRequestDto.getBreed();
+    this.sex = PetSex.of(petRequestDto.getSex());
+    this.age = petRequestDto.getAge();
+    this.weight = petRequestDto.getWeight();
+    this.lostLocation = petRequestDto.getLostLocation();
+    this.ownerType = petRequestDto.getOwnerType();
+    this.address = petRequestDto.getAddress();
+    this.phone = petRequestDto.getPhone();
+    this.tag = petRequestDto.getTag();
+    this.url = petRequestDto.getUrl();
+    this.img = petRequestDto.getImg();
+    this.extra = petRequestDto.getExtra();
+    this.isAdopted = petRequestDto.getIsAdopted();
   }
 
   public void addPost(Post post) {
