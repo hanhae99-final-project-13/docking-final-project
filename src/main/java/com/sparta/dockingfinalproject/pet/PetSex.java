@@ -1,8 +1,8 @@
 package com.sparta.dockingfinalproject.pet;
 
 public enum PetSex {
-  MALE("male"),
-  FEMALE("female");
+  M("m"),
+  F("f");
 
   private final String sex;
 
