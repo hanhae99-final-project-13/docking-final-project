@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -39,31 +41,51 @@ public class Pet {
   private String lostLocation;
 
   @Column(nullable = false)
-  private String ownerType;
-
-  @Column(nullable = false)
   private String address;
 
   @Column(nullable = false)
   private String phone;
 
-  @Column(nullable = true)
+  @Column
   private String tag;
 
-  @Column(nullable = false)
+  @Column
   private String url;
 
   @Column(nullable = false)
-  private String img;
+  private String isAdopted;
+
+  @Column(nullable = false)
+  private String ownerType;
+
+  @Column
+  private String petNo;
 
   @Column(nullable = false)
   private String extra;
 
   @Column(nullable = false)
-  private String isAdopted;
+  private String img;
 
   @OneToOne(mappedBy = "pet")
   private Post post;
+
+  @Builder
+  public Pet(String breed, String sex, String age, String weight, String lostLocation, String ownerType,
+             String address, String phone, String img, String extra, String isAdopted, String petNo) {
+    this.breed = breed;
+    this.sex = PetSex.of(sex);
+    this.age = Integer.parseInt(age.replaceAll("[^0-9]", ""));
+    this.weight = Double.parseDouble(weight.replaceAll("[^0-9.]", ""));
+    this.lostLocation = lostLocation;
+    this.ownerType = ownerType;
+    this.address = address;
+    this.phone = phone;
+    this.img = img;
+    this.extra = extra;
+    this.isAdopted = isAdopted;
+    this.petNo = petNo;
+  }
 
   public Pet(PetRequestDto petRequestDto) {
     this.breed = petRequestDto.getBreed();
