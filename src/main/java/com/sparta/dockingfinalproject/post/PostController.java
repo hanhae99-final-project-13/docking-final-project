@@ -3,6 +3,8 @@ package com.sparta.dockingfinalproject.post;
 import com.sparta.dockingfinalproject.pet.dto.PetRequestDto;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import java.util.Map;
+
+import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

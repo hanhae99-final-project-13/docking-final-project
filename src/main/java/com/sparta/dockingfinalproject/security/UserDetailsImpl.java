@@ -2,11 +2,10 @@ package com.sparta.dockingfinalproject.security;
 
 import com.sparta.dockingfinalproject.user.User;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-public class UserDetailsImpl implements UserDetails {
+public class UserDetailsImpl implements org.springframework.security.core.userdetails.UserDetails {
 
     private final User user;
 
