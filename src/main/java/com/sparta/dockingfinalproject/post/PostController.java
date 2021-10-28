@@ -24,8 +24,15 @@ public class PostController {
     return postService.getPosts(postId, userDetails);
   }
 
+  // 게시글 등록
   @PostMapping("/pets")
   public Map<String, Object> addPost(@RequestBody PetRequestDto petRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
     return postService.addPost(petRequestDto, userDetails);
+  }
+
+  // 게시글 수정
+  @PostMapping("/posts/{postId}")
+  public Map<String, Object> updatePost(@PathVariable Long postId, @RequestBody PetRequestDto petRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    return postService.updatePost(postId, petRequestDto, userDetails);
   }
 }
