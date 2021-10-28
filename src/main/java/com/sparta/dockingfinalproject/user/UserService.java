@@ -43,14 +43,7 @@ public class UserService {
     //회원 등록
     public void registerUser(SignupRequestDto requestDto) {
 
-
-
        String username = requestDto.getUsername();
-       Optional<User> found = userRepository.findByUsername(username);
-       if (found.isPresent()){
-           throw new IllegalArgumentException("중복된 이메일 존재합니다");
-       }
-
        String password = requestDto.getPassword();
        String pwcheck = requestDto.getPwcheck();
 
@@ -79,9 +72,6 @@ public class UserService {
         }
        return user;
     }
-
-
-
 
 }
 

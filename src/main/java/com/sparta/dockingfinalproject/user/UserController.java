@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 
 @RestController
@@ -50,8 +51,8 @@ public class UserController {
     public Map<String, Object> login(@RequestBody UserRequestDto requestDto, ResponseDto responseDto) {
 
         User user = userService.login(requestDto);
-
         Map<String, Object> result= new HashMap<>();
+
         result.put("status", "success");
         responseDto.setNickname(user.getNickname());
         responseDto.setEmail(user.getEmail());
@@ -80,6 +81,10 @@ public class UserController {
 
         return result;
     }
+
+
+
+
 
     //카카오 인가 코드 받기
     @GetMapping("/oauth/callback/kakao")
