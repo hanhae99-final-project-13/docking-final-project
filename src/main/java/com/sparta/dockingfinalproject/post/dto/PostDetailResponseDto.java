@@ -2,13 +2,14 @@ package com.sparta.dockingfinalproject.post.dto;
 
 import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.pet.PetSex;
+import com.sparta.dockingfinalproject.post.Post;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
 public class PostDetailResponseDto {
-  private String petName;
+  private Long postId;
   private String breed;
   private PetSex sex;
   private int age;
@@ -19,12 +20,13 @@ public class PostDetailResponseDto {
   private String tag;
   private String url;
   private String img;
-  private boolean isAdopted;
+  private String isAdopted;
   private boolean heart;
 
-  public static PostDetailResponseDto getPostDetailResponseDto(Pet pet, boolean heart) {
+  public static PostDetailResponseDto getPostDetailResponseDto(Post post, boolean heart) {
+    Pet pet = post.getPet();
     return PostDetailResponseDto.builder()
-            .petName(pet.getPetName())
+            .postId(post.getPostId())
             .breed(pet.getBreed())
             .sex(pet.getSex())
             .weight(pet.getWeight())
@@ -34,7 +36,7 @@ public class PostDetailResponseDto {
             .tag(pet.getTag())
             .url(pet.getUrl())
             .img(pet.getImg())
-            .isAdopted(pet.isAdopted())
+            .isAdopted(pet.getIsAdopted())
             .heart(heart)
             .build();
   }

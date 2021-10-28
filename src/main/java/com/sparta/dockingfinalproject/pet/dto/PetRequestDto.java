@@ -1,14 +1,15 @@
 package com.sparta.dockingfinalproject.pet.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class PetRequestDto {
-  private String petName;
   private String breed;
   private String sex;
   private int age;
@@ -16,11 +17,10 @@ public class PetRequestDto {
   private String lostLocation;
   private String ownerType;
   private String address;
-  private String condition;
   private String phone;
   private String tag;
   private String url;
   private String img;
   private String extra;
-  private boolean isAdopted;
+  private String isAdopted;
 }

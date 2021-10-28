@@ -66,11 +66,15 @@ public class Post extends Timestamped {
     this.user = user;
   }
 
-  public void addComment(Comment comment) {
+//  public void addComment(Comment comment) {
 //    this.commentList.add(comment);
-  }
+//  }
 
   public void addWish(Wish wish) {
     this.wishList.add(wish);
+  }
+
+  public void addViewCount() {
+    this.viewCount += 1;
   }
 }

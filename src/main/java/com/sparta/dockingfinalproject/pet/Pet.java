@@ -23,9 +23,6 @@ public class Pet {
   private Long petId;
 
   @Column(nullable = false)
-  private String petName;
-
-  @Column(nullable = false)
   private String breed;
 
   @Column(nullable = false)
@@ -45,15 +42,12 @@ public class Pet {
   private String ownerType;
 
   @Column(nullable = false)
-  private String condition;
-
-  @Column(nullable = false)
   private String address;
 
   @Column(nullable = false)
   private String phone;
 
-  @Column(nullable = false)
+  @Column(nullable = true)
   private String tag;
 
   @Column(nullable = false)
@@ -66,13 +60,12 @@ public class Pet {
   private String extra;
 
   @Column(nullable = false)
-  private boolean isAdopted;
+  private String isAdopted;
 
   @OneToOne(mappedBy = "pet")
   private Post post;
 
   public Pet(PetRequestDto petRequestDto) {
-    this.petName = petRequestDto.getPetName();
     this.breed = petRequestDto.getBreed();
     this.sex = PetSex.of(petRequestDto.getSex());
     this.age = petRequestDto.getAge();
@@ -80,16 +73,65 @@ public class Pet {
     this.lostLocation = petRequestDto.getLostLocation();
     this.ownerType = petRequestDto.getOwnerType();
     this.address = petRequestDto.getAddress();
-    this.condition = petRequestDto.getCondition();
     this.phone = petRequestDto.getPhone();
     this.tag = petRequestDto.getTag();
     this.url = petRequestDto.getUrl();
     this.img = petRequestDto.getImg();
     this.extra = petRequestDto.getExtra();
-    this.isAdopted = petRequestDto.isAdopted();
+    this.isAdopted = petRequestDto.getIsAdopted();
   }
 
   public void addPost(Post post) {
     this.post = post;
+  }
+
+  public Pet update(PetRequestDto petRequestDto) {
+    if (petCheck(petRequestDto.getBreed())) {
+      this.breed = petRequestDto.getBreed();
+    }
+    this.age = petRequestDto.getAge();
+    this.weight = petRequestDto.getWeight();
+
+    if (petCheck(petRequestDto.getLostLocation())) {
+      this.lostLocation= petRequestDto.getLostLocation();
+    }
+
+    if (petCheck(petRequestDto.getOwnerType())) {
+      this.ownerType= petRequestDto.getOwnerType();
+    }
+
+    if (petCheck(petRequestDto.getAddress())) {
+      this.address= petRequestDto.getAddress();
+    }
+
+    if (petCheck(petRequestDto.getPhone())) {
+      this.phone= petRequestDto.getPhone();
+    }
+
+    if (petCheck(petRequestDto.getTag())) {
+      this.tag= petRequestDto.getTag();
+    }
+
+    if (petCheck(petRequestDto.getUrl())) {
+      this.url= petRequestDto.getUrl();
+    }
+
+    if (petCheck(petRequestDto.getImg())) {
+      this.img= petRequestDto.getImg();
+    }
+
+    if (petCheck(petRequestDto.getExtra())) {
+      this.extra= petRequestDto.getExtra();
+    }
+
+    if (petCheck(petRequestDto.getIsAdopted())) {
+      this.isAdopted= petRequestDto.getIsAdopted();
+    }
+
+    return this;
+  }
+
+  private boolean petCheck(String data) {
+    return data != null && !data.isEmpty();
   }
 }
