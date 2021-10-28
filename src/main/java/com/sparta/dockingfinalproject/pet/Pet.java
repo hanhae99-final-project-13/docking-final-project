@@ -23,9 +23,6 @@ public class Pet {
   private Long petId;
 
   @Column(nullable = false)
-  private String petName;
-
-  @Column(nullable = false)
   private String breed;
 
   @Column(nullable = false)
@@ -45,15 +42,12 @@ public class Pet {
   private String ownerType;
 
   @Column(nullable = false)
-  private String condition;
-
-  @Column(nullable = false)
   private String address;
 
   @Column(nullable = false)
   private String phone;
 
-  @Column(nullable = false)
+  @Column(nullable = true)
   private String tag;
 
   @Column(nullable = false)
@@ -72,7 +66,6 @@ public class Pet {
   private Post post;
 
   public Pet(PetRequestDto petRequestDto) {
-    this.petName = petRequestDto.getPetName();
     this.breed = petRequestDto.getBreed();
     this.sex = PetSex.of(petRequestDto.getSex());
     this.age = petRequestDto.getAge();
@@ -80,7 +73,6 @@ public class Pet {
     this.lostLocation = petRequestDto.getLostLocation();
     this.ownerType = petRequestDto.getOwnerType();
     this.address = petRequestDto.getAddress();
-    this.condition = petRequestDto.getCondition();
     this.phone = petRequestDto.getPhone();
     this.tag = petRequestDto.getTag();
     this.url = petRequestDto.getUrl();
