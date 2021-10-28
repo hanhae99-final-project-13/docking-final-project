@@ -60,7 +60,7 @@ public class Pet {
   private String extra;
 
   @Column(nullable = false)
-  private boolean isAdopted;
+  private String isAdopted;
 
   @OneToOne(mappedBy = "pet")
   private Post post;
@@ -78,7 +78,7 @@ public class Pet {
     this.url = petRequestDto.getUrl();
     this.img = petRequestDto.getImg();
     this.extra = petRequestDto.getExtra();
-    this.isAdopted = petRequestDto.isAdopted();
+    this.isAdopted = petRequestDto.getIsAdopted();
   }
 
   public void addPost(Post post) {

@@ -20,7 +20,7 @@ public class PostDetailResponseDto {
   private String tag;
   private String url;
   private String img;
-  private boolean isAdopted;
+  private String isAdopted;
   private boolean heart;
 
   public static PostDetailResponseDto getPostDetailResponseDto(Post post, boolean heart) {
@@ -36,7 +36,7 @@ public class PostDetailResponseDto {
             .tag(pet.getTag())
             .url(pet.getUrl())
             .img(pet.getImg())
-            .isAdopted(pet.isAdopted())
+            .isAdopted(pet.getIsAdopted())
             .heart(heart)
             .build();
   }
