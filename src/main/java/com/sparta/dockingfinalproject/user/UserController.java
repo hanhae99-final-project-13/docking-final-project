@@ -1,16 +1,14 @@
 package com.sparta.dockingfinalproject.user;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
 import com.sparta.dockingfinalproject.user.dto.ResponseDto;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,12 +20,14 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final KakaoUserService kakaoUserService;
 
-    public UserController(UserService userService, UserRepository userRepository, JwtTokenProvider jwtTokenProvider)
+    public UserController(UserService userService, UserRepository userRepository, JwtTokenProvider jwtTokenProvider, KakaoUserService kakaoUserService)
     {
         this.userService = userService;
         this.userRepository  = userRepository;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.kakaoUserService = kakaoUserService;
 
     }
 
@@ -62,6 +62,7 @@ public class UserController {
 
     }
 
+    //로그인체크
     @GetMapping("/login/check")
     public Map<String, Object> loginCheck(@AuthenticationPrincipal UserDetailsImpl userDetails, ResponseDto responseDto){
 
@@ -73,9 +74,33 @@ public class UserController {
         Map<String, Object> data = new HashMap<>();
         data.put("nickname",userDetails.getUser().getNickname());
         data.put("email",userDetails.getUser().getEmail());
+        data.put("classCount",0 );
+        data.put("alarmCount",0 );
         result.put("data", data);
 
-
         return result;
+    }
+
+    //카카오 인가 코드 받기
+    @GetMapping("/oauth/callback/kakao")
+    public Map<String, Object> kakaoLogin(@RequestParam String code) throws JsonProcessingException {
+
+       User user = kakaoUserService.kakaoLogin(code);
+
+
+       Map<String, Object> result = new HashMap<>();
+       result.put("status", "success");
+       Map<String, Object> data = new HashMap<>();
+       data.put("token", jwtTokenProvider.createToken(user.getEmail()));
+       data.put("nickname", user.getNickname());
+       data.put("email", user.getEmail());
+       data.put("classCount",0 );
+       data.put("alarmCount",0 );
+
+       result.put("data",data);
+
+       return result;
+
+
     }
 }

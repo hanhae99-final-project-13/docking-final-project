@@ -1,13 +1,30 @@
 package com.sparta.dockingfinalproject.user;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
+import com.sparta.dockingfinalproject.user.dto.KakaoUserInfoDto;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -25,6 +42,8 @@ public class UserService {
 
     //회원 등록
     public void registerUser(SignupRequestDto requestDto) {
+
+
 
        String username = requestDto.getUsername();
        Optional<User> found = userRepository.findByUsername(username);
@@ -60,22 +79,10 @@ public class UserService {
         }
        return user;
     }
+
+
+
+
 }
 
 
-
-
-//LIST<MAP<>>
-//        User user = userRepository.findByUsername(requestDto.getUsername()).orElse(null);
-//        if(!passwordEncoder.matches(requestDto.getPassword(),user.getPassword())){
-//            throw new IllegalArgumentException("비밀번호가 불일치 합니다");
-//        }
-//        Map<String,String>nickname = new HashMap<>();
-//        nickname.put("nickname",user.getNickname());
-//        Map<String, String>token = new HashMap<>();
-//        token.put("token", jwtTokenProvider.createToken(requestDto.getUsername()));
-//        List<Map<String, String>> tu = new ArrayList<>();
-//        tu.add(nickname);
-//        tu.add(token);
-//
-//        return tu;
