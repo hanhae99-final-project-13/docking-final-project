@@ -106,6 +106,46 @@ public class UserController {
 
        return result;
 
-
     }
+
+
+    //아이디 중복 확인
+    @GetMapping("/signup/checkid")
+    public Map<String, Object> idDoubleCheck(@RequestParam String username) {
+
+        Optional<User> found = userRepository.findByUsername(username);
+
+        Map<String, Object>result = new HashMap<>();
+        result.put("status", "success");
+        Map<String, Object> message = new HashMap<>();
+
+        if(found.isPresent()){
+            message.put("msg",false);
+
+        } else {
+            message.put("msg",true);
+        }
+        result.put("data", message);
+        return result;
+    }
+
+    //닉네임 중복체크
+    @GetMapping("/signup/checknickname")
+    public Map<String, Object> nicknameDoubleCheck(@RequestParam String nickname) {
+        Optional<User> found = userRepository.findByNickname(nickname);
+
+        Map<String, Object>result = new HashMap<>();
+        result.put("status", "success");
+        Map<String, Object> message = new HashMap<>();
+
+        if(found.isPresent()){
+            message.put("msg",false);
+
+        } else {
+            message.put("msg",true);
+        }
+        result.put("data", message);
+        return result;
+    }
+
 }
