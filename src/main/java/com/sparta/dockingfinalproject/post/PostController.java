@@ -2,6 +2,8 @@ package com.sparta.dockingfinalproject.post;
 
 import com.sparta.dockingfinalproject.pet.dto.PetRequestDto;
 import java.util.Map;
+
+import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,12 +22,12 @@ public class PostController {
   }
 
   @GetMapping("/posts/{postId}")
-  public Map<String, Object> getPosts(@PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
+  public Map<String, Object> getPosts(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
     return postService.getPosts(postId, userDetails);
   }
 
   @PostMapping("/pets")
-  public Map<String, Object> addPost(@RequestBody PetRequestDto petRequestDto, @AuthenticationPrincipal UserDetails userDetails) {
+  public Map<String, Object> addPost(@RequestBody PetRequestDto petRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
     return postService.addPost(petRequestDto, userDetails);
   }
 }

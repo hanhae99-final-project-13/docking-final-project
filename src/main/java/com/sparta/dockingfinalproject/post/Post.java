@@ -53,7 +53,7 @@ public class Post extends Timestamped {
     this.pet = pet;
     this.viewCount = 0L;
     this.user = user;
-    this.commentList = new ArrayList<>();
+//    this.commentList = new ArrayList<>();
     this.wishList = new ArrayList<>();
   }
 
@@ -67,7 +67,7 @@ public class Post extends Timestamped {
   }
 
   public void addComment(Comment comment) {
-    this.commentList.add(comment);
+//    this.commentList.add(comment);
   }
 
   public void addWish(Wish wish) {

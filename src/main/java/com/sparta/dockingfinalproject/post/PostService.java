@@ -6,13 +6,14 @@ import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.pet.dto.PetRequestDto;
 import com.sparta.dockingfinalproject.post.dto.PostDetailResponseDto;
+import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.wish.Wish;
 import com.sparta.dockingfinalproject.wish.WishRepository;
-import java.util.HashMap;
-import java.util.Map;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+//userDetailsImpl 포스트 전체 로수정,Post와PostService PostController에comment다 주석처리
 @Service
 public class PostService {
 
@@ -24,7 +25,7 @@ public class PostService {
     this.wishRepository = wishRepository;
   }
 
-  public Map<String, Object> getPosts(Long postId, UserDetails userDetails) {
+  public Map<String, Object> getPosts(Long postId, UserDetailsImpl userDetails) {
     Post findPost = postRepository.findById(postId).orElseThrow(
         () -> new DockingException(ErrorCode.POST_NOT_FOUND)
     );
@@ -40,11 +41,11 @@ public class PostService {
 
     Map<String, Object> data = new HashMap<>();
     data.put("post", postResponseDto);
-    data.put("commentList", findPost.getCommentList());
+//    data.put("commentList", findPost.getCommentList());
     return SuccessResult.success(data);
   }
 
-  public Map<String, Object> addPost(PetRequestDto petRequestDto, UserDetails userDetails) {
+  public Map<String, Object> addPost(PetRequestDto petRequestDto, UserDetailsImpl userDetails) {
     Pet pet = new Pet(petRequestDto);
     Post post = new Post(pet, userDetails.getUser());
 
