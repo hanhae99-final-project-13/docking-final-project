@@ -36,4 +36,8 @@ public class Alarm extends Timestamped {
     public void addUser(User user) {
         this.user = user;
     }
+
+    public void updateStatus() {
+        this.status = false;
+    }
 }
