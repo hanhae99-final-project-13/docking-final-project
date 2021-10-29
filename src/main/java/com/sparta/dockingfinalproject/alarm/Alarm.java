@@ -1,16 +1,27 @@
 package com.sparta.dockingfinalproject.alarm;
 
 
+import com.sparta.dockingfinalproject.common.Timestamped;
+import com.sparta.dockingfinalproject.user.User;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-public class Alarm {
+@Entity
+@Getter
+@NoArgsConstructor
+public class Alarm extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int alarmId;
+    private Long alarmId;
 
     @Column(nullable = false)
     private String alarmContent;
@@ -18,5 +29,11 @@ public class Alarm {
     @Column(nullable = false)
     private boolean status;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID", nullable = false)
+    private User user;
 
+    public void addUser(User user) {
+        this.user = user;
+    }
 }
