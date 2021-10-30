@@ -3,11 +3,10 @@ package com.sparta.dockingfinalproject.post;
 import com.sparta.dockingfinalproject.pet.dto.PetRequestDto;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import java.util.Map;
-
-import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +21,7 @@ public class PostController {
     this.postService = postService;
   }
 
+  // 게시글 상세 조회
   @GetMapping("/posts/{postId}")
   public Map<String, Object> getPosts(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
     return postService.getPosts(postId, userDetails);
@@ -34,7 +34,7 @@ public class PostController {
   }
 
   // 게시글 수정
-  @PostMapping("/posts/{postId}")
+  @PatchMapping("/posts/{postId}")
   public Map<String, Object> updatePost(@PathVariable Long postId, @RequestBody PetRequestDto petRequestDto) {
     return postService.updatePost(postId, petRequestDto);
   }

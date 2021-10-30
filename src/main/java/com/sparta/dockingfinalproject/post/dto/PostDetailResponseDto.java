@@ -40,4 +40,21 @@ public class PostDetailResponseDto {
             .heart(heart)
             .build();
   }
+
+  public static PostDetailResponseDto getPostDetailResponseDto(Post post) {
+    Pet pet = post.getPet();
+    return PostDetailResponseDto.builder()
+        .postId(post.getPostId())
+        .breed(pet.getBreed())
+        .sex(pet.getSex())
+        .weight(pet.getWeight())
+        .lostLocation(pet.getOwnerType())
+        .ownerType(pet.getOwnerType())
+        .phone(pet.getPhone())
+        .tag(pet.getTag())
+        .url(pet.getUrl())
+        .img(pet.getImg())
+        .isAdopted(pet.getIsAdopted())
+        .build();
+  }
 }
