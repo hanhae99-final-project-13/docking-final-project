@@ -1,5 +1,8 @@
 package com.sparta.dockingfinalproject.post;
 
+import com.sparta.dockingfinalproject.comment.CommentRepository;
+import com.sparta.dockingfinalproject.comment.dto.CommentResponseDto;
+import com.sparta.dockingfinalproject.comment.dto.CommentResultDto;
 import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
@@ -10,12 +13,12 @@ import com.sparta.dockingfinalproject.post.dto.PostDetailResponseDto;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.wish.Wish;
 import com.sparta.dockingfinalproject.wish.WishRepository;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+
+import java.time.LocalDateTime;
+import java.util.*;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class PostService {
@@ -23,12 +26,14 @@ public class PostService {
   private final PostRepository postRepository;
   private final WishRepository wishRepository;
   private final PetRepository petRepository;
+  private final CommentRepository commentRepository;
 
-
-  public PostService(PostRepository postRepository, WishRepository wishRepository, PetRepository petRepository) {
+  public PostService(PostRepository postRepository, WishRepository wishRepository,
+      PetRepository petRepository, CommentRepository commentRepository) {
     this.postRepository = postRepository;
     this.wishRepository = wishRepository;
     this.petRepository = petRepository;
+    this.commentRepository = commentRepository;
   }
 
   @Transactional
@@ -47,9 +52,26 @@ public class PostService {
     PostDetailResponseDto postResponseDto = PostDetailResponseDto
         .getPostDetailResponseDto(findPost, heart);
 
+    //Comment return data 가공하기
+    ArrayList<CommentResultDto> commentDtoList = new ArrayList<>();
+    CommentResultDto commentResultDto = new CommentResultDto();
+
+    List<CommentResponseDto> commentResponseDto = commentRepository.findAllByPost(findPost);
+    for (CommentResponseDto crd : commentResponseDto) {
+      Long commentId = crd.getCommentId();
+      String comment = crd.getComment();
+      LocalDateTime createdAt = crd.getCreatedAt();
+      LocalDateTime modifiedAt = crd.getModifiedAt();
+      String nickname = crd.getUser().getNickname();
+
+      commentResultDto = new CommentResultDto(commentId, comment, nickname, createdAt, modifiedAt);
+      commentDtoList.add(commentResultDto);
+    }
+
     Map<String, Object> data = new HashMap<>();
     data.put("post", postResponseDto);
-//    data.put("commentList", findPost.getCommentList());
+    data.put("commentList", commentDtoList);
+
     return SuccessResult.success(data);
   }
 
