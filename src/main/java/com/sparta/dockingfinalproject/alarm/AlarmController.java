@@ -21,7 +21,7 @@ public class AlarmController {
     return alarmService.getAlarms(userDetails);
   }
 
-  @GetMapping("/alarm/{alarmId}")
+  @GetMapping("/alarms/{alarmId}")
   public Map<String, Object> getAlarm(@PathVariable Long alarmId) {
     return alarmService.getAlarm(alarmId);
   }
