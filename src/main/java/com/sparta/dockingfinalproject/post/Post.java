@@ -1,6 +1,7 @@
 package com.sparta.dockingfinalproject.post;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sparta.dockingfinalproject.comment.Comment;
 import com.sparta.dockingfinalproject.common.Timestamped;
 import com.sparta.dockingfinalproject.pet.Pet;
@@ -35,6 +36,7 @@ public class Post extends Timestamped {
 
   @OneToOne
   @JoinColumn(name = "PET_ID", nullable = false)
+  @JsonManagedReference
   private Pet pet;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -53,7 +55,7 @@ public class Post extends Timestamped {
     this.pet = pet;
     this.viewCount = 0L;
     this.user = user;
-//    this.commentList = new ArrayList<>();
+    this.commentList = new ArrayList<>();
     this.wishList = new ArrayList<>();
   }
 
@@ -66,9 +68,9 @@ public class Post extends Timestamped {
     this.user = user;
   }
 
-//  public void addComment(Comment comment) {
-//    this.commentList.add(comment);
-//  }
+  public void addComment(Comment comment) {
+    this.commentList.add(comment);
+  }
 
   public void addWish(Wish wish) {
     this.wishList.add(wish);
