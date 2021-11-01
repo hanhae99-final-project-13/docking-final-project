@@ -30,7 +30,7 @@ public class Pet {
 
   @Column(nullable = false)
   @Enumerated(value = EnumType.STRING)
-  private PetSex sex;
+  private Sex sex;
 
   @Column(nullable = false)
   private int age;
@@ -77,7 +77,7 @@ public class Pet {
       String ownerType,
       String address, String phone, String img, String extra, String isAdopted, String petNo) {
     this.breed = breed;
-    this.sex = PetSex.of(sex);
+    this.sex = Sex.of(sex);
     this.age = Integer.parseInt(age.replaceAll("[^0-9]", ""));
     this.weight = Double.parseDouble(weight.replaceAll("[^0-9.]", ""));
     this.lostLocation = lostLocation;
@@ -92,7 +92,7 @@ public class Pet {
 
   public Pet(PetRequestDto petRequestDto) {
     this.breed = petRequestDto.getBreed();
-    this.sex = PetSex.of(petRequestDto.getSex());
+    this.sex = Sex.of(petRequestDto.getSex());
     this.age = petRequestDto.getAge();
     this.weight = petRequestDto.getWeight();
     this.lostLocation = petRequestDto.getLostLocation();
