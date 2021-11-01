@@ -9,6 +9,7 @@ import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
 import com.sparta.dockingfinalproject.user.dto.ResponseDto;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
+import com.sparta.dockingfinalproject.user.mail.MailSendService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,24 +22,35 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final MailSendService mailSendService;
 
-    public UserController(UserService userService, UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {
+    public UserController(UserService userService, UserRepository userRepository, JwtTokenProvider jwtTokenProvider, MailSendService mailSendService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.mailSendService = mailSendService;
     }
 
     //회원가입 요청
     @PostMapping("/signup")
-    public Map<String, Object> registerUser(@RequestBody SignupRequestDto requestDto) throws DockingException {
+
+    //bindingResult가 뭘까?????????????
+    public Map<String, Object> registerUser(@RequestBody SignupRequestDto requestDto) throws Exception {
+
         Map<String, Object> result = new HashMap<>();
         System.out.println(requestDto.getUsername() + "회원가입 요청");
 
 
         try {
-            userService.registerUser(requestDto);
+
             Map<String,String>message = new HashMap<>();
             message.put("msg", "회원가입을 축하드립니다");
+
+            //임의의 authKey생성, 이메일 발송
+
+            String authKey = mailSendService.sendSimpleMessage(requestDto.getEmail());
+            userService.registerUser(requestDto, authKey);
+
             return SuccessResult.success(message);
 
         } catch (DockingException e) {
@@ -48,6 +60,14 @@ public class UserController {
 
 
     }
+
+
+
+    //////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////
+
 
     //로그인 요청
     @PostMapping("/user/login")
