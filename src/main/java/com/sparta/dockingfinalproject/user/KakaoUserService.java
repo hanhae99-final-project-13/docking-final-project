@@ -62,7 +62,11 @@ public class KakaoUserService {
             // role: 일반 사용자
             //UserRoleEnum role = UserRoleEnum.USER;
             String username = email;
-            kakaoUser = new User(username, password, nickname, email, kakaoId);
+
+            //kakaoUserinfo에서 이미지파일 꺼내서 정보에 추가하기
+            String userImgUrl = kakaoUserInfo.getUserImgUrl();
+
+            kakaoUser = new User(username, password, nickname, email, kakaoId, userImgUrl);
             userRepository.save(kakaoUser);
         }
 
@@ -141,11 +145,16 @@ public class KakaoUserService {
                 .get("email").asText();
 
 
-        System.out.println("카카오 사용자 정보: " + id + ", " + nickname + ", " + email);
+        //////////////////////////추가부분
+        ///////////////////////////get부분 알아봐야함
+        String userImgUrl= jsonNode.get("properties")
+            .get("profile_image").asText();
+
+        System.out.println("카카오 사용자 정보: " + id + ", " + nickname + ", " + email + "," + userImgUrl);
 
         String username = email;
 
-        return new KakaoUserInfoDto(id, nickname, email, username);
+        return new KakaoUserInfoDto(id, nickname, email, username, userImgUrl);
 
     }
 

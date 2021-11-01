@@ -33,6 +33,10 @@ public class User {
     @Column
     private String badge;
 
+    //추가부분
+    @Column
+    private String userImgUrl;
+
 
     @Column(unique = true)
     private Long kakaoId;
@@ -41,22 +45,24 @@ public class User {
     @JsonIgnore
     private List<Wish> wishList;
 
-    public User(String username, String password, String nickname, String email){
+    public User(String username, String password, String nickname, String email, String userImgUrl){
 
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.email = email;
+        this.userImgUrl = userImgUrl;
         this.kakaoId = null;
     }
 
-    public User(String username, String password, String nickname, String email, Long kakaoId){
+    public User(String username, String password, String nickname, String email, Long kakaoId, String userImgUrl){
 
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.email = email;
         this.kakaoId = kakaoId;
+        this.userImgUrl = userImgUrl;
 
     }
 

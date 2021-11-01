@@ -1,30 +1,11 @@
 package com.sparta.dockingfinalproject.user;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
-import com.sparta.dockingfinalproject.user.dto.KakaoUserInfoDto;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UserService {
@@ -46,6 +27,8 @@ public class UserService {
        String username = requestDto.getUsername();
        String password = requestDto.getPassword();
        String pwcheck = requestDto.getPwcheck();
+       String userImgUrl = "이미지url";
+
 
        if(!password.equals(pwcheck)) {
            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다");
@@ -55,10 +38,12 @@ public class UserService {
 
        String nickname = requestDto.getNickname();
        String email = requestDto.getEmail();
+//       String userImgUrl = requestDto.getUserImgUrl();
 
-       User user = new User(username, password, nickname, email);
 
-       userRepository.save(user);
+         User user = new User(username, password, nickname, email, userImgUrl);
+
+         userRepository.save(user);
 
     }
 
