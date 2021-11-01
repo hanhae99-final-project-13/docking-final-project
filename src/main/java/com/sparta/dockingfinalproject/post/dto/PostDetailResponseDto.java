@@ -30,7 +30,7 @@ public class PostDetailResponseDto {
             .breed(pet.getBreed())
             .sex(pet.getSex())
             .weight(pet.getWeight())
-            .lostLocation(pet.getOwnerType())
+            .lostLocation(pet.getLostLocation())
             .ownerType(pet.getOwnerType())
             .phone(pet.getPhone())
             .tag(pet.getTag())
