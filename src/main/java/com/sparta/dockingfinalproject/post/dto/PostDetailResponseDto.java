@@ -30,7 +30,7 @@ public class PostDetailResponseDto {
             .breed(pet.getBreed())
             .sex(pet.getSex())
             .weight(pet.getWeight())
-            .lostLocation(pet.getOwnerType())
+            .lostLocation(pet.getLostLocation())
             .ownerType(pet.getOwnerType())
             .phone(pet.getPhone())
             .tag(pet.getTag())
@@ -39,5 +39,22 @@ public class PostDetailResponseDto {
             .isAdopted(pet.getIsAdopted())
             .heart(heart)
             .build();
+  }
+
+  public static PostDetailResponseDto getPostDetailResponseDto(Post post) {
+    Pet pet = post.getPet();
+    return PostDetailResponseDto.builder()
+        .postId(post.getPostId())
+        .breed(pet.getBreed())
+        .sex(pet.getSex())
+        .weight(pet.getWeight())
+        .lostLocation(pet.getOwnerType())
+        .ownerType(pet.getOwnerType())
+        .phone(pet.getPhone())
+        .tag(pet.getTag())
+        .url(pet.getUrl())
+        .img(pet.getImg())
+        .isAdopted(pet.getIsAdopted())
+        .build();
   }
 }

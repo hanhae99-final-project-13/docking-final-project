@@ -14,7 +14,9 @@ public enum ErrorCode {
   USER_NOT_FOUND(BAD_REQUEST, "회원 정보를 찾을 수 없습니다."),
   LOGIN_TOKEN_EXPIRE(BAD_REQUEST, "로그인이 만료되었습니다. 재로그인 하세요."),
 
-  POST_NOT_FOUND(BAD_REQUEST, "해당 게시글을 찾을 수 없습니다.");
+  POST_NOT_FOUND(BAD_REQUEST, "해당 게시글을 찾을 수 없습니다."),
+
+  ALARM_NOT_FOUND(BAD_REQUEST, "해당 알람 내용을 찾을 수 없습니다.");
 
   private final HttpStatus httpStatus;
   private final String message;

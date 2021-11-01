@@ -1,6 +1,7 @@
 package com.sparta.dockingfinalproject.pet;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.sparta.dockingfinalproject.common.Timestamped;
 import com.sparta.dockingfinalproject.pet.dto.PetRequestDto;
 import com.sparta.dockingfinalproject.post.Post;
 import javax.persistence.Column;
@@ -11,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Pet {
+public class Pet extends Timestamped {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -159,4 +159,4 @@ public class Pet {
   private boolean petCheck(String data) {
     return data != null && !data.isEmpty();
   }
-}
+
