@@ -7,6 +7,7 @@ import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.User;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
@@ -21,16 +22,21 @@ public class AlarmService {
   }
 
   public Map<String, Object> getAlarms(UserDetailsImpl userDetails) {
-    List<Alarm> alarms = alarmRepositoroy.findAllByUserAndStatusTrueOrderByCreatedAtDesc(userDetails.getUser());
+    System.out.println(userDetails.getUser().getUsername());
+    List<Alarm> alarms = alarmRepositoroy.findAllByUserOrderByCreatedAtDesc(userDetails.getUser());
 
-    List<AlarmResponseDto> data = new ArrayList<>();
+    List<AlarmResponseDto> dataAlarms = new ArrayList<>();
     for (Alarm alarm : alarms) {
       AlarmResponseDto alarmResponseDto = AlarmResponseDto.builder()
                                                       .alarmId(alarm.getAlarmId())
                                                       .alarmContent(alarm.getAlarmContent())
                                                       .build();
-      data.add(alarmResponseDto);
+      dataAlarms.add(alarmResponseDto);
     }
+
+    Map<String, Object> data = new HashMap<>();
+    data.put("data", dataAlarms);
+    data.put("alarmCount", getAlarmCount(userDetails.getUser()));
 
     return SuccessResult.success(data);
   }
@@ -40,7 +46,16 @@ public class AlarmService {
     return alarms.size();
   }
 
-  public Map<String, Object> getAlarm(Long alarmId) {
+  public Map<String, Object> deleteAlarms() {
+    alarmRepositoroy.deleteAll();
+
+    Map<String, String> data = new HashMap<>();
+    data.put("msg", "삭제 완료되었습니다.");
+
+    return SuccessResult.success(data);
+  }
+
+  public Map<String, Object> getAlarm(Long alarmId, UserDetailsImpl userDetails) {
     Alarm alarm = alarmRepositoroy.findById(alarmId).orElseThrow(
         () -> new DockingException(ErrorCode.ALARM_NOT_FOUND)
     );
@@ -48,11 +63,14 @@ public class AlarmService {
     alarm.updateStatus();
     alarmRepositoroy.save(alarm);
 
-    AlarmResponseDto data = AlarmResponseDto.builder()
+    AlarmResponseDto dataAlarm = AlarmResponseDto.builder()
                                       .alarmId(alarm.getAlarmId())
                                       .alarmContent(alarm.getAlarmContent())
                                       .build();
 
+    Map<String, Object> data = new HashMap<>();
+    data.put("data", dataAlarm);
+    data.put("alarmCount", getAlarmCount(userDetails.getUser()));
     return SuccessResult.success(data);
   }
 }
