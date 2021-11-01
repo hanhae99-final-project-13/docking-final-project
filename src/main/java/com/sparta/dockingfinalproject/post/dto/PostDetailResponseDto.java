@@ -1,7 +1,7 @@
 package com.sparta.dockingfinalproject.post.dto;
 
 import com.sparta.dockingfinalproject.pet.Pet;
-import com.sparta.dockingfinalproject.pet.PetSex;
+import com.sparta.dockingfinalproject.pet.Sex;
 import com.sparta.dockingfinalproject.post.Post;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import lombok.Getter;
 public class PostDetailResponseDto {
   private Long postId;
   private String breed;
-  private PetSex sex;
+  private Sex sex;
   private int age;
   private double weight;
   private String lostLocation;

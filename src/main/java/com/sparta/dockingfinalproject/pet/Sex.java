@@ -1,17 +1,17 @@
 package com.sparta.dockingfinalproject.pet;
 
-public enum PetSex {
+public enum Sex {
   M("m"),
   F("f");
 
   private final String sex;
 
-  PetSex(String sex) {
+  Sex(String sex) {
     this.sex = sex;
   }
 
-  public static PetSex of(String sex) {
-    for (PetSex petSex : PetSex.values()) {
+  public static Sex of(String sex) {
+    for (Sex petSex : Sex.values()) {
       if (sex.equalsIgnoreCase(petSex.toString())) {
         return petSex;
       }

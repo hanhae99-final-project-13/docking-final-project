@@ -2,7 +2,6 @@ package com.sparta.dockingfinalproject.api;
 
 import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.pet.PetRepository;
-import com.sparta.dockingfinalproject.pet.PetSex;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;

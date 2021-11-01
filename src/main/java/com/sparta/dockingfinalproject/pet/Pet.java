@@ -1,5 +1,6 @@
 package com.sparta.dockingfinalproject.pet;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sparta.dockingfinalproject.common.Timestamped;
 import com.sparta.dockingfinalproject.pet.dto.PetRequestDto;
 import com.sparta.dockingfinalproject.post.Post;
@@ -11,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +30,7 @@ public class Pet extends Timestamped {
 
   @Column(nullable = false)
   @Enumerated(value = EnumType.STRING)
-  private PetSex sex;
+  private Sex sex;
 
   @Column(nullable = false)
   private int age;
@@ -69,13 +69,15 @@ public class Pet extends Timestamped {
   private String img;
 
   @OneToOne(mappedBy = "pet")
+  @JsonBackReference
   private Post post;
 
   @Builder
-  public Pet(String breed, String sex, String age, String weight, String lostLocation, String ownerType,
-             String address, String phone, String img, String extra, String isAdopted, String petNo) {
+  public Pet(String breed, String sex, String age, String weight, String lostLocation,
+      String ownerType,
+      String address, String phone, String img, String extra, String isAdopted, String petNo) {
     this.breed = breed;
-    this.sex = PetSex.of(sex);
+    this.sex = Sex.of(sex);
     this.age = Integer.parseInt(age.replaceAll("[^0-9]", ""));
     this.weight = Double.parseDouble(weight.replaceAll("[^0-9.]", ""));
     this.lostLocation = lostLocation;
@@ -90,7 +92,7 @@ public class Pet extends Timestamped {
 
   public Pet(PetRequestDto petRequestDto) {
     this.breed = petRequestDto.getBreed();
-    this.sex = PetSex.of(petRequestDto.getSex());
+    this.sex = Sex.of(petRequestDto.getSex());
     this.age = petRequestDto.getAge();
     this.weight = petRequestDto.getWeight();
     this.lostLocation = petRequestDto.getLostLocation();
@@ -116,39 +118,39 @@ public class Pet extends Timestamped {
     this.weight = petRequestDto.getWeight();
 
     if (petCheck(petRequestDto.getLostLocation())) {
-      this.lostLocation= petRequestDto.getLostLocation();
+      this.lostLocation = petRequestDto.getLostLocation();
     }
 
     if (petCheck(petRequestDto.getOwnerType())) {
-      this.ownerType= petRequestDto.getOwnerType();
+      this.ownerType = petRequestDto.getOwnerType();
     }
 
     if (petCheck(petRequestDto.getAddress())) {
-      this.address= petRequestDto.getAddress();
+      this.address = petRequestDto.getAddress();
     }
 
     if (petCheck(petRequestDto.getPhone())) {
-      this.phone= petRequestDto.getPhone();
+      this.phone = petRequestDto.getPhone();
     }
 
     if (petCheck(petRequestDto.getTag())) {
-      this.tag= petRequestDto.getTag();
+      this.tag = petRequestDto.getTag();
     }
 
     if (petCheck(petRequestDto.getUrl())) {
-      this.url= petRequestDto.getUrl();
+      this.url = petRequestDto.getUrl();
     }
 
     if (petCheck(petRequestDto.getImg())) {
-      this.img= petRequestDto.getImg();
+      this.img = petRequestDto.getImg();
     }
 
     if (petCheck(petRequestDto.getExtra())) {
-      this.extra= petRequestDto.getExtra();
+      this.extra = petRequestDto.getExtra();
     }
 
     if (petCheck(petRequestDto.getIsAdopted())) {
-      this.isAdopted= petRequestDto.getIsAdopted();
+      this.isAdopted = petRequestDto.getIsAdopted();
     }
 
     return this;
@@ -157,4 +159,4 @@ public class Pet extends Timestamped {
   private boolean petCheck(String data) {
     return data != null && !data.isEmpty();
   }
-}
+
