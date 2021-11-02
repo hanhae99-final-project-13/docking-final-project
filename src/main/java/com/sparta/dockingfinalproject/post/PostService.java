@@ -1,5 +1,6 @@
 package com.sparta.dockingfinalproject.post;
 
+import com.sparta.dockingfinalproject.alarm.Alarm;
 import com.sparta.dockingfinalproject.alarm.AlarmRepositoroy;
 import com.sparta.dockingfinalproject.comment.CommentRepository;
 import com.sparta.dockingfinalproject.comment.dto.CommentResponseDto;
@@ -58,8 +59,9 @@ public class PostService {
 
     Map<String, Object> data = new HashMap<>();
     data.put("postList", postList);
-    data.put("alarmCount", alarmRepositoroy.findAllByUserAndStatusTrueOrderByCreatedAtDesc(userDetails.getUser()));
-
+    Optional<List<Alarm>> alarms = alarmRepositoroy .findAllByUserAndStatusTrueOrderByCreatedAtDesc(userDetails.getUser());
+    if (alarms.isPresent()) { data.put("alarmCount", 0); }
+    else { data.put("alarmCount", alarms.get().size()); }
     return SuccessResult.success(data);
   }
 

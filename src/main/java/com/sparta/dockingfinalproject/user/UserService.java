@@ -9,6 +9,8 @@ import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
 import javax.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 public class UserService {
@@ -53,10 +55,10 @@ public class UserService {
 
     public User login (SignupRequestDto requestDto){
 
-//        User user = userRepository.findByUsername(requestDto.getUsername()).orElse(null);
-      User user = userRepository.findAllByAuthCheckTrueAndUsername(requestDto.getUsername()).orElseThrow(
-          () -> new IllegalArgumentException("이메일 인증 부터 해주세요")
-      );
+        User user = userRepository.findByUsername(requestDto.getUsername()).orElse(null);
+//      User user = userRepository.findAllByAuthCheckTrueAndUsername(requestDto.getUsername()).orElseThrow(
+//          () -> new IllegalArgumentException("이메일 인증 부터 해주세요")
+//      );
 
 
         if(!passwordEncoder.matches(requestDto.getPassword(),user.getPassword())){
@@ -77,6 +79,7 @@ public class UserService {
       } else {
         throw new DockingException(ErrorCode.POST_NOT_FOUND);
       }
+
 
 
     }

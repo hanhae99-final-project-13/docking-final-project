@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -42,8 +43,8 @@ public class AlarmService {
   }
 
   public int getAlarmCount(User user) {
-    List<Alarm> alarms = alarmRepositoroy.findAllByUserAndStatusTrueOrderByCreatedAtDesc(user);
-    return alarms.size();
+    Optional<List<Alarm>> alarms = alarmRepositoroy.findAllByUserAndStatusTrueOrderByCreatedAtDesc(user);
+    return alarms.get().size();
   }
 
   public Map<String, Object> deleteAlarms() {
