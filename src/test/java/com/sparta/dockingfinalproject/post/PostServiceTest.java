@@ -155,7 +155,7 @@ class PostServiceTest {
 
     assertThat(postRepository.findById(100L).get().getPostId()).isEqualTo(post.getPostId());
     assertThrows(DockingException.class,
-        () -> postService.getPosts(99L, userDetails), "해당 게시글을 찾을 수 없습니다.");
+        () -> postService.getPost(99L, userDetails), "해당 게시글을 찾을 수 없습니다.");
   }
 
   @Test
