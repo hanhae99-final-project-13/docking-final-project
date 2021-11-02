@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Pet extends Timestamped {
 
   @Id
@@ -159,5 +161,6 @@ public class Pet extends Timestamped {
   private boolean petCheck(String data) {
     return data != null && !data.isEmpty();
   }
+}
 
 }
