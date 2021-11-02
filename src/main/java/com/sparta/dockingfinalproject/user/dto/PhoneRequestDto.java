@@ -2,12 +2,14 @@ package com.sparta.dockingfinalproject.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
-public class phoneRequestDto {
+@NoArgsConstructor
+public class PhoneRequestDto {
 
-  private int phoneNumber;
+  private String phoneNumber;
 
 
 }

@@ -6,10 +6,11 @@ import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
+import com.sparta.dockingfinalproject.user.dto.PhoneRequestDto;
 import com.sparta.dockingfinalproject.user.dto.ResponseDto;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
-import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
 import com.sparta.dockingfinalproject.user.mail.MailSendService;
+import com.sparta.dockingfinalproject.user.phoneMessage.PhoneService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class UserController {
         this.userRepository = userRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.mailSendService = mailSendService;
-    }
+   }
 
     //회원가입 요청
     @PostMapping("/signup")
