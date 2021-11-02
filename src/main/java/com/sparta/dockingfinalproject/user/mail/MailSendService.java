@@ -55,7 +55,7 @@ public class MailSendService {
     MimeMessage message = javaMailSender.createMimeMessage();
 
     message.addRecipients(Message.RecipientType.TO, to);
-    message.setSubject("TEST 회원가입 이메일 인증");
+    message.setSubject("Dock 회원가입 이메일 인증 ");
 
     String mes = "";
     mes+= "<div style='margin:100px;'>";
@@ -76,7 +76,7 @@ public class MailSendService {
     mes += "' target='_blenk'>이메일 인증</a></strong><div><br/>";
     mes+= "</div>";
     message.setText(mes, "utf-8", "html");//내용
-    message.setFrom(new InternetAddress("wldms2494@gmail.com","Babble"));
+    message.setFrom(new InternetAddress("wldms2494@gmail.com","Docking team"));
 
     return message;
 

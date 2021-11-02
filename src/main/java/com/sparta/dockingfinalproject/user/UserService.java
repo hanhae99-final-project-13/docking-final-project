@@ -26,6 +26,7 @@ public class UserService {
 
     //회원 등록
     public void registerUser(SignupRequestDto requestDto, String authKey) {
+//      userRepository.findAllByAuth
 
        String username = requestDto.getUsername();
        String password = requestDto.getPassword();
@@ -50,9 +51,12 @@ public class UserService {
 
     }
 
-    public User login (UserRequestDto requestDto){
+    public User login (SignupRequestDto requestDto){
 
-        User user = userRepository.findByUsername(requestDto.getUsername()).orElse(null);
+//        User user = userRepository.findByUsername(requestDto.getUsername()).orElse(null);
+      User user = userRepository.findAllByAuthCheckTrueAndUsername(requestDto.getUsername()).orElseThrow(
+          () -> new IllegalArgumentException("이메일 인증 부터 해주세요")
+      );
 
 
         if(!passwordEncoder.matches(requestDto.getPassword(),user.getPassword())){

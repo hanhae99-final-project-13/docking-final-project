@@ -71,7 +71,7 @@ public class UserController {
 
     //로그인 요청
     @PostMapping("/user/login")
-    public Map<String, Object> login(@RequestBody UserRequestDto requestDto, ResponseDto responseDto) throws DockingException {
+    public Map<String, Object> login(@RequestBody SignupRequestDto requestDto, ResponseDto responseDto) throws DockingException {
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> result2 = new HashMap<>();
         List<Map<String, Object>> applyList = new ArrayList<>();
@@ -94,6 +94,7 @@ public class UserController {
             //creatToken(requestDto.getEmail(), requestDto.getPassword(), requestDto.getUsername,,이런식으로 정보를 더 넣을 수 있다)
             responseDto.setUserImgUrl(user.getUserImgUrl());
             responseDto.setApplyList(applyList);
+
 
 
             result.put("data", responseDto);
