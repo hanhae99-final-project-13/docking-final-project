@@ -112,6 +112,10 @@ public class Pet extends Timestamped {
     this.post = post;
   }
 
+  public void updateStatus(String isAdopted) {
+    this.isAdopted = isAdopted;
+  }
+
   public Pet update(PetRequestDto petRequestDto) {
     if (petCheck(petRequestDto.getBreed())) {
       this.breed = petRequestDto.getBreed();
@@ -161,6 +165,4 @@ public class Pet extends Timestamped {
   private boolean petCheck(String data) {
     return data != null && !data.isEmpty();
   }
-}
-
 }
