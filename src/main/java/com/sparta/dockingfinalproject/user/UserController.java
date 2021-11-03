@@ -111,6 +111,22 @@ public class UserController {
     }
 
 
+    //유저 정보 수정하기
+
+    @PatchMapping("/user")
+    public Map<String, Object> updateUser(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody SignupRequestDto requestDto){
+
+        System.out.println("사용자 정보 수정");
+        return userService.updateUser(userDetails, requestDto);
+
+    }
+
+
+
+
+
+
+
     //로그인체크
     @GetMapping("/user/check")
     public Map<String, Object> loginCheck(@AuthenticationPrincipal UserDetailsImpl userDetails) throws DockingException {
@@ -196,6 +212,8 @@ public class UserController {
             result.put("data", message);
             return result;
         }
+
+
 
     }
 

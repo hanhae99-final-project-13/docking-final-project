@@ -4,6 +4,7 @@ package com.sparta.dockingfinalproject.user;
 import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
+import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
@@ -84,11 +85,21 @@ public class UserService {
       }
 
 
-
     }
 
+@Transactional
+  public Map<String, Object> updateUser(UserDetailsImpl userDetails, SignupRequestDto requestDto) {
 
+      User findUser = userRepository.findById(userDetails.getUser().getUserId()).orElseThrow(
+          () -> new DockingException(ErrorCode.USER_NOT_FOUND)
+      );
 
+      findUser.update(requestDto);
+    //리턴 data 생성
+    Map<String, String> data = new HashMap<>();
+    data.put("msg", "사용자 정보가 수정 되었습니다");
+    return SuccessResult.success(data);
+  }
 }
 
 
