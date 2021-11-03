@@ -1,6 +1,7 @@
 package com.sparta.dockingfinalproject.security;
 
 import com.sparta.dockingfinalproject.user.User;
+import java.util.Collections;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
@@ -20,7 +21,8 @@ public class UserDetailsImpl implements org.springframework.security.core.userde
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.emptyList();
+
     }
 
     @Override

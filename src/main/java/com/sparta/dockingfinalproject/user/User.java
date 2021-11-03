@@ -33,30 +33,50 @@ public class User {
     @Column
     private String badge;
 
+    //추가부분
+    @Column
+    private String userImgUrl;
+
 
     @Column(unique = true)
     private Long kakaoId;
+
+    @Column(nullable = false)
+    private String authKey;
+
+    @Column(nullable = false)
+    private boolean authCheck;
+
+
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     @JsonIgnore
     private List<Wish> wishList;
 
-    public User(String username, String password, String nickname, String email){
+    public User(String username, String password, String nickname, String email, String userImgUrl, String authKey){
 
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.email = email;
+        this.userImgUrl = userImgUrl;
         this.kakaoId = null;
+        this.authKey = authKey;
+        this.authCheck = false;
+
     }
 
-    public User(String username, String password, String nickname, String email, Long kakaoId){
+    public User(String username, String password, String nickname, String email, Long kakaoId, String userImgUrl){
 
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.email = email;
         this.kakaoId = kakaoId;
+        this.userImgUrl = userImgUrl;
+        this.authKey = "";
+        this.authCheck = true;
+
 
     }
 
@@ -67,6 +87,15 @@ public class User {
         this.nickname = nickname;
         this.email = email;
         this.kakaoId = kakaoId;
+        this.authKey = "";
+        this.authCheck = true;
+
+    }
+
+    public User confirm(){
+        this.authKey ="";
+        this.authCheck = true;
+        return this;
 
     }
 }

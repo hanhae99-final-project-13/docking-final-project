@@ -17,6 +17,10 @@ public class SignupRequestDto {
 
     private String nickname;
 
+    private String userImgUrl;
+
+
+
 
 
 }
