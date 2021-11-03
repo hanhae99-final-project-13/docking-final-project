@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class phoneRequestDto {
+public class PhoneRequestDto {
 
-  private int phoneNumber;
+  private String phoneNumber;
 
 
 }
