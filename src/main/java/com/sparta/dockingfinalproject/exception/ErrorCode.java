@@ -16,7 +16,9 @@ public enum ErrorCode {
   POST_NOT_FOUND(BAD_REQUEST, "해당 게시글을 찾을 수 없습니다."),
   ALARM_NOT_FOUND(BAD_REQUEST, "해당 알람 내용을 찾을 수 없습니다."),
   NO_AUTHORIZATION(BAD_REQUEST, "권한이 없습니다."),
-  NO_DIFFERENCE(BAD_REQUEST, "변경된 사항이 없습니다.");
+  NO_DIFFERENCE(BAD_REQUEST, "변경된 사항이 없습니다."),
+
+  PET_NOT_FOUND(BAD_REQUEST, "해당 유기견을 찾을 수 없습니다.");
 
   private final HttpStatus httpStatus;
   private final String message;

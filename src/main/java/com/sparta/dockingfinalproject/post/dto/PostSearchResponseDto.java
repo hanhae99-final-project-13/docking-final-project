@@ -1,0 +1,21 @@
+package com.sparta.dockingfinalproject.post.dto;
+
+import com.sparta.dockingfinalproject.pet.Sex;
+import java.time.LocalDateTime;
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
+public class PostSearchResponseDto {
+  private Long postId;
+  private String breed;
+  private Sex sex;
+  private int age;
+  private String ownerType;
+  private String address;
+  private String img;
+  private String isAdopted;
+  private LocalDateTime createdAt;
+  private LocalDateTime modifiedAt;
+}
