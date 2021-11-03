@@ -1,6 +1,7 @@
 package com.sparta.dockingfinalproject.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.wish.Wish;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -96,6 +97,13 @@ public class User {
         this.authKey ="";
         this.authCheck = true;
         return this;
+
+    }
+
+    public void update(SignupRequestDto requestDto) {
+        this.nickname = requestDto.getNickname();
+        this.email = requestDto.getEmail();
+        this.userImgUrl = requestDto.getUserImgUrl();
 
     }
 }

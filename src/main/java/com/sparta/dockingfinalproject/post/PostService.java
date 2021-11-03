@@ -71,11 +71,11 @@ public class PostService {
   @Transactional
   public Map<String, Object> getPost(Long postId, UserDetailsImpl userDetails) {
     Post findPost = bringPost(postId);
-    Long userId = userDetails.getUser().getUserId();
+//    Long userId = userDetails.getUser().getUserId();
     Optional<Wish> findWish = null;
 
     boolean heart = false;
-    if (userId != null) {
+    if (userDetails != null) {
       findWish = wishRepository.findAllByUserAndPost(userDetails.getUser(), findPost);
       if (findWish.isPresent()) {
         heart = true;
