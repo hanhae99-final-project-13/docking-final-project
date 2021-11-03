@@ -43,8 +43,8 @@ public class AlarmService {
   }
 
   public int getAlarmCount(User user) {
-    Optional<List<Alarm>> alarms = alarmRepositoroy.findAllByUserAndStatusTrueOrderByCreatedAtDesc(user);
-    return alarms.get().size();
+    List<Alarm> alarms = alarmRepositoroy.findAllByUserAndStatusTrueOrderByCreatedAtDesc(user);
+    return alarms.size();
   }
 
   public Map<String, Object> deleteAlarms() {
