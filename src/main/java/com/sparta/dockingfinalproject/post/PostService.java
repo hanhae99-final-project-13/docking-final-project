@@ -11,6 +11,7 @@ import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.pet.PetRepository;
 import com.sparta.dockingfinalproject.pet.dto.PetRequestDto;
 import com.sparta.dockingfinalproject.post.dto.PostDetailResponseDto;
+import com.sparta.dockingfinalproject.post.dto.PostSearchResponseDto;
 import com.sparta.dockingfinalproject.post.dto.StatusDto;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.wish.Wish;
@@ -203,5 +204,144 @@ public class PostService {
     return postRepository.findById(postId).orElseThrow(
         () -> new DockingException(ErrorCode.POST_NOT_FOUND)
     );
+  }
+
+  public Map<String, Object> getPostsTermsSearch(Pageable pageable, String startDt, String endDt, String ownerType, String city, String district, String sort) {
+    Page<Pet> pets = null;
+    if (sort.equalsIgnoreCase("new")) {
+      if (startDt != null) {
+        String[] starts = startDt.split("-");
+        String[] ends = endDt.split("-");
+        LocalDateTime start = LocalDateTime.of(Integer.parseInt(starts[0]), Integer.parseInt(starts[1]), Integer.parseInt(starts[2]), 0, 0);
+        LocalDateTime end = LocalDateTime.of(Integer.parseInt(ends[0]), Integer.parseInt(ends[1]), Integer.parseInt(ends[2]), 23, 59);
+
+        if (ownerType == null) {
+          if (city == null) {
+            pets = petRepository.findAllByCreatedAtBetweenOrderByCreatedAtDesc(start, end, pageable);
+          }
+
+          if (city != null) {
+            String address = city + " " + district;
+            pets = petRepository.findAllByCreatedAtBetweenAndAddressLikeOrderByCreatedAtDesc(start, end, address, pageable);
+          }
+        }
+
+        if (ownerType != null) {
+          if (city == null) {
+            pets = petRepository.findAllByCreatedAtBetweenAndOwnerTypeContainingOrderByCreatedAtDesc(start, end, ownerType, pageable);
+          }
+
+          if (city != null) {
+            String address = city + " " + district;
+            pets = petRepository.findAllByCreatedAtBetweenAndOwnerTypeContainingAndAddressLikeOrderByCreatedAtDesc(start, end, ownerType, address, pageable);
+          }
+        }
+      }
+
+      if (startDt == null) {
+        if (ownerType == null) {
+          if (city == null) {
+            pets = petRepository.findAllByOrderByCreatedAtDesc(pageable);
+          }
+
+          if (city != null) {
+            String address = city + " " + district;
+            pets = petRepository.findAllByAddressLikeOrderByCreatedAtDesc(address, pageable);
+          }
+        }
+
+        if (ownerType != null) {
+          if (city == null) {
+            pets = petRepository.findAllByOwnerTypeContainingOrderByCreatedAtDesc(ownerType, pageable);
+          }
+
+          if (city != null) {
+            String address = city + " " + district;
+            pets = petRepository.findAllByOwnerTypeAndAddressLikeOrderByCreatedAtDesc(ownerType, address, pageable);
+          }
+        }
+      }
+    }
+
+    if (sort.equalsIgnoreCase("old")) {
+      if (startDt != null) {
+        String[] starts = startDt.split("-");
+        String[] ends = startDt.split("-");
+        LocalDateTime start = LocalDateTime.of(Integer.parseInt(starts[0]), Integer.parseInt(starts[1]), Integer.parseInt(starts[2]), 0, 0);
+        LocalDateTime end = LocalDateTime.of(Integer.parseInt(ends[0]), Integer.parseInt(ends[1]), Integer.parseInt(ends[2]), 23, 59);
+
+        if (ownerType == null) {
+          if (city == null) {
+            pets = petRepository.findAllByCreatedAtBetweenOrderByCreatedAtAsc(start, end, pageable);
+          }
+
+          if (city != null) {
+            String address = city + " " + district;
+            pets = petRepository.findAllByCreatedAtBetweenAndAddressLikeOrderByCreatedAtAsc(start, end, address, pageable);
+          }
+        }
+
+        if (ownerType != null) {
+          if (city == null) {
+            pets = petRepository.findAllByCreatedAtBetweenAndOwnerTypeContainingOrderByCreatedAtAsc(start, end, ownerType, pageable);
+          }
+
+          if (city != null) {
+            String address = city + " " + district;
+            pets = petRepository.findAllByCreatedAtBetweenAndOwnerTypeContainingAndAddressLikeOrderByCreatedAtAsc(start, end, ownerType, address, pageable);
+          }
+        }
+      }
+
+      if (startDt == null) {
+        if (ownerType == null) {
+          if (city == null) {
+            pets = petRepository.findAllByOrderByCreatedAtAsc(pageable);
+          }
+
+          if (city != null) {
+            String address = city + " " + district;
+            pets = petRepository.findAllByAddressLikeOrderByCreatedAtAsc(address, pageable);
+          }
+        }
+
+        if (ownerType != null) {
+          if (city == null) {
+            pets = petRepository.findAllByOwnerTypeContainingOrderByCreatedAtAsc(ownerType, pageable);
+          }
+
+          if (city != null) {
+            String address = city + " " + district;
+            pets = petRepository.findAllByOwnerTypeContainingAndAddressLikeOrderByCreatedAtAsc(ownerType, address, pageable);
+          }
+        }
+      }
+    }
+
+    List<PostSearchResponseDto> postList = new ArrayList<>();
+    for (Pet pet : pets) {
+      Post post = postRepository.findAllByPet(pet).orElseThrow(
+          () -> new DockingException(ErrorCode.PET_NOT_FOUND)
+      );
+
+      PostSearchResponseDto postSearchResponseDto = PostSearchResponseDto.builder()
+          .postId(post.getPostId())
+          .createdAt(pet.getCreatedAt())
+          .modifiedAt(pet.getModifiedAt())
+          .breed(pet.getBreed())
+          .sex(pet.getSex())
+          .age(pet.getAge())
+          .ownerType(pet.getOwnerType())
+          .address(pet.getAddress())
+          .img(pet.getImg())
+          .isAdopted(pet.getIsAdopted())
+          .build();
+
+      postList.add(postSearchResponseDto);
+    }
+
+    Map<String, Object> data = new HashMap<>();
+    data.put("postList", postList);
+    return SuccessResult.success(data);
   }
 }
