@@ -1,0 +1,560 @@
+[33mcommit 503761d6864acfb1eec2f0c27606d8f79ba3a421[m[33m ([m[1;36mHEAD[m[33m)[m
+Author: wldms2494 <wldms2494@gmail.com>
+Date:   Tue Nov 2 23:04:03 2021 +0900
+
+    fix conflicts
+
+[33mcommit 42772d25e511f6d6a741d1abecf196d2d264f9e0[m
+Author: wldms2494 <wldms2494@gmail.com>
+Date:   Mon Nov 1 17:52:09 2021 +0900
+
+    [feat] 이메일 본인 인증 기능 추가
+
+[33mcommit 818c4bdf27afa36e4a6cc79f1793e81c66a1ea99[m
+Author: wldms2494 <wldms2494@gmail.com>
+Date:   Mon Nov 1 13:07:43 2021 +0900
+
+    [fix] 닉네임 아이디 중복검사 버그 수정, creatToken시 claim에 username 주입
+
+[33mcommit 8c1e3831d3040b00d07640792d2d1d234d59f5b9[m
+Author: Jieun Song <80088918+wldms2494@users.noreply.github.com>
+Date:   Fri Oct 29 01:33:49 2021 +0900
+
+    [feat] 회원가입 아이디 닉네임 중복 검사 완료
+
+[33mcommit 1bd919c5eee39cf544afb5751f6e2aa0986c51b7[m
+Author: Jieun Song <80088918+wldms2494@users.noreply.github.com>
+Date:   Thu Oct 28 23:37:57 2021 +0900
+
+    [fix] 로그인 수정
+
+[33mcommit 72e4f6de2c0dcb2cf5ce82a3e142ca9e6fb6233a[m[33m ([m[1;31morigin/develop[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mdevelop[m[33m)[m
+Merge: 41942bd 14d24f9
+Author: Choi Seon Kang <42162127+zzangoobrother@users.noreply.github.com>
+Date:   Tue Nov 2 21:21:43 2021 +0900
+
+    Merge pull request #16 from hanhae99-final-project-13/feature/post
+    
+    [feat] postservice 테스트 코드 기능 구현
+
+[33mcommit 14d24f9f8f9a0c63d537278d4771ede4a95b0f2f[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Tue Nov 2 20:29:34 2021 +0900
+
+    [feat] postservice 테스트 코드 기능 구현
+
+[33mcommit 41942bdcc6a03986522a1703a0a9ce5c157557d9[m
+Merge: b63b0ae 2313dbb
+Author: vktm91 <90592804+vktm91@users.noreply.github.com>
+Date:   Mon Nov 1 22:13:07 2021 +0900
+
+    Merge pull request #15 from hanhae99-final-project-13/feature/api
+    
+    [feat] api data  서버시작시 자동 저장 기능
+
+[33mcommit 2313dbb865bb2188e86871854f33f65d1bc79297[m
+Author: vktm91@nate.com <vktm91@nate.com>
+Date:   Mon Nov 1 22:11:59 2021 +0900
+
+    [feat] api data  서버시작시 자동 저장 기능
+
+[33mcommit b63b0aec379b568d8c76997951f20fbf28bd5b14[m
+Merge: 50ba86b 8cc5a8e
+Author: vktm91 <90592804+vktm91@users.noreply.github.com>
+Date:   Mon Nov 1 16:32:56 2021 +0900
+
+    Merge pull request #14 from hanhae99-final-project-13/feature/wish
+    
+    [feat] 관심목록 불러오기 기능 추가 / PostDetailResponseDto 'lostLocation(pet.getL…
+
+[33mcommit 8cc5a8e69943f01603d87fe84f998fb8d849e1cf[m
+Author: vktm91@nate.com <vktm91@nate.com>
+Date:   Mon Nov 1 16:30:21 2021 +0900
+
+    [feat] 관심목록 불러오기 기능 추가 / PostDetailResponseDto 'lostLocation(pet.getLostLocation())' 오타수정
+
+[33mcommit 50ba86b451936532a21ee48bebd2e178b50e2e6c[m
+Merge: f52394d 46c10b7
+Author: Choi Seon Kang <42162127+zzangoobrother@users.noreply.github.com>
+Date:   Mon Nov 1 15:36:37 2021 +0900
+
+    Merge pull request #13 from hanhae99-final-project-13/feature/post
+    
+    [feat]알람 기능 추가 및 post 기능 수정
+
+[33mcommit 46c10b78bdd34aaa3919f3e49248bed20537651d[m
+Merge: fa803eb f52394d
+Author: Choi Seon Kang <42162127+zzangoobrother@users.noreply.github.com>
+Date:   Mon Nov 1 15:33:55 2021 +0900
+
+    Merge branch 'develop' into feature/post
+
+[33mcommit fa803eb9ee6f22c9714cac4f55195c04bb49acbb[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Mon Nov 1 14:36:26 2021 +0900
+
+    [fix] ownerType -> lostLocation 수정
+
+[33mcommit 5b3fec20835a51be33bad0fc18eb8500c2c28c1e[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Mon Nov 1 14:35:24 2021 +0900
+
+    [feat] 알람 전체 삭제 기능 추가
+
+[33mcommit f52394d07cf55e3bc677a9f919f1f0ef84c583de[m
+Merge: 3a26525 1239b65
+Author: vktm91 <90592804+vktm91@users.noreply.github.com>
+Date:   Mon Nov 1 12:59:01 2021 +0900
+
+    Merge pull request #12 from hanhae99-final-project-13/feature/fosterForm
+    
+    [feat] FosterForm 등록 기능 추가 / PetSex 클래스 -> Sex로 변경하여 User에도 적용
+
+[33mcommit 1239b654b90e79536783fc3b3d8cddc0f0ef03f6[m
+Author: vktm91@nate.com <vktm91@nate.com>
+Date:   Mon Nov 1 12:56:22 2021 +0900
+
+    [feat] FosterForm 등록 기능 추가 / PetSex 클래스 -> Sex로 변경하여 User에도 적용
+
+[33mcommit 223e338ef436704d8ee164be93b688817dfd8038[m
+Author: vktm91@nate.com <vktm91@nate.com>
+Date:   Mon Nov 1 12:49:25 2021 +0900
+
+    [feat] FosterForm 등록기능 추가 / PetSex 클래스 -> Sex로 변경하여 User에도 적용
+
+[33mcommit 3a26525420d91296434829bec95fb17bd43d31d0[m
+Merge: d118c85 481fd14
+Author: vktm91 <90592804+vktm91@users.noreply.github.com>
+Date:   Mon Nov 1 12:35:43 2021 +0900
+
+    Merge pull request #10 from hanhae99-final-project-13/feature/comment
+    
+    [feat] 코멘트 Dto 추가
+
+[33mcommit 481fd14ee1313493e596639a74533dd1eb0142b1[m
+Author: vktm91@nate.com <vktm91@nate.com>
+Date:   Sun Oct 31 16:53:17 2021 +0900
+
+    [feat] 코멘트 Dto 추가
+
+[33mcommit d118c855149631548a8d58518df227a1d4dedea0[m
+Merge: 7983ad8 a2b87a1
+Author: vktm91 <90592804+vktm91@users.noreply.github.com>
+Date:   Sun Oct 31 16:32:12 2021 +0900
+
+    Merge pull request #9 from hanhae99-final-project-13/feature/comment
+    
+    [feat] 코멘트 기능 추가 / Post<->Pet 순환참조 오류 수정
+
+[33mcommit 649345d1482a3cf32af34485b779e3453855d8cb[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Sat Oct 30 22:58:01 2021 +0900
+
+    [fix] url 수정
+
+[33mcommit 71d6a1746221f858a733b39880574b653497f23a[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Sat Oct 30 22:57:46 2021 +0900
+
+    [fix] url 수정 postId 수정
+
+[33mcommit 56b89d226ec5d007157d6ceb896b970454ed382e[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Sat Oct 30 22:56:53 2021 +0900
+
+    [feat] main페이지 조회 기능 추가
+
+[33mcommit a2b87a15812336e89170148a316357e5acccfb46[m[33m ([m[1;31morigin/feature/comment[m[33m)[m
+Author: vktm91@nate.com <vktm91@nate.com>
+Date:   Sat Oct 30 22:06:55 2021 +0900
+
+    [feat] 코멘트 기능 추가 / Post<->Pet 순환참조 오류 수정 / Timestamped @JsonFormat 추가 / PostService Comment return data 가공 추가
+
+[33mcommit 8cc6a8ef41b008807702e29ca46d49c4a4281297[m
+Merge: c84cb46 7983ad8
+Author: zzangoobrother <com1368@naver.com>
+Date:   Fri Oct 29 17:34:40 2021 +0900
+
+    Merge branch 'develop' of github.com:/zzangoobrother/docking-final-project into feature/alarm
+
+[33mcommit c84cb46b209ee27bc61bfee0dd3ca6c4bf8aa0bb[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Fri Oct 29 16:58:35 2021 +0900
+
+    [feat] Alarm 단건 조회 기능 추가
+
+[33mcommit 4c0c143099ad031a9b2b37b1a2148ebce25f2590[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Fri Oct 29 16:57:52 2021 +0900
+
+    [feat] EroorCode 추가
+
+[33mcommit 7983ad81278105c1ac97951cf330a0947f592947[m
+Merge: cba53e0 2506423
+Author: Choi Seon Kang <42162127+zzangoobrother@users.noreply.github.com>
+Date:   Fri Oct 29 16:56:29 2021 +0900
+
+    Merge pull request #8 from hanhae99-final-project-13/feature/comment
+    
+    [feat] comment create 기능 추가 / userId Long으로 변경
+
+[33mcommit 250642329802cce9f681e1606cea60dae7a094ad[m
+Author: vktm91@nate.com <vktm91@nate.com>
+Date:   Fri Oct 29 16:43:06 2021 +0900
+
+    [feat] comment create 기능 추가 / userId Long으로 변경
+
+[33mcommit 444dcbc0655df4cc3dcb91134fcc4b7f73a5118c[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Fri Oct 29 13:33:57 2021 +0900
+
+    [feat] 알람 리스트 조회 기능 추가 및 유저 알람 갯수 조회 기능 추가
+
+[33mcommit cba53e0c12d4bc96c0e784e5d57c50a880a00942[m[33m ([m[1;31morigin/feature/alarm[m[33m)[m
+Merge: 8544dad 89d2522
+Author: vktm91 <90592804+vktm91@users.noreply.github.com>
+Date:   Thu Oct 28 23:36:46 2021 +0900
+
+    Merge pull request #7 from hanhae99-final-project-13/feature/api
+    
+    [feat] api 기능 추가  + Pet Class petName컬럼 삭제/ tag, url (nullable = fals…
+
+[33mcommit 89d25227ba909d88ea0dfd185ec32e7be453805b[m[33m ([m[1;31morigin/feature/api[m[33m)[m
+Author: vktm91@nate.com <vktm91@nate.com>
+Date:   Thu Oct 28 23:32:11 2021 +0900
+
+    [feat] api 기능 추가  + Pet Class petName컬럼 삭제/ tag, url (nullable = false) 삭제/ pet생성자(api받는용도)추가/ 컬럼순서변경
+
+[33mcommit 8544dad5038b37da9f1d536c1906bb695ba27b26[m
+Merge: d1702e2 50d867b
+Author: Choi Seon Kang <42162127+zzangoobrother@users.noreply.github.com>
+Date:   Thu Oct 28 21:56:47 2021 +0900
+
+    Merge pull request #6 from hanhae99-final-project-13/feature/post
+    
+    [feat] 게시글 수정 삭제 관심등록 기능 구현
+
+[33mcommit 50d867b7831f17f765ea52d6af1598bc983cd903[m[33m ([m[1;31morigin/feature/post[m[33m)[m
+Merge: 51e3cb3 d1702e2
+Author: Choi Seon Kang <42162127+zzangoobrother@users.noreply.github.com>
+Date:   Thu Oct 28 21:55:17 2021 +0900
+
+    Merge branch 'develop' into feature/post
+
+[33mcommit 51e3cb372c88517b0e8a50505694ca145b9154b4[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Thu Oct 28 21:35:00 2021 +0900
+
+    [feat] 삭제 기능 추가
+
+[33mcommit 66e0f6d51911167639bab853cfae385e60092122[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Thu Oct 28 21:32:52 2021 +0900
+
+    [feat] 관심등록 기능 생성
+
+[33mcommit d1702e2055828c84112744666975483113acb6f2[m
+Merge: d362569 34310cf
+Author: Jieun Song <80088918+wldms2494@users.noreply.github.com>
+Date:   Thu Oct 28 21:27:51 2021 +0900
+
+    Merge pull request #5 from hanhae99-final-project-13/feature/signup
+    
+    [feat] 카카오 소셜로그인 기능 추가
+
+[33mcommit 34310cf01e2002691474648debc05f88a7f9c270[m
+Author: Jieun Song <80088918+wldms2494@users.noreply.github.com>
+Date:   Thu Oct 28 21:19:40 2021 +0900
+
+    [feat] 카카오 소셜로그인 기능 추가
+
+[33mcommit b5ff8592c2eb071ddcd6ad7ca8e1390a13531c42[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Thu Oct 28 16:39:42 2021 +0900
+
+    [feat] post 수정 기능 추가
+
+[33mcommit 2d6c524b261baf4e8b92fc97c4005d8b7fec8730[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Thu Oct 28 16:37:44 2021 +0900
+
+    [feat] pet update 기능 추가
+
+[33mcommit d311a5d2a7951e2c77123f57c61596e0a058885e[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Thu Oct 28 14:37:05 2021 +0900
+
+    [fix] isAdopted 타입 변환에 따른 수정
+
+[33mcommit 920eb10450f4707422d6436a7dcaedba68411dcc[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Thu Oct 28 13:16:56 2021 +0900
+
+    [fix] UserDetails -> UserDetailsImpl 변경
+
+[33mcommit 72bd2325bdb0d13f4a5db21b25e193acc856136e[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Thu Oct 28 13:15:51 2021 +0900
+
+    [fix] 반환타입 optional로 변경
+
+[33mcommit 55c7616b421d3db7ea9a0fda1a1c7957f9d69a4b[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Thu Oct 28 13:14:38 2021 +0900
+
+    [fix] 유이견 이름 삭제 및 post 아이디 추가
+
+[33mcommit 146e7ee7bfca848f6f72d1164bf453997084309b[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Thu Oct 28 13:13:54 2021 +0900
+
+    [fix] 유기견 이름, 상태 삭제
+
+[33mcommit 4d09810ad100586d9b778d6d5499913aa0c216f3[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Thu Oct 28 13:13:25 2021 +0900
+
+    [fix] 어노테이션 수정
+
+[33mcommit 6283b4ed0619192d10bc838bc80bcd536f0193d6[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Thu Oct 28 13:12:23 2021 +0900
+
+    [feat] h2 security 설정
+
+[33mcommit 9f92b24d61d156bb6a44ce0fdbe8f3c996566f0a[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Thu Oct 28 01:02:00 2021 +0900
+
+    [feat] PetRepository 생성
+
+[33mcommit d3625691b6ed5740881ceb830deecb725bdb24f9[m
+Merge: 3c9cf8a 2d9e813
+Author: Jieun Song <80088918+wldms2494@users.noreply.github.com>
+Date:   Wed Oct 27 21:59:52 2021 +0900
+
+    Merge pull request #4 from hanhae99-final-project-13/feature/post
+    
+    [feat] 게시글 조회 완성, 등록 생성
+
+[33mcommit 2d9e8130f97793075766d127e7efa2f9f384d9bc[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 21:42:05 2021 +0900
+
+    [feat] WishRepository 추가
+
+[33mcommit 843cdd58962cd200098beb4ba0b1afc993854ee9[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 21:41:41 2021 +0900
+
+    [feat] post 저장 기능 추가
+
+[33mcommit 4d1b6d30cb2b1023ec5729edc08e708551e60081[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 21:41:08 2021 +0900
+
+    [fix] 초기화 생성자 추가
+
+[33mcommit 5bf079cc206876ffe8a566f3fbab60fe1f8f827f[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 21:00:47 2021 +0900
+
+    [feat] SuccessResult 생성
+
+[33mcommit 1fcc0b276b5faa6a9cda44687e15f2bf255f7004[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 20:19:52 2021 +0900
+
+    [fix] pet isAdopted 타입 boolean 변경
+
+[33mcommit c64a5cdf54e92facd1f17dc6f439571a34c7900c[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 20:11:51 2021 +0900
+
+    [fix] condition 변수 추가
+
+[33mcommit 3c9cf8afec2718f615b08f1af1634fc5a9d3dd51[m
+Merge: cb05460 227ea43
+Author: Jieun Song <80088918+wldms2494@users.noreply.github.com>
+Date:   Wed Oct 27 21:38:09 2021 +0900
+
+    Merge pull request #3 from hanhae99-final-project-13/feature/signup
+    
+    [feat]회원가입 로그인 CORS해결 추가
+
+[33mcommit 227ea435416f1f0d035da1ee3b7e0a46ba53bbe6[m
+Author: Jieun Song <80088918+wldms2494@users.noreply.github.com>
+Date:   Wed Oct 27 21:21:42 2021 +0900
+
+    [feat] 로그인 기능, Cors 해결 추가
+
+[33mcommit cb05460d7cab64a429f0c5073f0946a04a93867d[m
+Merge: 3a6c8e0 eb6338d
+Author: Choi Seon Kang <42162127+zzangoobrother@users.noreply.github.com>
+Date:   Wed Oct 27 18:31:39 2021 +0900
+
+    Merge pull request #2 from hanhae99-final-project-13/feature/post
+    
+    [fix] pet, wish 기능 추가 및 post 수정
+
+[33mcommit eb6338d0fee6f418453c3107e57a82ee4cd0dd71[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 18:26:07 2021 +0900
+
+    [fix] PetSex enum 수정
+
+[33mcommit 6e235ff1ac44592eda62d6e6b9f7f83d44b77a46[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 17:32:00 2021 +0900
+
+    [feat] 게시글 상세페이지 response 생성 및 기능 추가
+
+[33mcommit e3aff6022a2bbfe77a897aa92e950523abbaeea3[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 16:19:30 2021 +0900
+
+    [feat] exception 기본 세팅
+
+[33mcommit 1d5967082bec3189fe02ad5541fb24513db4d722[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 16:00:26 2021 +0900
+
+    [feat] pet 생성자 기능 추가
+
+[33mcommit d2b9d6e6fda10f8dd428680d68b4b6903098b5b4[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 15:41:22 2021 +0900
+
+    [feat] PetSex 유기견 성별 enum 생성
+
+[33mcommit 522bc66297219e82932f1ba135ba4eabc610970c[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 15:28:38 2021 +0900
+
+    [feat] PetRequestDto 생성
+
+[33mcommit 829bd839aff362076f4eaef8cb5a454127b4afbe[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 15:22:54 2021 +0900
+
+    [feat] Post 클래스 추가 메소드 기능 추가
+
+[33mcommit 9c227ac53e5203a468f84a48f9ac657d4680d83b[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 13:11:04 2021 +0900
+
+    [feat] PostRepository 생성
+
+[33mcommit c908bc040bc3ae632519d42ff37741637f53f379[m
+Merge: 501a7f9 3a6c8e0
+Author: Jieun Song <80088918+wldms2494@users.noreply.github.com>
+Date:   Wed Oct 27 11:17:00 2021 +0900
+
+    Merge branch 'develop' of https://github.com/hanhae99-final-project-13/docking-final-project into feature/signup
+
+[33mcommit 501a7f976c4b5a6c5e59d1b49634a35ef7518a82[m
+Author: Jieun Song <80088918+wldms2494@users.noreply.github.com>
+Date:   Wed Oct 27 11:16:25 2021 +0900
+
+    [fix] UserController 회원등록 오류수정
+
+[33mcommit 3a6c8e08ff27f7f9cfbdf4051e3b0ee532b97063[m
+Merge: f56a841 766ab8b
+Author: Choi Seon Kang <42162127+zzangoobrother@users.noreply.github.com>
+Date:   Wed Oct 27 11:11:12 2021 +0900
+
+    Merge pull request #1 from hanhae99-final-project-13/feature/post
+    
+    [feat] post 기본 클래스 생성
+
+[33mcommit 766ab8bc383e8f1e331b007d333f548b60c0cbaa[m
+Merge: e466721 65f2b9f
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 11:02:28 2021 +0900
+
+    Merge branch 'master' of github.com:/zzangoobrother/docking-final-project into feature/post
+
+[33mcommit e4667215d082021e604e7b3ffc481c9c9598b393[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 11:01:22 2021 +0900
+
+    [fix] pet 수정
+
+[33mcommit 372a0317aee86b84260512cab65d299506164d45[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 09:56:51 2021 +0900
+
+    [feat] post controller, service 클래스 생성
+
+[33mcommit 218519864022fe504b3cc4a4d5094ae38d9667a0[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 09:24:47 2021 +0900
+
+    [feat] wish model 생성
+
+[33mcommit b6666dcd4296dce2a71335ccc988196ff3eeec5a[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 02:49:51 2021 +0900
+
+    [feat] pet model 변수들 구현
+
+[33mcommit b97df6ea9aa412c4609a419caa3f19e6b111b345[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 02:44:18 2021 +0900
+
+    [feat] post model 생성
+
+[33mcommit 9e75f79479937a659e92e85643ce6a9c5456d171[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Wed Oct 27 02:24:03 2021 +0900
+
+    [feat] 공통사용 Timestamped 기능 구현
+
+[33mcommit 058927863f8a226c1ed90647e62cef19d75804d2[m
+Author: Jieun Song <80088918+wldms2494@users.noreply.github.com>
+Date:   Wed Oct 27 01:22:52 2021 +0900
+
+    [fix] UserService 회원등록 오류수정
+
+[33mcommit 06fd760c45303d7ac40499d3c6266a8bbff0b492[m
+Author: Jieun Song <80088918+wldms2494@users.noreply.github.com>
+Date:   Wed Oct 27 01:07:32 2021 +0900
+
+    [feat] UserService 회원등록 추가
+
+[33mcommit 6cc98122adb05b1554afd6736f029c64acf4302f[m
+Author: Jieun Song <80088918+wldms2494@users.noreply.github.com>
+Date:   Tue Oct 26 23:58:57 2021 +0900
+
+    [feat] User 테이블 추가
+
+[33mcommit 65f2b9f7f662f07b6a3d8753bf2dc9e12b32eea5[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: Jieun Song <80088918+wldms2494@users.noreply.github.com>
+Date:   Tue Oct 26 23:09:35 2021 +0900
+
+    [feat] userController 추가
+
+[33mcommit f56a8416dbe3d279f710dfd44ebbac94696a4f25[m[33m ([m[1;31morigin/release[m[33m, [m[1;31morigin/hotfix[m[33m)[m
+Merge: 300f346 d81e585
+Author: zzangoobrother <com1368@naver.com>
+Date:   Tue Oct 26 22:36:52 2021 +0900
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 300f346a6921d2789103fe8c0fb949fb01f60e43[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Tue Oct 26 22:36:29 2021 +0900
+
+    [feat] 디렉토리 및 model 생성
+
+[33mcommit d81e585b7f604cec2659c2d425e5a141fca216af[m
+Author: Choi Seon Kang <42162127+zzangoobrother@users.noreply.github.com>
+Date:   Tue Oct 26 22:19:04 2021 +0900
+
+    Create README.md
+
+[33mcommit f9f66d6ffeeb39cfc2e0b0d38f0625cc1c00d701[m
+Author: zzangoobrother <com1368@naver.com>
+Date:   Tue Oct 26 22:17:23 2021 +0900
+
+    [feat] project setting
