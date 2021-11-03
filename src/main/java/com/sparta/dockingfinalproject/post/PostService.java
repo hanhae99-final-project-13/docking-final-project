@@ -62,6 +62,7 @@ public class PostService {
     }
 
     Map<String, Object> data = new HashMap<>();
+
     data.put("postList", postList);
     data.put("alarmCount",
     alarmRepositoroy.findAllByUserAndStatusTrueOrderByCreatedAtDesc(userDetails.getUser()));
