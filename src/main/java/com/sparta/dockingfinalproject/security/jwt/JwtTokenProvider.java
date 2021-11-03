@@ -34,8 +34,10 @@ public class JwtTokenProvider {
     }
 
     // 토큰 생성
-    public String createToken(String userPk) {
+    public String createToken(String userPk, String username) {
+
         Claims claims = Jwts.claims().setSubject(userPk);
+        claims.put("username", username);
 
         Date now = new Date();
 
@@ -59,7 +61,7 @@ public class JwtTokenProvider {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("X-AUTH-TOKEN");
+        return request.getHeader("Authorization");
     }
 
     // 토큰의 유효성 + 만료일자 확인
