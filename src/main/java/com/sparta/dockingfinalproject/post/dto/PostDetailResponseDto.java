@@ -17,6 +17,7 @@ public class PostDetailResponseDto {
   private String lostLocation;
   private String ownerType;
   private String phone;
+  private String address;
   private String tag;
   private String url;
   private String img;
@@ -33,6 +34,7 @@ public class PostDetailResponseDto {
             .lostLocation(pet.getLostLocation())
             .ownerType(pet.getOwnerType())
             .phone(pet.getPhone())
+            .address(pet.getAddress())
             .tag(pet.getTag())
             .url(pet.getUrl())
             .img(pet.getImg())
