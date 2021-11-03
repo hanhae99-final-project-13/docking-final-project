@@ -37,8 +37,6 @@ public class PostService {
   private final CommentRepository commentRepository;
   private final AlarmRepositoroy alarmRepositoroy;
 
-  Map<String, String> data = new HashMap<>();
-
   public PostService(PostRepository postRepository, WishRepository wishRepository,
       PetRepository petRepository, CommentRepository commentRepository,
       AlarmRepositoroy alarmRepositoroy) {
@@ -71,23 +69,24 @@ public class PostService {
 
   @Transactional
   public Map<String, Object> getPost(Long postId, UserDetailsImpl userDetails) {
-    Post findPost = postRepository.findById(postId).orElseThrow(
-        () -> new DockingException(ErrorCode.POST_NOT_FOUND)
-    );
-
-    Optional<Wish> findWish = wishRepository.findAllByUserAndPost(userDetails.getUser(), findPost);
+    Post findPost = bringPost(postId);
+    Long userId = userDetails.getUser().getUserId();
+    Optional<Wish> findWish = null;
 
     boolean heart = false;
-    if (findWish.isPresent()) {
-      heart = true;
+    if (userId != null) {
+      findWish = wishRepository.findAllByUserAndPost(userDetails.getUser(), findPost);
+      if (findWish.isPresent()) {
+        heart = true;
+      }
+      findPost.addViewCount();
     }
-    findPost.addViewCount();
+
     PostDetailResponseDto postResponseDto = PostDetailResponseDto
         .getPostDetailResponseDto(findPost, heart);
 
     //Comment return data 가공하기
     ArrayList<CommentResultDto> commentDtoList = new ArrayList<>();
-    CommentResultDto commentResultDto = new CommentResultDto();
 
     List<CommentResponseDto> commentResponseDto = commentRepository.findAllByPost(findPost);
     for (CommentResponseDto crd : commentResponseDto) {
@@ -97,7 +96,7 @@ public class PostService {
       LocalDateTime modifiedAt = crd.getModifiedAt();
       String nickname = crd.getUser().getNickname();
 
-      commentResultDto = new CommentResultDto(commentId, comment, nickname, createdAt, modifiedAt);
+      CommentResultDto commentResultDto = new CommentResultDto(commentId, comment, nickname, createdAt, modifiedAt);
       commentDtoList.add(commentResultDto);
     }
 
@@ -112,41 +111,54 @@ public class PostService {
   public Map<String, Object> addPost(PetRequestDto petRequestDto, UserDetailsImpl userDetails) {
     Pet pet = new Pet(petRequestDto);
     Pet savePet = petRepository.save(pet);
+    Long userId = userDetails.getUser().getUserId();
 
+    if (userId != null) {
     Post post = new Post(savePet, userDetails.getUser());
     postRepository.save(post);
+    } else {
+      throw new DockingException(ErrorCode.NO_AUTHORIZATION);
+    }
 
     return SuccessResult.success(new ArrayList<>());
   }
 
   @Transactional
-  public Map<String, Object> updatePost(Long postId, PetRequestDto petRequestDto) {
-    Post findPost = postRepository.findById(postId).orElseThrow(
-        () -> new DockingException(ErrorCode.POST_NOT_FOUND)
-    );
+  public Map<String, Object> updatePost(Long postId, PetRequestDto petRequestDto, UserDetailsImpl userDetails) {
+    Post findPost = bringPost(postId);
+    Map<String, String> data = new HashMap<>();
+    Long userId = userDetails.getUser().getUserId();
+    Long writerId = findPost.getUser().getUserId();
 
+    if (userId.equals(writerId)) {
     Pet pet = findPost.getPet();
     pet.update(petRequestDto);
     findPost.addPet(pet);
 
-    Map<String, String> data = new HashMap<>();
     data.put("msg", "수정 완료");
+    } else {
+      throw new DockingException(ErrorCode.NO_AUTHORIZATION);
+    }
     return SuccessResult.success(data);
   }
 
   @Transactional
-  public Map<String, Object> deletePost(Long postId) {
-    Post findPost = postRepository.findById(postId).orElseThrow(
-        () -> new DockingException(ErrorCode.POST_NOT_FOUND)
-    );
-
+  public Map<String, Object> deletePost(Long postId, UserDetailsImpl userDetails) {
+    Post findPost = bringPost(postId);
     Pet findPet = findPost.getPet();
+    Long userId = userDetails.getUser().getUserId();
+    Long writerId = findPost.getUser().getUserId();
 
+    Map<String, Object> data = new HashMap<>();
+
+    if (userId.equals(writerId)) {
     postRepository.deleteById(findPost.getPostId());
     petRepository.deleteById(findPet.getPetId());
 
-    Map<String, Object> data = new HashMap<>();
     data.put("msg", "삭제 완료");
+    } else {
+      throw new DockingException(ErrorCode.NO_AUTHORIZATION);
+    }
     return SuccessResult.success(data);
   }
 
@@ -160,6 +172,8 @@ public class PostService {
 
     Post findPost = bringPost(postId);
     Long writerId = findPost.getUser().getUserId();
+
+    Map<String, String> data = new HashMap<>();
 
     // 보호 상태 업데이트하기
     if (userId.equals(writerId)) {

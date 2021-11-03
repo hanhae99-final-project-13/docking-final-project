@@ -39,14 +39,14 @@ public class PostController {
   // 게시글 수정
   @PatchMapping("/posts/{postId}")
   public Map<String, Object> updatePost(@PathVariable Long postId,
-      @RequestBody PetRequestDto petRequestDto) {
-    return postService.updatePost(postId, petRequestDto);
+      @RequestBody PetRequestDto petRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    return postService.updatePost(postId, petRequestDto, userDetails);
   }
 
   // 게시글 삭제
   @DeleteMapping("/posts/{postId}")
-  public Map<String, Object> deletePost(@PathVariable Long postId) {
-    return postService.deletePost(postId);
+  public Map<String, Object> deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    return postService.deletePost(postId, userDetails);
   }
 
   // 보호상태 변경

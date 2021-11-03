@@ -178,7 +178,7 @@ class PostServiceTest {
         .isAdopted("true")
         .build();
 
-    postService.updatePost(post.getPostId(), petRequestDto);
+    postService.updatePost(post.getPostId(), petRequestDto, userDetails);
 
     Pet updatePet = post.getPet();
     assertThat(updatePet.getBreed()).isEqualTo("요크셔테리어");
@@ -200,7 +200,7 @@ class PostServiceTest {
     when(petRepository.findById(10L)).thenReturn(Optional.of(pet));
     when(postRepository.findById(100L)).thenReturn(Optional.of(post));
 
-    postService.deletePost(post.getPostId());
+    postService.deletePost(post.getPostId(), userDetails);
 
     assertThat(postRepository.findById(post.getPostId()).get().getPostId()).isNull();
   }
