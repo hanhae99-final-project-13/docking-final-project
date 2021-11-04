@@ -3,6 +3,8 @@ package com.sparta.dockingfinalproject.fosterForm;
 import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
+import com.sparta.dockingfinalproject.fosterForm.dto.FormPreviewDto;
+import com.sparta.dockingfinalproject.fosterForm.dto.FormsInPostDto;
 import com.sparta.dockingfinalproject.fosterForm.dto.FosterFormRequestDto;
 import com.sparta.dockingfinalproject.fosterForm.dto.FosterFormResultDto;
 import com.sparta.dockingfinalproject.fosterForm.dto.FosterPreviewDto;
@@ -108,6 +110,36 @@ public class FosterFormService {
 
     Map<String, Object> data = new HashMap<>();
     data.put("fosterFormPreviewList", fosterPreviewDtos);
+    return SuccessResult.success(data);
+  }
+
+  //내가 올린 post 목록조회
+  @Transactional
+  public Map<String, Object> getMyPosts(UserDetailsImpl userDetails) {
+    if (userDetails == null) {
+      throw new DockingException(ErrorCode.USER_NOT_FOUND);
+    }
+
+    User user = userDetails.getUser();
+
+    List<Post> myPosts = postRepository.findAllByUser(user);
+    List<FormsInPostDto> formsInPostDtos = new ArrayList<>();
+
+    for (Post post : myPosts) {
+      PostPreviewDto postPreviewDto = PostPreviewDto.of(post);
+      List<FormPreviewDto> formPreviewDtos = new ArrayList<>();
+      List<FosterForm> fosterForms = post.getFormList();
+
+      for (FosterForm fosterForm : fosterForms) {
+        FormPreviewDto formPreviewDto = FormPreviewDto.of(fosterForm);
+        formPreviewDtos.add(formPreviewDto);
+      }
+
+      FormsInPostDto formsInPostDto = FormsInPostDto.of(postPreviewDto, formPreviewDtos);
+      formsInPostDtos.add(formsInPostDto);
+    }
+    Map<String, Object> data = new HashMap<>();
+    data.put("formsInPostsPreview", formsInPostDtos);
     return SuccessResult.success(data);
   }
 }

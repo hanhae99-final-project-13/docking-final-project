@@ -26,15 +26,21 @@ public class FosterFormController {
 
   // 입양신청서 상세 조회
   @GetMapping("/requests/{fosterFormId}")
-  public Map<String, Object> getFosterForm(@PathVariable Long fosterFormId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+  public Map<String, Object> getFosterForm(@PathVariable Long fosterFormId,
+      @AuthenticationPrincipal UserDetailsImpl userDetails) {
     return fosterFormService.getFosterForm(fosterFormId, userDetails);
   }
 
-
   // 내가 보낸 입양신청서 목록 조회
   @GetMapping("/requests")
-  public Map<String, Object> getMyFosterForms(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+  public Map<String, Object> getMyFosterForms(
+      @AuthenticationPrincipal UserDetailsImpl userDetails) {
     return fosterFormService.getMyFosterForms(userDetails);
   }
 
+  // 내가 올린 post 목록 조회
+  @GetMapping("/{userId}/myposts")
+  public Map<String, Object> getMyPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    return fosterFormService.getMyPosts(userDetails);
+  }
 }
