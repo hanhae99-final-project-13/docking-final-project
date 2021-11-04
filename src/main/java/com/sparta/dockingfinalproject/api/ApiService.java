@@ -261,7 +261,7 @@ public class ApiService {
     signupRequestDto.setNickname("관리자");
     signupRequestDto.setEmail("administrator@sparta.com");
 
-    userService.registerUser(signupRequestDto, "");
+    userService.registerUser(signupRequestDto);
 
     // 관리자 로그인
     userRequestDto.setUsername("administrator");

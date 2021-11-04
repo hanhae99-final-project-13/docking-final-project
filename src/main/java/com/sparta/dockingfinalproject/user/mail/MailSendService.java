@@ -41,11 +41,11 @@ public class MailSendService {
       return key.toString();
   }
 
-  public String sendSimpleMessage(String to) throws Exception {
-    MimeMessage message = creatMessage(to);
+  public String sendSimpleMessage(String to) {
     try {
+      MimeMessage message = creatMessage(to);
       javaMailSender.send(message);
-    } catch (MailException e){
+    } catch (Exception e) {
       e.printStackTrace();
     }
     return ePw;
