@@ -1,6 +1,5 @@
 package com.sparta.dockingfinalproject.post;
 
-import com.sparta.dockingfinalproject.alarm.Alarm;
 import com.sparta.dockingfinalproject.alarm.AlarmRepositoroy;
 import com.sparta.dockingfinalproject.comment.CommentRepository;
 import com.sparta.dockingfinalproject.comment.dto.CommentResponseDto;
@@ -54,70 +53,85 @@ public class PostService {
     Page<Post> postPage = postRepository.findAllByOrderByModifiedAtDesc(pageable);
     List<Post> posts = postPage.getContent();
 
+    Map<String, Object> data = new HashMap<>();
+    data.put("postList", getPostList(posts));
+    data.put("alarmCount", getAlarmCount(userDetails));
+
+    return SuccessResult.success(data);
+  }
+
+  private List<PostDetailResponseDto> getPostList(List<Post> posts) {
     List<PostDetailResponseDto> postList = new ArrayList<>();
     for (Post post : posts) {
-      PostDetailResponseDto postDetailResponseDto = PostDetailResponseDto.getPostDetailResponseDto(
-          post);
+      PostDetailResponseDto postDetailResponseDto = PostDetailResponseDto.getPostDetailResponseDto(post);
       postList.add(postDetailResponseDto);
     }
+    return postList;
+  }
 
-    Map<String, Object> data = new HashMap<>();
-
-    data.put("postList", postList);
-    data.put("alarmCount",
-    alarmRepositoroy.findAllByUserAndStatusTrueOrderByCreatedAtDesc(userDetails.getUser()));
-    return SuccessResult.success(data);
+  private int getAlarmCount(UserDetailsImpl userDetails) {
+    if (userDetails != null) {
+      return alarmRepositoroy.findAllByUserAndStatusTrueOrderByCreatedAtDesc(userDetails.getUser()).size();
+    }
+    return 0;
   }
 
   @Transactional
   public Map<String, Object> getPost(Long postId, UserDetailsImpl userDetails) {
     Post findPost = bringPost(postId);
-//    Long userId = userDetails.getUser().getUserId();
-    Optional<Wish> findWish = null;
+    boolean heart = getHeart(userDetails, findPost);
 
-    boolean heart = false;
+    findPost.addViewCount();
+
+    PostDetailResponseDto postResponseDto = PostDetailResponseDto.getPostDetailResponseDto(findPost, heart);
+
+    Map<String, Object> data = new HashMap<>();
+    data.put("post", postResponseDto);
+    data.put("commentList", getCommentList(findPost));
+
+    return SuccessResult.success(data);
+  }
+
+  private boolean getHeart(UserDetailsImpl userDetails, Post findPost) {
     if (userDetails != null) {
-      findWish = wishRepository.findAllByUserAndPost(userDetails.getUser(), findPost);
+      Optional<Wish> findWish = wishRepository.findAllByUserAndPost(userDetails.getUser(), findPost);
       if (findWish.isPresent()) {
-        heart = true;
+        return true;
       }
-      findPost.addViewCount();
     }
+    return false;
+  }
 
-    PostDetailResponseDto postResponseDto = PostDetailResponseDto
-        .getPostDetailResponseDto(findPost, heart);
-
-    //Comment return data 가공하기
+  //Comment return data 가공하기
+  private ArrayList<CommentResultDto> getCommentList(Post findPost) {
     ArrayList<CommentResultDto> commentDtoList = new ArrayList<>();
 
     List<CommentResponseDto> commentResponseDto = commentRepository.findAllByPost(findPost);
     for (CommentResponseDto crd : commentResponseDto) {
-      Long commentId = crd.getCommentId();
-      String comment = crd.getComment();
-      LocalDateTime createdAt = crd.getCreatedAt();
-      LocalDateTime modifiedAt = crd.getModifiedAt();
-      String nickname = crd.getUser().getNickname();
-
-      CommentResultDto commentResultDto = new CommentResultDto(commentId, comment, nickname, createdAt, modifiedAt);
+      CommentResultDto commentResultDto = getCommentResult(crd);
       commentDtoList.add(commentResultDto);
     }
+    return commentDtoList;
+  }
 
-    Map<String, Object> data = new HashMap<>();
-    data.put("post", postResponseDto);
-    data.put("commentList", commentDtoList);
+  private CommentResultDto getCommentResult(CommentResponseDto crd) {
+    Long commentId = crd.getCommentId();
+    String comment = crd.getComment();
+    LocalDateTime createdAt = crd.getCreatedAt();
+    LocalDateTime modifiedAt = crd.getModifiedAt();
+    String nickname = crd.getUser().getNickname();
 
-    return SuccessResult.success(data);
+    return new CommentResultDto(commentId, comment, nickname, createdAt, modifiedAt);
   }
 
   @Transactional
   public Map<String, Object> addPost(PetRequestDto petRequestDto, UserDetailsImpl userDetails) {
     Pet pet = new Pet(petRequestDto);
     Pet savePet = petRepository.save(pet);
-    Long userId = userDetails.getUser().getUserId();
 
-    if (userId != null) {
-    Post post = new Post(savePet, userDetails.getUser());
-    postRepository.save(post);
+    if (userDetails != null) {
+      Post post = new Post(savePet, userDetails.getUser());
+      postRepository.save(post);
     } else {
       throw new DockingException(ErrorCode.NO_AUTHORIZATION);
     }
@@ -133,11 +147,11 @@ public class PostService {
     Long writerId = findPost.getUser().getUserId();
 
     if (userId.equals(writerId)) {
-    Pet pet = findPost.getPet();
-    pet.update(petRequestDto);
-    findPost.addPet(pet);
+      Pet pet = findPost.getPet();
+      pet.update(petRequestDto);
+      findPost.addPet(pet);
 
-    data.put("msg", "수정 완료");
+      data.put("msg", "수정 완료");
     } else {
       throw new DockingException(ErrorCode.NO_AUTHORIZATION);
     }
@@ -154,10 +168,10 @@ public class PostService {
     Map<String, Object> data = new HashMap<>();
 
     if (userId.equals(writerId)) {
-    postRepository.deleteById(findPost.getPostId());
-    petRepository.deleteById(findPet.getPetId());
+      postRepository.deleteById(findPost.getPostId());
+      petRepository.deleteById(findPet.getPetId());
 
-    data.put("msg", "삭제 완료");
+      data.put("msg", "삭제 완료");
     } else {
       throw new DockingException(ErrorCode.NO_AUTHORIZATION);
     }

@@ -41,7 +41,7 @@ public class UserService {
   }
 
   //회원 등록
-  public Map<String, Object> registerUser(SignupRequestDto requestDto) throws Exception {
+  public Map<String, Object> registerUser(SignupRequestDto requestDto) {
 
 	String username = requestDto.getUsername();
 	String password = requestDto.getPassword();

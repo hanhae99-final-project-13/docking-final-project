@@ -3,6 +3,7 @@ package com.sparta.dockingfinalproject.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.wish.Wish;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -13,6 +14,7 @@ import java.util.List;
 @ToString
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class User {
     @Id
