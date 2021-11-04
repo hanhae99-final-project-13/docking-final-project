@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class PhoneRequestDto {
 
   private String phoneNumber;
-  private String randomNumber;
+  private int randomNumber;
 
 
 }

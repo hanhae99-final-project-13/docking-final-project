@@ -32,16 +32,14 @@ public class UserService {
   private final PhoneService phoneService;
 
 
-
-
   public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-	  JwtTokenProvider jwtTokenProvider, MailSendService mailSendService, PhoneService phoneService) {
+	  JwtTokenProvider jwtTokenProvider, MailSendService mailSendService,
+	  PhoneService phoneService) {
 	this.userRepository = userRepository;
 	this.passwordEncoder = passwordEncoder;
 	this.jwtTokenProvider = jwtTokenProvider;
 	this.mailSendService = mailSendService;
 	this.phoneService = phoneService;
-
 
 
   }
@@ -56,28 +54,29 @@ public class UserService {
 	String email = requestDto.getEmail();
 	String userImgUrl = "이미지url";
 	String authKey = mailSendService.sendSimpleMessage(email);
-	String randomNumber = "1234";
 
 
-	if (username == null) {
-	  throw new DockingException(ErrorCode.USER_NOT_FOUND);
+	if (username == "") {
+	  throw new DockingException(ErrorCode.USERNAME_NOT_FOUND);
 	}
-	if (email == null) {
-	  throw new DockingException(ErrorCode.USER_NOT_FOUND);
+	if (email == "") {
+	  throw new DockingException(ErrorCode.EMAIL_NOT_FOUND);
 	}
-	if (nickname == null) {
-	  throw new DockingException(ErrorCode.USER_NOT_FOUND);
+	if (nickname == "") {
+	  throw new DockingException(ErrorCode.NICKNAME_NOT_FOUND);
 	}
-
 	if (!password.equals(pwcheck)) {
 	  throw new DockingException(ErrorCode.PASSWORD_MISS_MATCH);
 	}
+
+//	if(!requestDto.isAuthCheck() == true  ) {
+//	  throw new DockingException(ErrorCode.EMAIL_NOT_FOUND);
+//	}
 	//패스워드 인코딩 완료
 	password = passwordEncoder.encode(password);
 
-	User user = new User(username, password, nickname, email, userImgUrl, authKey,randomNumber);
+	User user = new User(username, password, nickname, email, userImgUrl, authKey);
 	userRepository.save(user);
-
 
 	//data에 메세지넣기
 	Map<String, Object> data = new HashMap<>();
@@ -96,6 +95,8 @@ public class UserService {
 //          () -> new IllegalArgumentException("이메일 인증 부터 해주세요")
 //      );
 
+
+
 	List<Map<String, Object>> applyList = new ArrayList<>();
 	Map<String, Object> apply = new HashMap<>();
 
@@ -109,7 +110,8 @@ public class UserService {
 	data.put("userImgUrl", user.getUserImgUrl());
 	data.put("classCount", 5);
 	data.put("alarmCount", 5);
-	data.put("token", jwtTokenProvider.createToken(requestDto.getUsername(), requestDto.getUsername()));
+	data.put("token",
+		jwtTokenProvider.createToken(requestDto.getUsername(), requestDto.getUsername()));
 	data.put("applyList", applyList);
 
 	apply.put("applyState", "디폴트");
@@ -134,30 +136,28 @@ public class UserService {
 	return SuccessResult.success(data);
   }
 
-
 //로그인 체크
-//예외처리???????????
 
   public Map<String, Object> loginCheck(UserDetailsImpl userDetails) {
 	Map<String, Object> data = new HashMap<>();
 
-	if(userDetails !=null){
-	List<Map<String, Object>> applyList = new ArrayList<>();
+	if (userDetails != null) {
+	  List<Map<String, Object>> applyList = new ArrayList<>();
 
+	  Map<String, Object> apply = new HashMap<>();
 
-	Map<String, Object> apply = new HashMap<>();
+	  data.put("nickname", userDetails.getUser().getNickname());
+	  data.put("email", userDetails.getUser().getEmail());
+	  data.put("userImgUrl", userDetails.getUser().getUserImgUrl());
+	  data.put("classCount", 5);
+	  data.put("alarmCount", 5);
+	  data.put("applyList", applyList);
 
-	data.put("nickname", userDetails.getUser().getNickname());
-	data.put("email", userDetails.getUser().getEmail());
-	data.put("userImgUrl", userDetails.getUser().getUserImgUrl());
-	data.put("classCount", 5);
-	data.put("alarmCount", 5);
-	data.put("applyList", applyList);
+	  apply.put("applyState", "디폴트");
+	  apply.put("postId", "디폴트");
 
-	apply.put("applyState", "디폴트");
-	apply.put("postId", "디폴트");
-
-	applyList.add(apply); } else{
+	  applyList.add(apply);
+	} else {
 	  throw new DockingException(ErrorCode.USER_NOT_FOUND);
 	}
 
@@ -167,34 +167,32 @@ public class UserService {
   }
 
 
-
   public Map<String, Object> idDoubleCheck(String username) {
+	//빈값은 프론트에서 처리됨
 
 	Map<String, Object> data = new HashMap<>();
 	Optional<User> found = userRepository.findByUsername(username);
 
-	if(!found.isPresent()){
+	if (!found.isPresent()) {
 	  data.put("msg", "아이디 중복 확인 완료");
 	} else {
-		throw new DockingException(ErrorCode.USERNAME_DUPLICATE);
-	  }
+	  throw new DockingException(ErrorCode.USERNAME_DUPLICATE);
+	}
 
 	return SuccessResult.success(data);
 
-	}
-
+  }
 
 
   public Map<String, Object> nicknameDoubleCheck(String nickname) {
 
-
 	Map<String, Object> data = new HashMap<>();
 	Optional<User> found = userRepository.findByNickname(nickname);
 
-	if(!found.isPresent()){
+	if (!found.isPresent()) {
 	  data.put("msg", "닉네임 중복 확인 완료");
 	} else {
-	  throw new DockingException(ErrorCode.USERNAME_DUPLICATE);
+	  throw new DockingException(ErrorCode.NICKNAME_DUPLICATE);
 	}
 
 	return SuccessResult.success(data);
@@ -203,15 +201,12 @@ public class UserService {
   }
 
 
-
-
   //이메일 인증 확인
   @Transactional
   public void singUpConfirm(String email, String authKey) throws Exception {
 	User user = userRepository.findByEmail(email).orElseThrow(
 		() -> new IllegalArgumentException("인증번호가 만료되었습니다. 다시 회원가입 해주세요")
 	);
-
 	if (user.getAuthKey().equalsIgnoreCase(authKey)) {
 	  user.confirm();
 	} else {
@@ -222,7 +217,7 @@ public class UserService {
 
   //휴대폰 인증 확인
 
-  public Map<String, Object> phoneConfirm(UserDetailsImpl userDetails,PhoneRequestDto requestDto) {
+  public Map<String, Object> phoneConfirm(UserDetailsImpl userDetails, PhoneRequestDto requestDto) {
 	Map<String, Object> data = new HashMap<>();
 
 
@@ -230,13 +225,17 @@ public class UserService {
 		() -> new DockingException(ErrorCode.USER_NOT_FOUND)
 	);
 
-	System.out.println("클라이언트인증번호 "+requestDto.getRandomNumber());
+	System.out.println("클라이언트인증번호 " + requestDto.getRandomNumber());
 
- 	String randomNumber2 ="1234";
-	//String randomNumber2=phoneService.sendMessage(requestDto); //randomNumber2 = 생성된 인증번호 1234, randomnumber 는 clien로 부터 온 번호
-	if(requestDto.getRandomNumber().equals(randomNumber2)){
+// 	String randomNumber2 ="1234";
+	int randomNumber2=phoneService.sendMessage(requestDto);
+	// randomNumber2 = 생성된 인증번호 1234, randomnumber 는 clien로 부터 온 번호
+	if (requestDto.getRandomNumber() == (randomNumber2)) {
 
-	data.put("msg", "인증번호가 일치합니다 ");
+
+	  user.setRandomNumber(requestDto.getRandomNumber());
+	  userRepository.save(user);
+	  data.put("msg", "인증번호가 일치합니다 ");
 
 
 	} else {

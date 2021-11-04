@@ -15,16 +15,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Service
 public class PhoneService {
 
-  public static final String randomNumber = creatKey();
+  public static final int randomNumber = creatKey();
 
 
-  private static String creatKey() {
-	return "1234";
+  private static int creatKey() {
+	int randomNumber = (int)(Math.random() * (99999 - 10000 + 1)) + 10000;
+	System.out.println(randomNumber);
+	return randomNumber;
 
   }
 
 
-  public String sendMessage ( PhoneRequestDto requestDto) {
+  public int sendMessage ( PhoneRequestDto requestDto) {
 
 	  String api_key = "NCSSX04M9KLZMYOS";
 

@@ -1,6 +1,8 @@
 package com.sparta.dockingfinalproject.user.phoneMessage;
 
 import com.sparta.dockingfinalproject.common.SuccessResult;
+import com.sparta.dockingfinalproject.exception.DockingException;
+import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.User;
 import com.sparta.dockingfinalproject.user.UserRepository;
@@ -30,22 +32,29 @@ public class PhoneController {
   }
 
 
-  @PostMapping("/checkNumber")
-  public void sendMessage(@RequestBody PhoneRequestDto requestDto){
-//	Map<String, Object> result = new HashMap<>();
+  @PostMapping("/sendNumber")
+  public Map<String, Object> sendMessage(@RequestBody PhoneRequestDto requestDto){
+	Map<String, Object> data = new HashMap<>();
 
-	System.out.println("타고있니");
-	String randomNumber = phoneService.sendMessage(requestDto);
+	if(requestDto != null){
+
+	phoneService.sendMessage(requestDto);
+	data.put("msg", "인증 번호 발송 완료");} else {
+	  throw new DockingException(ErrorCode.NUMBER_NOT_FOUND);
+
+	}
+
+	return SuccessResult.success(data);
 
   }
 
 
 @PostMapping("/phoneConfirm")
   public Map<String, Object> phoneConfirm(@AuthenticationPrincipal UserDetailsImpl userDetails,@RequestBody PhoneRequestDto requestDto){
+  Map<String, Object> data = new HashMap<>();
 
 	userService.phoneConfirm(userDetails, requestDto);
 
-  	Map<String, Object> data = new HashMap<>();
   	data.put("msg", "인증번호가 확인되었습니다");
 
 
