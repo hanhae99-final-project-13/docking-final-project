@@ -56,13 +56,13 @@ public class UserService {
 	String authKey = mailSendService.sendSimpleMessage(email);
 
 
-	if (username == "") {
+	if (username.isEmpty()) {
 	  throw new DockingException(ErrorCode.USERNAME_NOT_FOUND);
 	}
-	if (email == "") {
+	if (email.isEmpty()) {
 	  throw new DockingException(ErrorCode.EMAIL_NOT_FOUND);
 	}
-	if (nickname == "") {
+	if (nickname.isEmpty()) {
 	  throw new DockingException(ErrorCode.NICKNAME_NOT_FOUND);
 	}
 	if (!password.equals(pwcheck)) {
