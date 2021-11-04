@@ -1,6 +1,7 @@
 package com.sparta.dockingfinalproject.user.mail;
 
 
+import com.sparta.dockingfinalproject.exception.DockingException;
 import java.util.Random;
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
@@ -41,7 +42,6 @@ public class MailSendService {
   }
 
   public String sendSimpleMessage(String to) throws Exception {
-
     MimeMessage message = creatMessage(to);
     try {
       javaMailSender.send(message);

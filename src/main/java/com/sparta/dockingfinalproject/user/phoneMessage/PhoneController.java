@@ -19,8 +19,10 @@ public class PhoneController {
   public void sendMessage(@RequestBody PhoneRequestDto requestDto){
 //	Map<String, Object> result = new HashMap<>();
 
-	 phoneService.sendMessage(requestDto);
 	System.out.println("타고있니");
+	String randomNumber = "12345";
+
+   	phoneService.sendMessage(requestDto, randomNumber);
 
   }
 

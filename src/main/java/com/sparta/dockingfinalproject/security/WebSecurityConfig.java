@@ -63,13 +63,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	http.authorizeRequests()
 
-
-
-
-
-
-
-
 		// login 없이 허용
 		.antMatchers("/user/login").permitAll()
 		.antMatchers("/signup").permitAll()
@@ -88,20 +81,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.and()
 		.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
-
-
-
-//
-//	http.cors();
-//	http.csrf().disable()
-//		.csrf().disable()
-//		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//		.and()
-//		.authorizeRequests()
-//		.antMatchers("/").permitAll()
-//		.antMatchers("/").permitAll()
-//		.and()
-//		.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
-//			UsernamePasswordAuthenticationFilter.class);
   }
 }

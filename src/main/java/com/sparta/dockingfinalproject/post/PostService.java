@@ -1,5 +1,6 @@
 package com.sparta.dockingfinalproject.post;
 
+import com.sparta.dockingfinalproject.alarm.Alarm;
 import com.sparta.dockingfinalproject.alarm.AlarmRepositoroy;
 import com.sparta.dockingfinalproject.comment.CommentRepository;
 import com.sparta.dockingfinalproject.comment.dto.CommentResponseDto;
@@ -61,21 +62,21 @@ public class PostService {
     }
 
     Map<String, Object> data = new HashMap<>();
+
     data.put("postList", postList);
     data.put("alarmCount",
-        alarmRepositoroy.findAllByUserAndStatusTrueOrderByCreatedAtDesc(userDetails.getUser()));
-
+    alarmRepositoroy.findAllByUserAndStatusTrueOrderByCreatedAtDesc(userDetails.getUser()));
     return SuccessResult.success(data);
   }
 
   @Transactional
   public Map<String, Object> getPost(Long postId, UserDetailsImpl userDetails) {
     Post findPost = bringPost(postId);
-    Long userId = userDetails.getUser().getUserId();
+//    Long userId = userDetails.getUser().getUserId();
     Optional<Wish> findWish = null;
 
     boolean heart = false;
-    if (userId != null) {
+    if (userDetails != null) {
       findWish = wishRepository.findAllByUserAndPost(userDetails.getUser(), findPost);
       if (findWish.isPresent()) {
         heart = true;
