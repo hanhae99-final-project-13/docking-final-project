@@ -43,7 +43,7 @@ public class FosterForm {
   private String job;
 
   @Column(nullable = false)
-  private String address;
+  private String fosterAddress;
 
   @Column(nullable = false)
   private String currentPet;
@@ -84,7 +84,7 @@ public class FosterForm {
     this.gender = fosterFormrRequestDto.getGender();
     this.phone = fosterFormrRequestDto.getPhone();
     this.job = fosterFormrRequestDto.getJob();
-    this.address = fosterFormrRequestDto.getAddress();
+    this.fosterAddress = fosterFormrRequestDto.getAddress();
     this.currentPet = fosterFormrRequestDto.getCurrentPet();
     this.experience = fosterFormrRequestDto.getExperience();
     this.reason = fosterFormrRequestDto.getReason();
