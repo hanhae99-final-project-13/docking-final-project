@@ -8,6 +8,7 @@ import com.sparta.dockingfinalproject.fosterForm.dto.FosterFormResultDto;
 import com.sparta.dockingfinalproject.fosterForm.dto.FosterPreviewDto;
 import com.sparta.dockingfinalproject.post.Post;
 import com.sparta.dockingfinalproject.post.PostRepository;
+import com.sparta.dockingfinalproject.post.dto.PostPreviewDto;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.User;
 import com.sparta.dockingfinalproject.user.UserRepository;
