@@ -10,6 +10,7 @@ import com.sparta.dockingfinalproject.user.dto.PhoneRequestDto;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
 import com.sparta.dockingfinalproject.user.mail.MailSendService;
+import com.sparta.dockingfinalproject.user.phoneMessage.PhoneService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,14 +29,19 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
   private final MailSendService mailSendService;
+  private final PhoneService phoneService;
+
+
 
 
   public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-	  JwtTokenProvider jwtTokenProvider, MailSendService mailSendService) {
+	  JwtTokenProvider jwtTokenProvider, MailSendService mailSendService, PhoneService phoneService) {
 	this.userRepository = userRepository;
 	this.passwordEncoder = passwordEncoder;
 	this.jwtTokenProvider = jwtTokenProvider;
 	this.mailSendService = mailSendService;
+	this.phoneService = phoneService;
+
 
 
   }
@@ -49,8 +55,9 @@ public class UserService {
 	String nickname = requestDto.getNickname();
 	String email = requestDto.getEmail();
 	String userImgUrl = "이미지url";
-
 	String authKey = mailSendService.sendSimpleMessage(email);
+	String randomNumber = "1234";
+
 
 	if (username == null) {
 	  throw new DockingException(ErrorCode.USER_NOT_FOUND);
@@ -68,8 +75,9 @@ public class UserService {
 	//패스워드 인코딩 완료
 	password = passwordEncoder.encode(password);
 
-	User user = new User(username, password, nickname, email, userImgUrl, authKey);
+	User user = new User(username, password, nickname, email, userImgUrl, authKey,randomNumber);
 	userRepository.save(user);
+
 
 	//data에 메세지넣기
 	Map<String, Object> data = new HashMap<>();
@@ -212,9 +220,29 @@ public class UserService {
 
   }
 
+  //휴대폰 인증 확인
 
-  //핸드폰 인증 확인
-  public void confirmMessage(PhoneRequestDto requestDto) {
+  public Map<String, Object> phoneConfirm(UserDetailsImpl userDetails,PhoneRequestDto requestDto) {
+	Map<String, Object> data = new HashMap<>();
+
+
+	User user = userRepository.findByUsername(userDetails.getUser().getUsername()).orElseThrow(
+		() -> new DockingException(ErrorCode.USER_NOT_FOUND)
+	);
+
+	System.out.println("클라이언트인증번호 "+requestDto.getRandomNumber());
+
+ 	String randomNumber2 ="1234";
+	//String randomNumber2=phoneService.sendMessage(requestDto); //randomNumber2 = 생성된 인증번호 1234, randomnumber 는 clien로 부터 온 번호
+	if(requestDto.getRandomNumber().equals(randomNumber2)){
+
+	data.put("msg", "인증번호가 일치합니다 ");
+
+
+	} else {
+	  throw new DockingException(ErrorCode.NUMBER_MISS_MATCH);
+	}
+	return SuccessResult.success(data);
   }
 
 }

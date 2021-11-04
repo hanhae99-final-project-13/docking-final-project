@@ -22,6 +22,12 @@ public enum ErrorCode {
   USERNAME_MISS_MATCH(BAD_REQUEST, "아이디가 일치하지 않습니다."),
   USERNAME_DUPLICATE(BAD_REQUEST, "중복된 username이 존재합니다."),
   NICKNAME_DUPLICATE(BAD_REQUEST, "중복된 nickname이 존재합니다."),
+
+  NUMBER_MISS_MATCH(BAD_REQUEST, "인증번호가 맞지 않습니다."),
+
+
+
+
   PET_NOT_FOUND(BAD_REQUEST, "해당 유기견을 찾을 수 없습니다.");
 
   private final HttpStatus httpStatus;

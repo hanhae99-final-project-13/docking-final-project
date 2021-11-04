@@ -50,13 +50,15 @@ public class User {
     @Column(nullable = false)
     private boolean authCheck;
 
+    @Column
+    private String randomNumber;
 
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     @JsonIgnore
     private List<Wish> wishList;
 
-    public User(String username, String password, String nickname, String email, String userImgUrl, String authKey){
+    public User(String username, String password, String nickname, String email, String userImgUrl, String authKey, String randomNumber){
 
         this.username = username;
         this.password = password;
@@ -66,6 +68,7 @@ public class User {
         this.kakaoId = null;
         this.authKey = authKey;
         this.authCheck = false;
+        this.randomNumber = randomNumber;
 
     }
 
@@ -79,7 +82,8 @@ public class User {
         this.userImgUrl = userImgUrl;
         this.authKey = "";
         this.authCheck = true;
-
+        //추가
+        this.randomNumber = "";
 
     }
 
