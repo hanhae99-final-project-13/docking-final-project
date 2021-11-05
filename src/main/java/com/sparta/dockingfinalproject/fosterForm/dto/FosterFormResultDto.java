@@ -11,7 +11,7 @@ public class FosterFormResultDto {
 
   private Long fosterFormId;
   private String name;
-  private Long birthYear;
+  private Long fosterAge;
   private Sex gender;
   private String phone;
   private String job;
@@ -19,6 +19,7 @@ public class FosterFormResultDto {
   private String currentPet;
   private String experience;
   private String reason;
+  private String allergy;
   private String family;
   private String timeTogether;
   private String anxiety;
@@ -30,7 +31,7 @@ public class FosterFormResultDto {
     return FosterFormResultDto.builder()
         .fosterFormId(fosterForm.getFosterFormId())
         .name(fosterForm.getName())
-        .birthYear(fosterForm.getBirthYear())
+        .fosterAge(fosterForm.getFosterAge())
         .gender(fosterForm.getGender())
         .phone(fosterForm.getPhone())
         .job(fosterForm.getJob())
@@ -38,6 +39,7 @@ public class FosterFormResultDto {
         .currentPet(fosterForm.getCurrentPet())
         .experience(fosterForm.getExperience())
         .reason(fosterForm.getReason())
+        .allergy(fosterForm.getAllergy())
         .family(fosterForm.getFamily())
         .timeTogether(fosterForm.getTimeTogether())
         .anxiety(fosterForm.getAnxiety())

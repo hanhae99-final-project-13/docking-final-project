@@ -12,7 +12,7 @@ public class FosterFormRequestDto {
 
   private String name;
 
-  private Long birthYear;
+  private Long fosterAge;
 
   private Sex gender;
 
@@ -20,13 +20,15 @@ public class FosterFormRequestDto {
 
   private String job;
 
-  private String address;
+  private String fosterAddress;
 
   private String currentPet;
 
   private String experience;
 
   private String reason;
+
+  private String allergy;
 
   private String family;
 

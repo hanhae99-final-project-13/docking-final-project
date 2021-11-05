@@ -13,7 +13,7 @@ public class FosterPreviewDto {
 
   private Long fosterFormId;
   private String name;
-  private Long birthYear;
+  private Long fosterAge;
   private Sex gender;
   private String phone;
   private String fosterAddress;
@@ -23,7 +23,7 @@ public class FosterPreviewDto {
     return FosterPreviewDto.builder()
         .fosterFormId(fosterForm.getFosterFormId())
         .name(fosterForm.getName())
-        .birthYear(fosterForm.getBirthYear())
+        .fosterAge(fosterForm.getFosterAge())
         .gender(fosterForm.getGender())
         .phone(fosterForm.getPhone())
         .fosterAddress(fosterForm.getFosterAddress())
