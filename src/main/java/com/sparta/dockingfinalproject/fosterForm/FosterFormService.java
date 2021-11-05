@@ -32,7 +32,7 @@ public class FosterFormService {
 
   //입양신청서 등록
   @Transactional
-  public Map<String, Object> addFosterForm(Long postId, FosterFormRequestDto fosterFormrRequestDto,
+  public Map<String, Object> addFosterForm(Long postId, FosterFormRequestDto fosterFormRequestDto,
       UserDetailsImpl userDetails) {
     if (userDetails == null) {
       throw new DockingException(ErrorCode.USER_NOT_FOUND);
@@ -46,9 +46,18 @@ public class FosterFormService {
     Post post = postRepository.findById(postId).orElseThrow(
         () -> new DockingException(ErrorCode.POST_NOT_FOUND)
     );
+    if ( post.getPet().getTag() == null || !post.getPet().getTag().equals("직접등록") ) {
+      throw new DockingException(ErrorCode.NO_AVAILABILITY);
+    }
+    List<FosterForm> fosterForms = post.getFormList();
+    for (FosterForm fosterform : fosterForms) {
+      if (fosterform.getUser() == user) {
+        throw new DockingException(ErrorCode.REQUEST_DUPLICATE);
+      }
+    }
 
     //db에 FosterForm 저장
-    FosterForm fosterForm = new FosterForm(post, fosterFormrRequestDto, user);
+    FosterForm fosterForm = new FosterForm(post, fosterFormRequestDto, user);
     fosterFormRepository.save(fosterForm);
 
     //리턴 data 생성
@@ -66,7 +75,6 @@ public class FosterFormService {
     Map<String, Object> data = new HashMap<>();
 
     Long userId = userDetails.getUser().getUserId();
-    User user = userRepository.getById(userId);
 
     FosterForm findFosterForm = fosterFormRepository.findById(fosterFormId).orElseThrow(
         () -> new DockingException(ErrorCode.FOSTERFORM_NOT_FOUND)

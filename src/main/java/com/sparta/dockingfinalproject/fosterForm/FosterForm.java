@@ -30,7 +30,7 @@ public class FosterForm {
   private String name;
 
   @Column(nullable = false)
-  private Long birthYear;
+  private Long fosterAge;
 
   @Column(nullable = false)
   @Enumerated(value = EnumType.STRING)
@@ -53,6 +53,9 @@ public class FosterForm {
 
   @Column(nullable = false)
   private String reason;
+
+  @Column(nullable = false)
+  private String allergy;
 
   @Column(nullable = false)
   private String family;
@@ -80,14 +83,15 @@ public class FosterForm {
 
   public FosterForm(Post post, FosterFormRequestDto fosterFormrRequestDto, User user) {
     this.name = fosterFormrRequestDto.getName();
-    this.birthYear = fosterFormrRequestDto.getBirthYear();
+    this.fosterAge = fosterFormrRequestDto.getFosterAge();
     this.gender = fosterFormrRequestDto.getGender();
     this.phone = fosterFormrRequestDto.getPhone();
     this.job = fosterFormrRequestDto.getJob();
-    this.fosterAddress = fosterFormrRequestDto.getAddress();
+    this.fosterAddress = fosterFormrRequestDto.getFosterAddress();
     this.currentPet = fosterFormrRequestDto.getCurrentPet();
     this.experience = fosterFormrRequestDto.getExperience();
     this.reason = fosterFormrRequestDto.getReason();
+    this.allergy = fosterFormrRequestDto.getAllergy();
     this.family = fosterFormrRequestDto.getFamily();
     this.timeTogether = fosterFormrRequestDto.getTimeTogether();
     this.anxiety = fosterFormrRequestDto.getAnxiety();
