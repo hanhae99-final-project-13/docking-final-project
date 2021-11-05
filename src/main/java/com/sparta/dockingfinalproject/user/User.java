@@ -6,6 +6,7 @@ import com.sparta.dockingfinalproject.wish.Wish;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @ToString
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -50,6 +52,8 @@ public class User {
     @Column(nullable = false)
     private boolean authCheck;
 
+    @Column
+    private int randomNumber;
 
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
@@ -67,6 +71,7 @@ public class User {
         this.authKey = authKey;
         this.authCheck = false;
 
+
     }
 
     public User(String username, String password, String nickname, String email, Long kakaoId, String userImgUrl){
@@ -79,7 +84,8 @@ public class User {
         this.userImgUrl = userImgUrl;
         this.authKey = "";
         this.authCheck = true;
-
+        //추가
+//        this.randomNumber = "";
 
     }
 

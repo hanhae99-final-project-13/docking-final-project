@@ -19,6 +19,8 @@ public class SignupRequestDto {
 
     private String userImgUrl;
 
+    private boolean authCheck;
+
 
 
 
