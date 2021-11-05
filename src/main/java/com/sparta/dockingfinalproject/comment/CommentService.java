@@ -27,25 +27,28 @@ public class CommentService {
 
   //Comment 등록
   @Transactional
-  public Map<String, Object> addComment(Long postId, CommentRequestDto commentRequestDto,
+  public Map<String, Object> addComment(CommentRequestDto commentRequestDto,
       UserDetailsImpl userDetails) {
+    if (userDetails == null) {
+      throw new DockingException(ErrorCode.NO_AUTHORIZATION);
+    }
+
     //User 가져오기
     Long userId = userDetails.getUser().getUserId();
     User user = userRepository.getById(userId);
 
     //해당 Post 가져오기
-    Post post = postRepository.findById(postId).orElseThrow(
+    Post post = postRepository.findById(commentRequestDto.getPostId()).orElseThrow(
         () -> new DockingException(ErrorCode.POST_NOT_FOUND)
     );
 
     //db에 Comment 저장
     Comment comment = new Comment(post, commentRequestDto, user);
 
-    List<Comment> postCommentList = post.getCommentList();
-
-    if (!postCommentList.contains(comment)) {
-      postCommentList.add(comment);
-    }
+//    List<Comment> postCommentList = post.getCommentList();
+//    if (!postCommentList.contains(comment)) {
+//      postCommentList.add(comment);
+//    }
 
     commentRepository.save(comment);
     System.out.println(comment);
@@ -59,34 +62,48 @@ public class CommentService {
 
   //Comment 수정
   @Transactional
-  public Map<String, Object> updateComment(Long commentId, CommentRequestDto commentRequestDto) {
+  public Map<String, Object> updateComment(Long commentId, CommentRequestDto commentRequestDto,
+      UserDetailsImpl userDetails) {
+    if (userDetails == null) {
+      throw new DockingException(ErrorCode.USER_NOT_FOUND);
+    }
+
     //해당 Comment 가져오기
     Comment comment = commentRepository.findById(commentId).orElseThrow(
         () -> new DockingException(ErrorCode.POST_NOT_FOUND)
     );
+    Long userId = userDetails.getUser().getUserId();
+    Long writerId = comment.getUser().getUserId();
 
     //db에 Comment 업데이트
-    comment.update(commentRequestDto);
-
-    //리턴 data 생성
     Map<String, String> data = new HashMap<>();
-    data.put("msg", "댓글이 수정 되었습니다");
+    if (userId.equals(writerId)) {
+      comment.update(commentRequestDto);
+      data.put("msg", "댓글이 수정 되었습니다");
+    } else {
+      throw new DockingException(ErrorCode.NO_AUTHORIZATION);
+    }
     return SuccessResult.success(data);
   }
 
   //Comment 삭제
   @Transactional
-  public Map<String, Object> deleteComment(Long commentId) {
+  public Map<String, Object> deleteComment(Long commentId, UserDetailsImpl userDetails) {
     //해당 Comment 가져오기
     Comment comment = commentRepository.findById(commentId).orElseThrow(
         () -> new DockingException(ErrorCode.POST_NOT_FOUND)
     );
+    Long userId = userDetails.getUser().getUserId();
+    Long writerId = comment.getUser().getUserId();
 
     //db에 Comment 삭제
-    commentRepository.deleteById(commentId);
-
     Map<String, Object> data = new HashMap<>();
-    data.put("msg", "삭제 완료");
+    if (userId.equals(writerId)) {
+      commentRepository.deleteById(commentId);
+      data.put("msg", "삭제 완료");
+    } else {
+      throw new DockingException(ErrorCode.NO_AUTHORIZATION);
+    }
     return SuccessResult.success(data);
   }
 
