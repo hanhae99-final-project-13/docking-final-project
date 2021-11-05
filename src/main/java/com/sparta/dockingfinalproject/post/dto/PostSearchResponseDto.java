@@ -2,6 +2,7 @@ package com.sparta.dockingfinalproject.post.dto;
 
 import com.sparta.dockingfinalproject.pet.Sex;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,7 +15,7 @@ public class PostSearchResponseDto {
   private int age;
   private String ownerType;
   private String address;
-  private String img;
+  private List<String> img;
   private String isAdopted;
   private LocalDateTime createdAt;
   private LocalDateTime modifiedAt;
