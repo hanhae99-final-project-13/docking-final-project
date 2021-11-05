@@ -11,6 +11,8 @@ import lombok.Getter;
 @Getter
 @Builder
 public class PostDetailResponseDto {
+  private Long userId;
+  private String nickname;
   private Long postId;
   private String breed;
   private Sex sex;
@@ -29,6 +31,8 @@ public class PostDetailResponseDto {
   public static PostDetailResponseDto getPostDetailResponseDto(Post post, boolean heart) {
     Pet pet = post.getPet();
     return PostDetailResponseDto.builder()
+            .userId(post.getUser().getUserId())
+            .nickname(post.getUser().getNickname())
             .postId(post.getPostId())
             .breed(pet.getBreed())
             .sex(pet.getSex())
@@ -49,6 +53,8 @@ public class PostDetailResponseDto {
     Pet pet = post.getPet();
 
     return PostDetailResponseDto.builder()
+        .userId(post.getUser().getUserId())
+        .nickname(post.getUser().getNickname())
         .postId(post.getPostId())
         .breed(pet.getBreed())
         .sex(pet.getSex())

@@ -345,6 +345,8 @@ public class PostService {
         imgs.add(x);
       }
       PostSearchResponseDto postSearchResponseDto = PostSearchResponseDto.builder()
+          .userId(post.getUser().getUserId())
+          .nickname(post.getUser().getNickname())
           .postId(post.getPostId())
           .createdAt(pet.getCreatedAt())
           .modifiedAt(pet.getModifiedAt())

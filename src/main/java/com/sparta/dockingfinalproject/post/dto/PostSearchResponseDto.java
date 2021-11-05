@@ -9,6 +9,8 @@ import lombok.Getter;
 @Getter
 @Builder
 public class PostSearchResponseDto {
+  private Long userId;
+  private String nickname;
   private Long postId;
   private String breed;
   private Sex sex;

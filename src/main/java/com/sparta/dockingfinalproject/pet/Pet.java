@@ -68,7 +68,7 @@ public class Pet extends Timestamped {
   @Column(nullable = false)
   private String extra;
 
-  @Column(nullable = false)
+  @Column(nullable = false, length = 1500)
   private String img;
 
   @OneToOne(mappedBy = "pet")
