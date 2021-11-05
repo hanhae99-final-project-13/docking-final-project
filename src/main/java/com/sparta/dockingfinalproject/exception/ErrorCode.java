@@ -18,6 +18,8 @@ public enum ErrorCode {
   ALARM_NOT_FOUND(BAD_REQUEST, "해당 알람 내용을 찾을 수 없습니다."),
   NO_AUTHORIZATION(BAD_REQUEST, "권한이 없습니다."),
   NO_DIFFERENCE(BAD_REQUEST, "변경된 사항이 없습니다."),
+  NO_AVAILABILITY(BAD_REQUEST, "신청 가능 대상이 아닙니다."),
+  REQUEST_DUPLICATE(BAD_REQUEST, "이미 신청 완료 하였습니다."),
   PASSWORD_MISS_MATCH(BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
   USERNAME_MISS_MATCH(BAD_REQUEST, "아이디가 일치하지 않습니다."),
   USERNAME_DUPLICATE(BAD_REQUEST, "중복된 username이 존재합니다."),
