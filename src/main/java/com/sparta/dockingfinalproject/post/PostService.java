@@ -334,12 +334,19 @@ public class PostService {
     }
 
     List<PostSearchResponseDto> postList = new ArrayList<>();
-    for (Pet pet : pets) {
+    for (Pet pet : pets.getContent()) {
       Post post = postRepository.findAllByPet(pet).orElseThrow(
           () -> new DockingException(ErrorCode.PET_NOT_FOUND)
       );
 
+      List<String> imgs = new ArrayList<>();
+      String[] str = pet.getImg().split(" ## ");
+      for (String x : str) {
+        imgs.add(x);
+      }
       PostSearchResponseDto postSearchResponseDto = PostSearchResponseDto.builder()
+          .userId(post.getUser().getUserId())
+          .nickname(post.getUser().getNickname())
           .postId(post.getPostId())
           .createdAt(pet.getCreatedAt())
           .modifiedAt(pet.getModifiedAt())
@@ -348,7 +355,7 @@ public class PostService {
           .age(pet.getAge())
           .ownerType(pet.getOwnerType())
           .address(pet.getAddress())
-          .img(pet.getImg())
+          .img(imgs)
           .isAdopted(pet.getIsAdopted())
           .build();
 
@@ -357,6 +364,8 @@ public class PostService {
 
     Map<String, Object> data = new HashMap<>();
     data.put("postList", postList);
+    data.put("last", pets.isLast());
+    data.put("totalPages", pets.getTotalPages());
     return SuccessResult.success(data);
   }
 }

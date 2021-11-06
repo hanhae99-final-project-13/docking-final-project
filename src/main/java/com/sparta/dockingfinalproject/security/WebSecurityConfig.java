@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsUtils;
 
 @RequiredArgsConstructor
 @Configuration
@@ -62,7 +63,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	// 회원 관리 처리 API (POST /user/**) 에 대해 CSRF 무시
 
 	http.authorizeRequests()
-
 		// login 없이 허용
 		.antMatchers("/user/login").permitAll()
 		.antMatchers("/signup").permitAll()
@@ -81,6 +81,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.anyRequest().authenticated()
 		.and()
 		.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-
   }
 }

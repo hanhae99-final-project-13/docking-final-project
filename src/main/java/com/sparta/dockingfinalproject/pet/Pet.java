@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sparta.dockingfinalproject.common.Timestamped;
 import com.sparta.dockingfinalproject.pet.dto.PetRequestDto;
 import com.sparta.dockingfinalproject.post.Post;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -67,7 +68,7 @@ public class Pet extends Timestamped {
   @Column(nullable = false)
   private String extra;
 
-  @Column(nullable = false)
+  @Column(nullable = false, length = 1500)
   private String img;
 
   @OneToOne(mappedBy = "pet")
@@ -103,7 +104,14 @@ public class Pet extends Timestamped {
     this.phone = petRequestDto.getPhone();
     this.tag = petRequestDto.getTag();
     this.url = petRequestDto.getUrl();
-    this.img = petRequestDto.getImg();
+
+    List<String> imgs = petRequestDto.getImg();
+    String temp = "";
+    for (String im : imgs) {
+      temp += (im + " ## ");
+    }
+    this.img = temp;
+
     this.extra = petRequestDto.getExtra();
     this.isAdopted = petRequestDto.getIsAdopted();
   }
@@ -147,8 +155,13 @@ public class Pet extends Timestamped {
       this.url = petRequestDto.getUrl();
     }
 
-    if (petCheck(petRequestDto.getImg())) {
-      this.img = petRequestDto.getImg();
+    if (petRequestDto.getImg().size() == 0) {
+      List<String> imgs = petRequestDto.getImg();
+      String temp = "";
+      for (String img : imgs) {
+        temp = img + "/";
+      }
+      this.img = temp;
     }
 
     if (petCheck(petRequestDto.getExtra())) {

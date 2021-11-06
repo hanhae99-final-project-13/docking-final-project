@@ -67,6 +67,13 @@ public class PostController {
       @RequestParam(required = false) String sort) {
 
     Pageable pageable1 = PageRequest.of(page, 8);
-    return postService.getPostsTermsSearch(pageable1, startDt, endDt, ownerType, city, district, sort);
+    return postService.getPostsTermsSearch(pageable1, getTrimData(startDt), getTrimData(endDt), getTrimData(ownerType), getTrimData(city), getTrimData(district), getTrimData(sort));
+  }
+
+  private String getTrimData(String data) {
+    if (data != null && data.isEmpty()) {
+      return data.trim();
+    }
+    return data;
   }
 }

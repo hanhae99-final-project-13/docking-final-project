@@ -1,5 +1,6 @@
 package com.sparta.dockingfinalproject.pet.dto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +21,7 @@ public class PetRequestDto {
   private String phone;
   private String tag;
   private String url;
-  private String img;
+  private List<String> img;
   private String extra;
   private String isAdopted;
 }

@@ -80,23 +80,22 @@ public class FosterForm {
   @JoinColumn(name = "POST_ID", nullable = false)
   private Post post;
 
-
-  public FosterForm(Post post, FosterFormRequestDto FosterFormRequestDto, User user) {
-    this.name = FosterFormRequestDto.getName();
-    this.fosterAge = FosterFormRequestDto.getFosterAge();
-    this.gender = FosterFormRequestDto.getGender();
-    this.phone = FosterFormRequestDto.getPhone();
-    this.job = FosterFormRequestDto.getJob();
-    this.fosterAddress = FosterFormRequestDto.getFosterAddress();
-    this.currentPet = FosterFormRequestDto.getCurrentPet();
-    this.experience = FosterFormRequestDto.getExperience();
-    this.reason = FosterFormRequestDto.getReason();
-    this.allergy = FosterFormRequestDto.getAllergy();
-    this.family = FosterFormRequestDto.getFamily();
-    this.timeTogether = FosterFormRequestDto.getTimeTogether();
-    this.anxiety = FosterFormRequestDto.getAnxiety();
-    this.bark = FosterFormRequestDto.getBark();
-    this.roomUrl = FosterFormRequestDto.getRoomUrl();
+  public FosterForm(Post post, FosterFormRequestDto fosterFormRequestDto, User user) {
+    this.name = fosterFormRequestDto.getName();
+    this.fosterAge = fosterFormRequestDto.getFosterAge();
+    this.gender = fosterFormRequestDto.getGender();
+    this.phone = fosterFormRequestDto.getPhone();
+    this.job = fosterFormRequestDto.getJob();
+    this.fosterAddress = fosterFormRequestDto.getFosterAddress();
+    this.currentPet = fosterFormRequestDto.getCurrentPet();
+    this.experience = fosterFormRequestDto.getExperience();
+    this.reason = fosterFormRequestDto.getReason();
+    this.allergy = fosterFormRequestDto.getAllergy();
+    this.family = fosterFormRequestDto.getFamily();
+    this.timeTogether = fosterFormRequestDto.getTimeTogether();
+    this.anxiety = fosterFormRequestDto.getAnxiety();
+    this.bark = fosterFormRequestDto.getBark();
+    this.roomUrl = fosterFormRequestDto.getRoomUrl();
     this.user = user;
     this.post = post;
   }
