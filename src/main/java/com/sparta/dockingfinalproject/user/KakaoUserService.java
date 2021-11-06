@@ -3,8 +3,11 @@ package com.sparta.dockingfinalproject.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.dockingfinalproject.exception.DockingException;
+import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.dto.KakaoUserInfoDto;
+import javax.print.Doc;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -66,6 +69,7 @@ public class KakaoUserService {
             //kakaoUserinfo에서 이미지파일 꺼내서 정보에 추가하기
             String userImgUrl = kakaoUserInfo.getUserImgUrl();
 
+
             kakaoUser = new User(username, password, nickname, email, kakaoId, userImgUrl);
             userRepository.save(kakaoUser);
         }
@@ -91,7 +95,8 @@ public class KakaoUserService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", "b288c56fd31bb6f686ba8a3a39ba7fb2");
-        body.add("redirect_uri", "http://imcute.shop/oauth/callback/kakao");
+        body.add("redirect_uri", "http://localhost:3000/oauth/callback/kakao");
+        System.out.println("현재 코드 값 " + code);
         body.add("code", code);
 
         // HTTP 요청 보내기
@@ -147,8 +152,15 @@ public class KakaoUserService {
 
         //////////////////////////추가부분
         ///////////////////////////get부분 알아봐야함
-        String userImgUrl= jsonNode.get("properties")
-            .get("profile_image").asText();
+
+        //여기가 안불러와짐
+//            System.out.println(jsonNode.get("properties").get("profile_image"));
+//            String userImgUrl= jsonNode.get("properties")
+//                .get("profile_image").asText();
+
+
+        String userImgUrl= "카카오 이미지 url";
+
 
         System.out.println("카카오 사용자 정보: " + id + ", " + nickname + ", " + email + "," + userImgUrl);
 
@@ -162,6 +174,7 @@ public class KakaoUserService {
         UserDetails userDetails = new UserDetailsImpl(kakaoUser);
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
+            System.out.println("강제 로그인 완료");
     }
 
 

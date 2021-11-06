@@ -73,6 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers("/posts").permitAll()
 		.antMatchers("/posts/**").permitAll()
 		.antMatchers("/**").permitAll()
+
 		//추가 - 메인 페이지 접근 허용
 		.antMatchers("/").permitAll()
 

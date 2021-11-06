@@ -1,7 +1,10 @@
 package com.sparta.dockingfinalproject.user.mail;
 
+import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.user.UserService;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +24,13 @@ public class MailController {
   }
 
   @GetMapping("/emailCheck")
-  public void mailCheck(@RequestParam String email) throws Exception{
-	System.out.println(email);
+  public Map<String, Object>mailCheck(@RequestParam String email) throws Exception{
+	Map<String, Object> data = new HashMap<>();
 	String authKey = mailSendService.sendSimpleMessage(email);
-	System.out.println(authKey);
+	data.put("msg", "이메일을 확인해주세요");
+
+	return SuccessResult.success(data);
+
 
   }
 
