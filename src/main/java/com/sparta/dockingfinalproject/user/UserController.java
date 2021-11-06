@@ -5,6 +5,8 @@ import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
+import com.sparta.dockingfinalproject.user.mail.MailController;
+import com.sparta.dockingfinalproject.user.mail.MailSendService;
 import java.util.Map;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
   private final UserService userService;
-  public UserController(UserService userService	) {
+  private final MailSendService mailSendService;
+  public UserController(UserService userService, MailSendService mailSendService	) {
 
 	this.userService = userService;
+	this.mailSendService = mailSendService;
 
   }
 
@@ -31,6 +35,7 @@ public class UserController {
   //bindingResult가 뭘까?????????????
   public Map<String, Object> registerUser(@RequestBody SignupRequestDto requestDto)
 	  throws Exception {
+//	String authKey = mailSendService.sendSimpleMessage(requestDto.getEmail());
 	return userService.registerUser(requestDto);
   }
 

@@ -47,21 +47,23 @@ public class User {
     @Column(unique = true)
     private Long kakaoId;
 
-    @Column(nullable = false)
+    @Column
     private String authKey;
 
-    @Column(nullable = false)
+    @Column
     private boolean authCheck;
 
     @Column
-    private int randomNumber;
+    String phoneNumber;
+
+
 
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     @JsonIgnore
     private List<Wish> wishList;
 
-    public User(String username, String password, String nickname, String email, String userImgUrl, String authKey){
+    public User(String username, String password, String nickname, String email, String userImgUrl, String phoneNumber){
 
         this.username = username;
         this.password = password;
@@ -69,8 +71,8 @@ public class User {
         this.email = email;
         this.userImgUrl = userImgUrl;
         this.kakaoId = null;
-        this.authKey = authKey;
-        this.authCheck = false;
+        this.phoneNumber = phoneNumber;
+//        this.authCheck = false;
 
 
     }
@@ -83,7 +85,7 @@ public class User {
         this.email = email;
         this.kakaoId = kakaoId;
         this.userImgUrl = userImgUrl;
-        this.authKey = "";
+        this.phoneNumber ="";
         this.authCheck = true;
         //추가
 //        this.randomNumber = "";
@@ -108,6 +110,8 @@ public class User {
         return this;
 
     }
+
+
 
     public void update(UpdateRequestDto requestDto) {
         this.nickname = requestDto.getNickname();

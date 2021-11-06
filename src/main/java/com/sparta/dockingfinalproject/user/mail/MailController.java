@@ -1,6 +1,8 @@
 package com.sparta.dockingfinalproject.user.mail;
 
 import com.sparta.dockingfinalproject.common.SuccessResult;
+import com.sparta.dockingfinalproject.exception.DockingException;
+import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.user.UserService;
 import java.net.URI;
 import java.util.HashMap;
@@ -26,8 +28,12 @@ public class MailController {
   @GetMapping("/emailCheck")
   public Map<String, Object>mailCheck(@RequestParam String email) throws Exception{
 	Map<String, Object> data = new HashMap<>();
-	String authKey = mailSendService.sendSimpleMessage(email);
-	data.put("msg", "이메일을 확인해주세요");
+	if(email .isEmpty()) {
+	throw new DockingException(ErrorCode.EMAIL_NOT_FOUND);
+	//에러 코드 수정해야함
+	}
+	  String authKey = mailSendService.sendSimpleMessage(email);
+	  data.put("msg", "이메일을 확인해주세요");
 
 	return SuccessResult.success(data);
 
@@ -35,13 +41,18 @@ public class MailController {
   }
 
   @GetMapping("/user/signUpConfirm")
-  public ResponseEntity<Object> signupConfirm(@RequestParam String email, @RequestParam String authKey)
-	throws Exception {
+//  public ResponseEntity<Object> signupConfirm(@RequestParam String email, @RequestParam String authKey)
+  public ResponseEntity<Object>signupConfirm(@RequestParam String email, @RequestParam String authKey)
+
+  throws Exception {
+
 	System.out.println(email);
 	System.out.println(authKey);
 	userService.singUpConfirm(email,authKey);
 
-	URI redirectUri = new URI("http://localhost:8080");
+
+
+	URI redirectUri = new URI("http://localhost:3000/login");
 	HttpHeaders httpHeaders = new HttpHeaders();
 	httpHeaders.setLocation(redirectUri);
 	return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);

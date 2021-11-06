@@ -1,6 +1,7 @@
 package com.sparta.dockingfinalproject.user.phoneMessage;
 
 import com.sparta.dockingfinalproject.user.dto.PhoneRequestDto;
+import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import java.util.HashMap;
 import java.util.Random;
 import net.nurigo.java_sdk.api.Message;
@@ -26,7 +27,7 @@ public class PhoneService {
   }
 
 
-  public int sendMessage ( PhoneRequestDto requestDto) {
+  public int sendMessage (String phoneNumber) {
 
 	  String api_key = "NCSSX04M9KLZMYOS";
 
@@ -36,8 +37,8 @@ public class PhoneService {
 
 	  // 4 params(to, from, type, text) are mandatory. must be filled
 	  HashMap<String, String> params = new HashMap<>();
-	System.out.println(requestDto.getPhoneNumber());
-	  params.put("to",requestDto.getPhoneNumber());
+	System.out.println(phoneNumber);
+	  params.put("to",phoneNumber);
 	  params.put("from", "07079541724");
 	  params.put("type", "SMS");
 	System.out.println(randomNumber);
