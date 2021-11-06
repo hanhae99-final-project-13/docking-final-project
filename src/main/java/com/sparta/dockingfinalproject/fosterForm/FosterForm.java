@@ -81,22 +81,22 @@ public class FosterForm {
   private Post post;
 
 
-  public FosterForm(Post post, FosterFormRequestDto fosterFormrRequestDto, User user) {
-    this.name = fosterFormrRequestDto.getName();
-    this.fosterAge = fosterFormrRequestDto.getFosterAge();
-    this.gender = fosterFormrRequestDto.getGender();
-    this.phone = fosterFormrRequestDto.getPhone();
-    this.job = fosterFormrRequestDto.getJob();
-    this.fosterAddress = fosterFormrRequestDto.getFosterAddress();
-    this.currentPet = fosterFormrRequestDto.getCurrentPet();
-    this.experience = fosterFormrRequestDto.getExperience();
-    this.reason = fosterFormrRequestDto.getReason();
-    this.allergy = fosterFormrRequestDto.getAllergy();
-    this.family = fosterFormrRequestDto.getFamily();
-    this.timeTogether = fosterFormrRequestDto.getTimeTogether();
-    this.anxiety = fosterFormrRequestDto.getAnxiety();
-    this.bark = fosterFormrRequestDto.getBark();
-    this.roomUrl = fosterFormrRequestDto.getRoomUrl();
+  public FosterForm(Post post, FosterFormRequestDto FosterFormRequestDto, User user) {
+    this.name = FosterFormRequestDto.getName();
+    this.fosterAge = FosterFormRequestDto.getFosterAge();
+    this.gender = FosterFormRequestDto.getGender();
+    this.phone = FosterFormRequestDto.getPhone();
+    this.job = FosterFormRequestDto.getJob();
+    this.fosterAddress = FosterFormRequestDto.getFosterAddress();
+    this.currentPet = FosterFormRequestDto.getCurrentPet();
+    this.experience = FosterFormRequestDto.getExperience();
+    this.reason = FosterFormRequestDto.getReason();
+    this.allergy = FosterFormRequestDto.getAllergy();
+    this.family = FosterFormRequestDto.getFamily();
+    this.timeTogether = FosterFormRequestDto.getTimeTogether();
+    this.anxiety = FosterFormRequestDto.getAnxiety();
+    this.bark = FosterFormRequestDto.getBark();
+    this.roomUrl = FosterFormRequestDto.getRoomUrl();
     this.user = user;
     this.post = post;
   }

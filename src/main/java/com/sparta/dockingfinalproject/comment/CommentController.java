@@ -1,5 +1,6 @@
 package com.sparta.dockingfinalproject.comment;
 
+import com.sparta.dockingfinalproject.comment.dto.CommentEditRequestDto;
 import com.sparta.dockingfinalproject.comment.dto.CommentRequestDto;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,8 @@ public class CommentController {
   // Comment 수정
   @PatchMapping("/comments/{commentId}")
   public Map<String, Object> updateComment(@PathVariable Long commentId,
-      @RequestBody CommentRequestDto commentRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return commentService.updateComment(commentId, commentRequestDto, userDetails);
+      @RequestBody CommentEditRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    return commentService.updateComment(commentId, requestDto, userDetails);
   }
 
   // Comment 삭제

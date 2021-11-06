@@ -1,5 +1,6 @@
 package com.sparta.dockingfinalproject.comment;
 
+import com.sparta.dockingfinalproject.comment.dto.CommentEditRequestDto;
 import com.sparta.dockingfinalproject.comment.dto.CommentRequestDto;
 import com.sparta.dockingfinalproject.common.Timestamped;
 import com.sparta.dockingfinalproject.post.Post;
@@ -35,9 +36,9 @@ public class Comment extends Timestamped {
     this.user = user;
   }
 
-  public Comment update(CommentRequestDto commentRequestDto) {
-    if (commentCheck(commentRequestDto.getComment())) {
-      this.comment = commentRequestDto.getComment();
+  public Comment update(CommentEditRequestDto requestDto) {
+    if (commentCheck(requestDto.getComment())) {
+      this.comment = requestDto.getComment();
     }
     return this;
   }
