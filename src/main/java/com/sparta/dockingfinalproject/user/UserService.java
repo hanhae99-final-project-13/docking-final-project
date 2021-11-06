@@ -8,6 +8,7 @@ import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
 import com.sparta.dockingfinalproject.user.dto.PhoneRequestDto;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
+import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
 import com.sparta.dockingfinalproject.user.mail.MailSendService;
 import com.sparta.dockingfinalproject.user.phoneMessage.PhoneService;
@@ -88,7 +89,6 @@ public class UserService {
 
 
   //로그인
-  //아이디 불일치일때 예외처리는?
   public Map<String, Object> login(SignupRequestDto requestDto) {
 	User user = userRepository.findByUsername(requestDto.getUsername()).orElse(null);
 	//      User user = userRepository.findAllByAuthCheckTrueAndUsername(requestDto.getUsername()).orElseThrow(
@@ -96,13 +96,28 @@ public class UserService {
 //      );
 
 
-
 	List<Map<String, Object>> applyList = new ArrayList<>();
 	Map<String, Object> apply = new HashMap<>();
 
+	//패스워드 불일치일때
 	if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
+	  throw new DockingException(ErrorCode.PASSWORD_MISS_MATCH);
+	}
+	//아이디가 빈값일때
+	if (requestDto.getUsername().isEmpty()) {
+	  throw new DockingException(ErrorCode.USERNAME_NOT_FOUND);
+	}
+
+	//패스워드 빈값일때
+	if (requestDto.getPassword().isEmpty()) {
+	  throw new DockingException(ErrorCode.USERNAME_NOT_FOUND);
+	}
+
+	//아이디 불일치일때
+	if(!user.getUsername() .equals (requestDto.getUsername())){
 	  throw new DockingException(ErrorCode.USERNAME_MISS_MATCH);
 	}
+
 
 	Map<String, Object> data = new HashMap<>();
 	data.put("nickname", user.getNickname());
@@ -110,8 +125,7 @@ public class UserService {
 	data.put("userImgUrl", user.getUserImgUrl());
 	data.put("classCount", 5);
 	data.put("alarmCount", 5);
-	data.put("token",
-		jwtTokenProvider.createToken(requestDto.getUsername(), requestDto.getUsername()));
+	data.put("token",jwtTokenProvider.createToken(requestDto.getUsername(), requestDto.getUsername()));
 	data.put("applyList", applyList);
 
 	apply.put("applyState", "디폴트");
@@ -124,21 +138,29 @@ public class UserService {
 
   //회원정보 수정
   @Transactional
-  public Map<String, Object> updateUser(UserDetailsImpl userDetails, SignupRequestDto requestDto) {
+  public Map<String, Object> updateUser(UserDetailsImpl userDetails, UpdateRequestDto requestDto) {
+	//리턴 data 생성
+	Map<String, String> data = new HashMap<>();
+	System.out.println("수정으로 도착");
+//
+//	if (requestDto.getNickname().isEmpty()) {
+//	  throw new DockingException(ErrorCode.NICKNAME_NOT_FOUND);
+//	}
 
 	User findUser = userRepository.findById(userDetails.getUser().getUserId()).orElseThrow(
 		() -> new DockingException(ErrorCode.USER_NOT_FOUND)
 	);
-	findUser.update(requestDto);
-	//리턴 data 생성
-	Map<String, String> data = new HashMap<>();
-	data.put("msg", "사용자 정보가 수정 되었습니다");
-	return SuccessResult.success(data);
-  }
 
+	findUser.update(requestDto);
+
+	data.put("msg", "사용자 정보가 수정 되었습니다");
+
+	return SuccessResult.success(data);
+
+  }
 //로그인 체크
 
-  public Map<String, Object> loginCheck(UserDetailsImpl userDetails) {
+  public Map<String, Object> loginCheck (UserDetailsImpl userDetails) {
 	Map<String, Object> data = new HashMap<>();
 
 	if (userDetails != null) {

@@ -29,7 +29,8 @@ public enum ErrorCode {
   USERNAME_NOT_FOUND(BAD_REQUEST, "아이디를 중복확인을 먼저 해주세요"),
   NICKNAME_NOT_FOUND(BAD_REQUEST, "닉네임 중복확인을 먼저 해주세요"),
   EMAIL_NOT_FOUND(BAD_REQUEST, "이메일 인증을 먼저 진행해 주세요"),
-
+  IMAGE_NOT_FOUND(BAD_REQUEST, "이미지가 없습니다."),
+  CODE_NOT_FOUND(BAD_REQUEST, "카카오 사용자를 찾을 수 없습니다."),
 
 
 

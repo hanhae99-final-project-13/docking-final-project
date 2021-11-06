@@ -4,6 +4,7 @@ package com.sparta.dockingfinalproject.user;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
+import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
 import java.util.Map;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,7 +46,10 @@ public class UserController {
 
   @PatchMapping("/user")
   public Map<String, Object> updateUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
-	  @RequestBody SignupRequestDto requestDto) {
+	  @RequestBody UpdateRequestDto requestDto) {
+
+	System.out.println("수정에 도착");
+
 	return userService.updateUser(userDetails, requestDto);
 
   }
