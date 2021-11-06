@@ -5,6 +5,7 @@ import com.sparta.dockingfinalproject.comment.dto.CommentRequestDto;
 import com.sparta.dockingfinalproject.common.Timestamped;
 import com.sparta.dockingfinalproject.post.Post;
 import com.sparta.dockingfinalproject.user.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Comment extends Timestamped {
 
   @Id
