@@ -39,7 +39,7 @@ public class PhoneController {
 
 	if(requestDto != null){
 
-	phoneService.sendMessage(requestDto.getPhoneNumber());
+	phoneService.sendMessage(requestDto);
 	data.put("msg", "인증 번호 발송 완료");} else {
 	  throw new DockingException(ErrorCode.NUMBER_NOT_FOUND);
 
@@ -54,7 +54,7 @@ public class PhoneController {
   public Map<String, Object> phoneConfirm(@RequestBody SignupRequestDto singupRequestDto){
   Map<String, Object> data = new HashMap<>();
 
-	userService.phoneConfirm(singupRequestDto);
+	phoneService.phoneConfirm(singupRequestDto);
 
   	data.put("msg", "인증번호가 확인되었습니다");
 

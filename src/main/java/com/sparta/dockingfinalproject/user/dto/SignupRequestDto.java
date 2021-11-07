@@ -26,7 +26,7 @@ public class SignupRequestDto {
 
 
 //    private boolean authCheck;
-    private String randomNumber;
+    private Integer randomNumber;
     private String phoneNumber;
 
 

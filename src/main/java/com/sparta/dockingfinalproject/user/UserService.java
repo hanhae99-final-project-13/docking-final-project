@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class UserService {
   private final MailSendService mailSendService;
   private final PhoneService phoneService;
 
-  private static Map<String, Object> auth = new HashMap<>();
+
 
   public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
 	  JwtTokenProvider jwtTokenProvider, MailSendService mailSendService,
@@ -57,16 +58,13 @@ public class UserService {
 	String nickname = requestDto.getNickname();
 	String email = requestDto.getEmail();
 	String userImgUrl = "이미지url";
-//	String authKey = mailSendService.sendSimpleMessage(email);
-	String randomNumber = requestDto.getRandomNumber();
-
+	String phoneNumber = requestDto.getPhoneNumber();
+	Integer randomNumber = requestDto.getRandomNumber();
 
 	if (username.isEmpty()) {
 	  throw new DockingException(ErrorCode.USERNAME_NOT_FOUND);
 	}
-	if (email.isEmpty()) {
-	  throw new DockingException(ErrorCode.EMAIL_NOT_FOUND);
-	}
+
 	if (nickname.isEmpty()) {
 	  throw new DockingException(ErrorCode.NICKNAME_NOT_FOUND);
 	}
@@ -75,18 +73,20 @@ public class UserService {
 	}
 
 
+
+
+
 	//패스워드 인코딩
 	password = passwordEncoder.encode(password);
 
-	User user = new User(username, password, nickname, email, userImgUrl, randomNumber);
+
+
+	User user = new User(username, password, nickname,email, userImgUrl,phoneNumber);
 	userRepository.save(user);
-
-
-
 
 	//data에 메세지넣기
 	Map<String, Object> data = new HashMap<>();
-	data.put("msg", "이메일을 확인하시고, 인증 완료후 로그인을 이용해주세요 !");
+	data.put("msg", "회원가입 축하합니다!");
 
 	return SuccessResult.success(data);
 
@@ -96,16 +96,9 @@ public class UserService {
   //로그인
   public Map<String, Object> login(SignupRequestDto requestDto) {
 	User user = userRepository.findByUsername(requestDto.getUsername()).orElse(null);
-//	      User user = userRepository.findAllByAuthCheckTrueAndUsername(requestDto.getUsername()).orElseThrow(
-//          () -> new DockingException(ErrorCode.EMAIL_NOT_FOUND)
-//      );
-
 
 	List<Map<String, Object>> applyList = new ArrayList<>();
 	Map<String, Object> apply = new HashMap<>();
-//	if(!user.isAuthCheck()==true) {
-//	  throw new DockingException(ErrorCode.EMAIL_NOT_FOUND);
-//	}
 
 	//패스워드 불일치일때
 	if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
@@ -125,11 +118,6 @@ public class UserService {
 	if(!user.getUsername() .equals (requestDto.getUsername())){
 	  throw new DockingException(ErrorCode.USERNAME_MISS_MATCH);
 	}
-
-	if(requestDto.getRandomNumber().isEmpty()) {
-	  throw new DockingException(ErrorCode.NO_PHONE_AUTHENTICATION);
-	}
-
 
 
 	Map<String, Object> data = new HashMap<>();
@@ -155,11 +143,6 @@ public class UserService {
 	//리턴 data 생성
 	Map<String, String> data = new HashMap<>();
 	System.out.println("수정으로 도착");
-//
-//	if (requestDto.getNickname().isEmpty()) {
-//	  throw new DockingException(ErrorCode.NICKNAME_NOT_FOUND);
-//	}
-
 	User findUser = userRepository.findById(userDetails.getUser().getUserId()).orElseThrow(
 		() -> new DockingException(ErrorCode.USER_NOT_FOUND)
 	);
@@ -256,27 +239,6 @@ public class UserService {
 
   }
 
-  //휴대폰 인증 확인
-
-  public Map<String, Object> phoneConfirm(SignupRequestDto signupRequestDto) {
-	Map<String, Object> data = new HashMap<>();
-
-
-
-
-	String randomNumber2 = Integer.toString(phoneService.sendMessage(signupRequestDto.getPhoneNumber()));
-	if (signupRequestDto.getRandomNumber().equals(randomNumber2)) {
-
-
-	  auth.put("username",randomNumber2 );
-	  data.put("msg", "인증번호가 일치합니다 ");
-	  return SuccessResult.success(data);
-
-	} else {
-	  throw new DockingException(ErrorCode.NUMBER_MISS_MATCH);
-	}
-
-  }
 
 }
 

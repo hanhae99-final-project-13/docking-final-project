@@ -35,7 +35,6 @@ public class UserController {
   //bindingResult가 뭘까?????????????
   public Map<String, Object> registerUser(@RequestBody SignupRequestDto requestDto)
 	  throws Exception {
-//	String authKey = mailSendService.sendSimpleMessage(requestDto.getEmail());
 	return userService.registerUser(requestDto);
   }
 
@@ -52,11 +51,7 @@ public class UserController {
   @PatchMapping("/user")
   public Map<String, Object> updateUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
 	  @RequestBody UpdateRequestDto requestDto) {
-
-	System.out.println("수정에 도착");
-
 	return userService.updateUser(userDetails, requestDto);
-
   }
 
 
@@ -64,18 +59,14 @@ public class UserController {
   @GetMapping("/user/check")
   public Map<String, Object> loginCheck(@AuthenticationPrincipal UserDetailsImpl userDetails)
 	  throws DockingException {
-
 	return userService.loginCheck(userDetails);
-
   }
 
 
   //아이디 중복 확인
   @GetMapping("/signup/checkid")
   public Map<String, Object> idDoubleCheck(@RequestParam String username) throws DockingException {
-
 	return userService.idDoubleCheck(username);
-
   }
 
 
@@ -83,8 +74,6 @@ public class UserController {
   @GetMapping("/signup/checknickname")
   public Map<String, Object> nicknameDoubleCheck(@RequestParam String nickname)
 	  throws DockingException {
-
 	return userService.nicknameDoubleCheck(nickname);
-
   }
 }

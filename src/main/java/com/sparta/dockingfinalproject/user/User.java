@@ -53,7 +53,7 @@ public class User {
     @Column
     private boolean authCheck;
 
-    @Column
+    @Column(nullable = false)
     String phoneNumber;
 
 
@@ -63,7 +63,7 @@ public class User {
     @JsonIgnore
     private List<Wish> wishList;
 
-    public User(String username, String password, String nickname, String email, String userImgUrl, String phoneNumber){
+    public User(String username, String password, String nickname, String email,  String userImgUrl, String phoneNumber){
 
         this.username = username;
         this.password = password;
@@ -72,7 +72,7 @@ public class User {
         this.userImgUrl = userImgUrl;
         this.kakaoId = null;
         this.phoneNumber = phoneNumber;
-//        this.authCheck = false;
+
 
 
     }
@@ -87,8 +87,6 @@ public class User {
         this.userImgUrl = userImgUrl;
         this.phoneNumber ="";
         this.authCheck = true;
-        //추가
-//        this.randomNumber = "";
 
     }
 
