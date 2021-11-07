@@ -20,7 +20,7 @@ public class WishController {
 
   @PostMapping("/wishes")
   public Map<String, Object> addWish(@RequestBody WishRequestDto wishRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return wishService.addWish(wishRequestDto.getPostId(), userDetails);
+    return wishService.addWishAndDeleteWish(wishRequestDto.getPostId(), userDetails);
   }
 
   @GetMapping("/{userId}/wishes")

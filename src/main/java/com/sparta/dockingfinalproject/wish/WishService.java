@@ -30,38 +30,44 @@ public class WishService {
     this.postRepository = postRepository;
   }
 
-  public Map<String, Object> addWish(Long postId, UserDetailsImpl userDetails) {
+  public Map<String, Object> addWishAndDeleteWish(Long postId, UserDetailsImpl userDetails) {
     Map<String, Object> data = new HashMap<>();
 
-    Post findPost = postRepository.findById(postId).orElseThrow(
-        () -> new DockingException(ErrorCode.POST_NOT_FOUND)
-    );
+    Post findPost = findPost(postId);
 
     Optional<Wish> findWish = wishRepository.findAllByUserAndPost(userDetails.getUser(), findPost);
     if (findWish.isPresent()) {
-      Long wishId = findWish.get().getWishId();
-      wishRepository.deleteById(wishId);
-
+      deleteWish(findWish.get().getWishId());
       data.put("msg", "관심목록에서 삭제되었습니다.");
       return SuccessResult.success(data);
     }
 
-    Wish wish = new Wish();
-    wish.addPost(findPost);
-    wish.addUser(userDetails.getUser());
-
-    wishRepository.save(wish);
-
+    saveWish(findPost, userDetails.getUser());
     data.put("msg", "관심목록에 추가되었습니다.");
-
     return SuccessResult.success(data);
   }
 
+  private Post findPost(Long postId) {
+    return postRepository.findById(postId).orElseThrow(
+        () -> new DockingException(ErrorCode.POST_NOT_FOUND)
+    );
+  }
+
+  private void deleteWish(Long wishId) {
+    wishRepository.deleteById(wishId);
+  }
+
+  private void saveWish(Post post, User user) {
+    Wish wish = new Wish();
+    wish.addPost(post);
+    wish.addUser(user);
+    wishRepository.save(wish);
+  }
 
   // 나의 WishList 조회
   public Map<String, Object> getWishes(User user) {
 
-    ArrayList<WishResultDto> wishResultDtos = new ArrayList<>();
+    List<WishResultDto> wishResultDtos = new ArrayList<>();
     WishResultDto wishResultDto = new WishResultDto();
 
     List<WishResponseDto> wishResponseDtos = wishRepository.findAllByUser(user);

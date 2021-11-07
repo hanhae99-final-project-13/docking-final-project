@@ -71,7 +71,7 @@ public class PostController {
   }
 
   private String getTrimData(String data) {
-    if (data != null && data.isEmpty()) {
+    if (data != null && !data.isEmpty()) {
       return data.trim();
     }
     return data;
