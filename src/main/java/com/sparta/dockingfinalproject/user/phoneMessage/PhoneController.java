@@ -8,6 +8,7 @@ import com.sparta.dockingfinalproject.user.User;
 import com.sparta.dockingfinalproject.user.UserRepository;
 import com.sparta.dockingfinalproject.user.UserService;
 import com.sparta.dockingfinalproject.user.dto.PhoneRequestDto;
+import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,7 +34,7 @@ public class PhoneController {
 
 
   @PostMapping("/sendNumber")
-  public Map<String, Object> sendMessage(@RequestBody PhoneRequestDto requestDto){
+  public Map<String, Object> sendMessage(@RequestBody SignupRequestDto requestDto){
 	Map<String, Object> data = new HashMap<>();
 
 	if(requestDto != null){
@@ -50,10 +51,10 @@ public class PhoneController {
 
 
 @PostMapping("/phoneConfirm")
-  public Map<String, Object> phoneConfirm(@AuthenticationPrincipal UserDetailsImpl userDetails,@RequestBody PhoneRequestDto requestDto){
+  public Map<String, Object> phoneConfirm(@RequestBody SignupRequestDto singupRequestDto){
   Map<String, Object> data = new HashMap<>();
 
-	userService.phoneConfirm(userDetails, requestDto);
+	phoneService.phoneConfirm(singupRequestDto);
 
   	data.put("msg", "인증번호가 확인되었습니다");
 

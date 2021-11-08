@@ -1,6 +1,8 @@
 package com.sparta.dockingfinalproject.user;
 
 
+import static java.lang.Boolean.TRUE;
+
 import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
@@ -17,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,7 @@ public class UserService {
   private final JwtTokenProvider jwtTokenProvider;
   private final MailSendService mailSendService;
   private final PhoneService phoneService;
+
 
 
   public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
@@ -54,15 +58,13 @@ public class UserService {
 	String nickname = requestDto.getNickname();
 	String email = requestDto.getEmail();
 	String userImgUrl = "이미지url";
-	String authKey = mailSendService.sendSimpleMessage(email);
-
+	String phoneNumber = requestDto.getPhoneNumber();
+	Integer randomNumber = requestDto.getRandomNumber();
 
 	if (username.isEmpty()) {
 	  throw new DockingException(ErrorCode.USERNAME_NOT_FOUND);
 	}
-	if (email.isEmpty()) {
-	  throw new DockingException(ErrorCode.EMAIL_NOT_FOUND);
-	}
+
 	if (nickname.isEmpty()) {
 	  throw new DockingException(ErrorCode.NICKNAME_NOT_FOUND);
 	}
@@ -70,18 +72,21 @@ public class UserService {
 	  throw new DockingException(ErrorCode.PASSWORD_MISS_MATCH);
 	}
 
-//	if(!requestDto.isAuthCheck() == true  ) {
-//	  throw new DockingException(ErrorCode.EMAIL_NOT_FOUND);
-//	}
-	//패스워드 인코딩 완료
+
+
+
+
+	//패스워드 인코딩
 	password = passwordEncoder.encode(password);
 
-	User user = new User(username, password, nickname, email, userImgUrl, authKey);
+
+
+	User user = new User(username, password, nickname,email, userImgUrl,phoneNumber);
 	userRepository.save(user);
 
 	//data에 메세지넣기
 	Map<String, Object> data = new HashMap<>();
-	data.put("msg", "회원가입이 완료되었습니다");
+	data.put("msg", "회원가입 축하합니다!");
 
 	return SuccessResult.success(data);
 
@@ -91,10 +96,6 @@ public class UserService {
   //로그인
   public Map<String, Object> login(SignupRequestDto requestDto) {
 	User user = userRepository.findByUsername(requestDto.getUsername()).orElse(null);
-	//      User user = userRepository.findAllByAuthCheckTrueAndUsername(requestDto.getUsername()).orElseThrow(
-//          () -> new IllegalArgumentException("이메일 인증 부터 해주세요")
-//      );
-
 
 	List<Map<String, Object>> applyList = new ArrayList<>();
 	Map<String, Object> apply = new HashMap<>();
@@ -142,11 +143,6 @@ public class UserService {
 	//리턴 data 생성
 	Map<String, String> data = new HashMap<>();
 	System.out.println("수정으로 도착");
-//
-//	if (requestDto.getNickname().isEmpty()) {
-//	  throw new DockingException(ErrorCode.NICKNAME_NOT_FOUND);
-//	}
-
 	User findUser = userRepository.findById(userDetails.getUser().getUserId()).orElseThrow(
 		() -> new DockingException(ErrorCode.USER_NOT_FOUND)
 	);
@@ -188,13 +184,15 @@ public class UserService {
 
   }
 
-
+//아이디 중복 체크
   public Map<String, Object> idDoubleCheck(String username) {
-	//빈값은 프론트에서 처리됨
 
 	Map<String, Object> data = new HashMap<>();
 	Optional<User> found = userRepository.findByUsername(username);
 
+	if(username.isEmpty()){
+	  throw new DockingException(ErrorCode.USER_NOT_FOUND);
+	}
 	if (!found.isPresent()) {
 	  data.put("msg", "아이디 중복 확인 완료");
 	} else {
@@ -205,12 +203,15 @@ public class UserService {
 
   }
 
-
+//닉네임 중복 체크
   public Map<String, Object> nicknameDoubleCheck(String nickname) {
 
 	Map<String, Object> data = new HashMap<>();
 	Optional<User> found = userRepository.findByNickname(nickname);
 
+	if(nickname.isEmpty()) {
+	  throw new DockingException(ErrorCode.NICKNAME_NOT_FOUND);
+	}
 	if (!found.isPresent()) {
 	  data.put("msg", "닉네임 중복 확인 완료");
 	} else {
@@ -226,6 +227,7 @@ public class UserService {
   //이메일 인증 확인
   @Transactional
   public void singUpConfirm(String email, String authKey) throws Exception {
+
 	User user = userRepository.findByEmail(email).orElseThrow(
 		() -> new IllegalArgumentException("인증번호가 만료되었습니다. 다시 회원가입 해주세요")
 	);
@@ -237,34 +239,6 @@ public class UserService {
 
   }
 
-  //휴대폰 인증 확인
-
-  public Map<String, Object> phoneConfirm(UserDetailsImpl userDetails, PhoneRequestDto requestDto) {
-	Map<String, Object> data = new HashMap<>();
-
-
-	User user = userRepository.findByUsername(userDetails.getUser().getUsername()).orElseThrow(
-		() -> new DockingException(ErrorCode.USER_NOT_FOUND)
-	);
-
-	System.out.println("클라이언트인증번호 " + requestDto.getRandomNumber());
-
-// 	String randomNumber2 ="1234";
-	int randomNumber2=phoneService.sendMessage(requestDto);
-	// randomNumber2 = 생성된 인증번호 1234, randomnumber 는 clien로 부터 온 번호
-	if (requestDto.getRandomNumber() == (randomNumber2)) {
-
-
-	  user.setRandomNumber(requestDto.getRandomNumber());
-	  userRepository.save(user);
-	  data.put("msg", "인증번호가 일치합니다 ");
-
-
-	} else {
-	  throw new DockingException(ErrorCode.NUMBER_MISS_MATCH);
-	}
-	return SuccessResult.success(data);
-  }
 
 }
 

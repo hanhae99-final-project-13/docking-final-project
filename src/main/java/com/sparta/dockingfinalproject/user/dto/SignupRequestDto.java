@@ -1,8 +1,13 @@
 package com.sparta.dockingfinalproject.user.dto;
 
+import com.sparta.dockingfinalproject.user.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class SignupRequestDto {
@@ -19,7 +24,10 @@ public class SignupRequestDto {
 
     private String userImgUrl;
 
-    private boolean authCheck;
+
+//    private boolean authCheck;
+    private Integer randomNumber;
+    private String phoneNumber;
 
 
 
