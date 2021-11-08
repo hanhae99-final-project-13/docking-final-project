@@ -229,7 +229,6 @@ public class PostService {
         String[] ends = endDt.split("-");
         LocalDateTime start = LocalDateTime.of(Integer.parseInt(starts[0]), Integer.parseInt(starts[1]), Integer.parseInt(starts[2]), 0, 0);
         LocalDateTime end = LocalDateTime.of(Integer.parseInt(ends[0]), Integer.parseInt(ends[1]), Integer.parseInt(ends[2]), 23, 59);
-
         if (ownerType == null) {
           if (city == null) {
             pets = petRepository.findAllByCreatedAtBetweenOrderByCreatedAtDesc(start, end, pageable);
@@ -281,7 +280,7 @@ public class PostService {
     if (sort.equalsIgnoreCase("old")) {
       if (startDt != null) {
         String[] starts = startDt.split("-");
-        String[] ends = startDt.split("-");
+        String[] ends = endDt.split("-");
         LocalDateTime start = LocalDateTime.of(Integer.parseInt(starts[0]), Integer.parseInt(starts[1]), Integer.parseInt(starts[2]), 0, 0);
         LocalDateTime end = LocalDateTime.of(Integer.parseInt(ends[0]), Integer.parseInt(ends[1]), Integer.parseInt(ends[2]), 23, 59);
 
