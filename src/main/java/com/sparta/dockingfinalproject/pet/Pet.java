@@ -155,11 +155,11 @@ public class Pet extends Timestamped {
       this.url = petRequestDto.getUrl();
     }
 
-    if (petRequestDto.getImg().size() == 0) {
+    if (petRequestDto.getImg().size() > 0) {
       List<String> imgs = petRequestDto.getImg();
       String temp = "";
       for (String img : imgs) {
-        temp = img + "/";
+        temp += img + " ## ";
       }
       this.img = temp;
     }

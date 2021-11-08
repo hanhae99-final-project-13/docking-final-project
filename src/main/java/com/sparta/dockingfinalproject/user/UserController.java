@@ -5,7 +5,7 @@ import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
-import com.sparta.dockingfinalproject.user.mail.MailController;
+import com.sparta.dockingfinalproject.user.dto.UserInquriryRequestDto;
 import com.sparta.dockingfinalproject.user.mail.MailSendService;
 import java.util.Map;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -47,7 +47,6 @@ public class UserController {
   }
 
   //유저 수정
-
   @PatchMapping("/user")
   public Map<String, Object> updateUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
 	  @RequestBody UpdateRequestDto requestDto) {
@@ -75,5 +74,19 @@ public class UserController {
   public Map<String, Object> nicknameDoubleCheck(@RequestParam String nickname)
 	  throws DockingException {
 	return userService.nicknameDoubleCheck(nickname);
+  }
+
+  // 아이디 찾기
+  @PostMapping("/idInquiry")
+  public Map<String, Object> findUserId(@RequestBody UserInquriryRequestDto userInquriryRequestDto) {
+    return userService.findUserId(userInquriryRequestDto);
+  }
+
+  // 비밀번호 찾기
+  @PostMapping("/pwInquiry")
+  public Map<String, Object> findUserPw(@RequestBody UserInquriryRequestDto userInquriryRequestDto) {
+    String tempPw = mailSendService.sendSimpleMessage(userInquriryRequestDto.getEmail());
+    Map<String, Object> result = userService.findUserPw(userInquriryRequestDto, tempPw);
+    return result;
   }
 }

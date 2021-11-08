@@ -91,7 +91,7 @@ class PostServiceTest {
         "보호소", "10", "귀여움", "https://www.naver.com",
         new Post());
 
-    user = new User(1L, "user1", "aa1234", "홍길동", "sss@naver.com", "", "",  0L, "", true, 0, new ArrayList<>());
+    user = new User(1L, "user1", "aa1234", "홍길동", "sss@naver.com", "", "",  0L, "", true, "", new ArrayList<>());
 
     userDetails = new UserDetailsImpl(user);
 
