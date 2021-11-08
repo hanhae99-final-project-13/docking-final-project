@@ -30,23 +30,34 @@ public class KakaoUserController {
     @GetMapping("/oauth/callback/kakao")
     public Map<String, Object> kakaoLogin(@RequestParam String code) throws JsonProcessingException {
         List<Map<String, Object>> applyList = new ArrayList<>();
+        List<Map<String, Object>> eduList = new ArrayList<>();
+
         User user = kakaoUserService.kakaoLogin(code);
         Map<String, Object> data = new HashMap<>();
 
         if(code != null) {
 
             Map<String, Object> apply = new HashMap<>();
+            Map<String, Object> edu = new HashMap<>();
+
 
             data.put("nickname", user.getNickname());
             data.put("email", user.getEmail());
             data.put("userImgUrl", user.getUserImgUrl());
-            data.put("classCount", 3);
+//            data.put("eduList", user.getEduList());
+            data.put("eduList", eduList);
+
             data.put("alarmCount", 3);
             data.put("applyList", applyList);
             data.put("token", jwtTokenProvider.createToken(user.getEmail(),user.getEmail()));
             apply.put("applyState", "디폴트");
             apply.put("postId", "디폴트");
             applyList.add(apply);
+            edu.put("필수지식",true);
+            edu.put("심화지식",false);
+            edu.put("심화지식2",false);
+            eduList.add(edu);
+
         } else{
             throw new DockingException(ErrorCode.CODE_NOT_FOUND);
         }

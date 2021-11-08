@@ -46,7 +46,6 @@ public class User {
     @Column
     private String userImgUrl;
 
-
     @Column(unique = true)
     private Long kakaoId;
 
@@ -65,6 +64,8 @@ public class User {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     @JsonIgnore
     private List<Wish> wishList;
+
+
 
     public User(String username, String password, String nickname, String email,  String userImgUrl, String phoneNumber){
 
