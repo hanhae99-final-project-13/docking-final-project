@@ -1,17 +1,20 @@
 package com.sparta.dockingfinalproject.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
 import com.sparta.dockingfinalproject.wish.Wish;
+import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import javax.persistence.*;
-import java.util.List;
 
 @ToString
 @Getter
@@ -54,7 +57,7 @@ public class User {
     private boolean authCheck;
 
     @Column(nullable = false)
-    String phoneNumber;
+    private String phoneNumber;
 
 
 
