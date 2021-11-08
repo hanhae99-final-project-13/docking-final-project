@@ -39,8 +39,7 @@ public class FosterFormService {
     }
 
     //User 가져오기
-    Long userId = userDetails.getUser().getUserId();
-    User user = userRepository.getById(userId);
+    User user = userDetails.getUser();
 
     //해당 Post 가져오기
     Post post = postRepository.findById(postId).orElseThrow(

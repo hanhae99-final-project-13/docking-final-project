@@ -50,7 +50,7 @@ public class PostService {
 
   public Map<String, Object> home(UserDetailsImpl userDetails) {
     Pageable pageable = PageRequest.of(0, 6);
-    Page<Post> postPage = postRepository.findAllByOrderByModifiedAtDesc(pageable);
+    Page<Post> postPage = postRepository.findAllByOrderByCreatedAtDesc(pageable);
     List<Post> posts = postPage.getContent();
 
     Map<String, Object> data = new HashMap<>();

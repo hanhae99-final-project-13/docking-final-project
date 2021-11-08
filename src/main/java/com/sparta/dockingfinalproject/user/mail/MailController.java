@@ -39,23 +39,4 @@ public class MailController {
 
 
   }
-
-  @GetMapping("/user/signUpConfirm")
-//  public ResponseEntity<Object> signupConfirm(@RequestParam String email, @RequestParam String authKey)
-  public ResponseEntity<Object>signupConfirm(@RequestParam String email, @RequestParam String authKey)
-
-  throws Exception {
-
-	System.out.println(email);
-	System.out.println(authKey);
-	userService.singUpConfirm(email,authKey);
-
-
-
-	URI redirectUri = new URI("http://localhost:3000/login");
-	HttpHeaders httpHeaders = new HttpHeaders();
-	httpHeaders.setLocation(redirectUri);
-	return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
-
-  }
 }

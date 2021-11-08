@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-  Page<Post> findAllByOrderByModifiedAtDesc(Pageable pageable);
+  Page<Post> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
   Optional<Post> findAllByPet(Pet pet);
 
