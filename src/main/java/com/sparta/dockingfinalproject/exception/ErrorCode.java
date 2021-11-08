@@ -21,8 +21,10 @@ public enum ErrorCode {
   EMAIL_DUPLICATE(BAD_REQUEST, "중복된 이메일이 존재합니다."),
   IMAGE_NOT_FOUND(BAD_REQUEST, "이미지가 없습니다."),
   CODE_NOT_FOUND(BAD_REQUEST, "카카오 사용자를 찾을 수 없습니다."),
-  PASSWORD_MISS_MATCH(BAD_REQUEST, "비밀번호를 확인해주세요."),
+
   PASSWORD_EMPTY(BAD_REQUEST, "비밀번호를 입력해주세요."),
+  PASSWORD_MISS_MATCH(BAD_REQUEST, "비밀번호와 비밀번호 확인이 일치하지 않습니다."),
+  PASSWORD_NOT_FOUND(BAD_REQUEST, "비밀번호가 틀렸습니다."),
 
   NUMBER_MISS_MATCH(BAD_REQUEST, "인증번호가 맞지 않습니다."),
   NUMBER_NOT_FOUND(BAD_REQUEST, "핸드폰번호를 입력해주세요."),

@@ -83,48 +83,46 @@ public class UserService {
 
   }
 
-
   //로그인
   public Map<String, Object> login(SignupRequestDto requestDto) {
-    //아이디가 빈값일때
-    if (requestDto.getUsername().isEmpty()) {
-      throw new DockingException(ErrorCode.USERNAME_EMPTY);
-    }
+	//아이디가 빈값일때
+	if (requestDto.getUsername().isEmpty()) {
+	  throw new DockingException(ErrorCode.USERNAME_EMPTY);
+	}
 
-    //패스워드 빈값일때
-    if (requestDto.getPassword().isEmpty()) {
-      throw new DockingException(ErrorCode.PASSWORD_EMPTY);
-    }
+	//패스워드 빈값일때
+	if (requestDto.getPassword().isEmpty()) {
+	  throw new DockingException(ErrorCode.PASSWORD_EMPTY);
+	}
 
-    User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
-        () -> new DockingException(ErrorCode.USERNAME_NOT_FOUND)
-    );
+	User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
+		() -> new DockingException(ErrorCode.USERNAME_NOT_FOUND)
+	);
 
-    List<Map<String, Object>> applyList = new ArrayList<>();
-    Map<String, Object> apply = new HashMap<>();
+	List<Map<String, Object>> applyList = new ArrayList<>();
+	Map<String, Object> apply = new HashMap<>();
 
-    //패스워드 불일치일때
-    if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
-      throw new DockingException(ErrorCode.PASSWORD_MISS_MATCH);
-    }
+	//패스워드 불일치일때
+	if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
+	  throw new DockingException(ErrorCode.PASSWORD_MISS_MATCH);
+	}
 
+	Map<String, Object> data = new HashMap<>();
+	data.put("nickname", user.getNickname());
+	data.put("email", user.getEmail());
+	data.put("userImgUrl", user.getUserImgUrl());
+	data.put("classCount", 5);
+	data.put("alarmCount", 5);
+	data.put("token",
+		jwtTokenProvider.createToken(requestDto.getUsername(), requestDto.getUsername()));
+	data.put("applyList", applyList);
 
-    Map<String, Object> data = new HashMap<>();
-    data.put("nickname", user.getNickname());
-    data.put("email", user.getEmail());
-    data.put("userImgUrl", user.getUserImgUrl());
-    data.put("classCount", 5);
-    data.put("alarmCount", 5);
-    data.put("token",
-        jwtTokenProvider.createToken(requestDto.getUsername(), requestDto.getUsername()));
-    data.put("applyList", applyList);
+	apply.put("applyState", "디폴트");
+	apply.put("postId", "디폴트");
 
-    apply.put("applyState", "디폴트");
-    apply.put("postId", "디폴트");
+	applyList.add(apply);
 
-    applyList.add(apply);
-
-    return SuccessResult.success(data);
+	return SuccessResult.success(data);
   }
 
   //회원정보 수정
@@ -149,20 +147,33 @@ public class UserService {
   public Map<String, Object> loginCheck(UserDetailsImpl userDetails) {
     Map<String, Object> data = new HashMap<>();
 
-    if (userDetails != null) {
-      List<Map<String, Object>> applyList = new ArrayList<>();
+
+	if (userDetails != null) {
+	  List<Map<String, Object>> applyList = new ArrayList<>();
+	  List<Map<String, Object>> eduList = new ArrayList<>();
+	  Map<String, Object> edu = new HashMap<>();
+
+
 
       Map<String, Object> apply = new HashMap<>();
 
-      data.put("nickname", userDetails.getUser().getNickname());
-      data.put("email", userDetails.getUser().getEmail());
-      data.put("userImgUrl", userDetails.getUser().getUserImgUrl());
-      data.put("classCount", 5);
-      data.put("alarmCount", 5);
-      data.put("applyList", applyList);
 
-      apply.put("applyState", "디폴트");
-      apply.put("postId", "디폴트");
+	  data.put("nickname", userDetails.getUser().getNickname());
+	  data.put("email", userDetails.getUser().getEmail());
+	  data.put("userImgUrl", userDetails.getUser().getUserImgUrl());
+//	  data.put("eduList", userDetails.getUser().getEduList());
+	  data.put("alarmCount", 5);
+	  data.put("applyList", applyList);
+	  data.put("eduList", eduList);
+
+
+	  apply.put("applyState", "디폴트");
+	  apply.put("postId", "디폴트");
+	  edu.put("필수지식",true);
+	  edu.put("심화지식",false);
+	  edu.put("심화지식2",false);
+	  eduList.add(edu);
+
 
       applyList.add(apply);
     } else {
