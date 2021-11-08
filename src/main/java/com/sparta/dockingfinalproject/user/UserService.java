@@ -2,6 +2,7 @@ package com.sparta.dockingfinalproject.user;
 
 
 import com.sparta.dockingfinalproject.common.SuccessResult;
+import com.sparta.dockingfinalproject.education.Education;
 import com.sparta.dockingfinalproject.education.EducationRepository;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.transaction.Transactional;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +56,9 @@ public class UserService {
 
     User user = new User(requestDto, password);
     userRepository.save(user);
+
+    Education education = new Education(user);
+    educationRepository.save(education);
 
     //data에 메세지넣기
     Map<String, Object> data = new HashMap<>();
@@ -107,6 +112,9 @@ public class UserService {
     if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
       throw new DockingException(ErrorCode.PASSWORD_MISS_MATCH);
     }
+
+
+    Education education = educationRepository.findByUser(user).orElse(null);
     Map<String, Object> data = new HashMap<>();
     List<Map<String, Object>> applyList = new ArrayList<>();
     Map<String, Object> apply = new HashMap<>();
@@ -118,9 +126,9 @@ public class UserService {
 
     apply.put("applyState", "디폴트");
     apply.put("postId", "디폴트");
-    edu.put("필수지식", false);
-    edu.put("심화지식", false);
-    edu.put("심화지식2", false);
+    edu.put("필수지식", education.getBasic());
+    edu.put("심화지식", education.getAdvanced());
+    edu.put("심화지식2", education.getCore());
     eduList.add(edu);
 
     applyList.add(apply);
@@ -156,10 +164,14 @@ public class UserService {
 
   public Map<String, Object> loginCheck(UserDetailsImpl userDetails) {
     Map<String, Object> data = new HashMap<>();
+    User user = userDetails.getUser();
+
+    Education education = educationRepository.findByUser(user).orElse(null);
 
     if (userDetails != null) {
       List<Map<String, Object>> applyList = new ArrayList<>();
       Map<String, Object> apply = new HashMap<>();
+
 
       data.put("nickname", userDetails.getUser().getNickname());
       List<Map<String, Object>> eduList = new ArrayList<>();
@@ -171,14 +183,18 @@ public class UserService {
       data.put("email", userDetails.getUser().getEmail());
       data.put("userImgUrl", userDetails.getUser().getUserImgUrl());
       data.put("phone", userDetails.getUser().getPhoneNumber());
-      data.put("eduList", "eduList");
+      data.put("eduList", eduList);
       data.put("alarmCount", 5);
       data.put("applyList", applyList);
 
       apply.put("applyState", "디폴트");
       apply.put("postId", "디폴트");
+      edu.put("필수지식",education.getBasic());
+      edu.put("심화지식",education.getAdvanced());
+      edu.put("심화지식2",education.getCore());
 
       applyList.add(apply);
+      eduList.add(edu);
     } else {
       throw new DockingException(ErrorCode.USER_NOT_FOUND);
     }
