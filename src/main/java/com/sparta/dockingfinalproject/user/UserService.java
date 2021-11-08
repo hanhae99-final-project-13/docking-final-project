@@ -59,7 +59,7 @@ public class UserService {
     }
 
     if (username.isEmpty()) {
-      throw new DockingException(ErrorCode.USERNAME_NOT_FOUND);
+      throw new DockingException(ErrorCode.USERNAME_EMPTY);
     }
 
     if (nickname.isEmpty()) {
@@ -86,7 +86,19 @@ public class UserService {
 
   //로그인
   public Map<String, Object> login(SignupRequestDto requestDto) {
-    User user = userRepository.findByUsername(requestDto.getUsername()).orElse(null);
+    //아이디가 빈값일때
+    if (requestDto.getUsername().isEmpty()) {
+      throw new DockingException(ErrorCode.USERNAME_EMPTY);
+    }
+
+    //패스워드 빈값일때
+    if (requestDto.getPassword().isEmpty()) {
+      throw new DockingException(ErrorCode.PASSWORD_EMPTY);
+    }
+
+    User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
+        () -> new DockingException(ErrorCode.USERNAME_NOT_FOUND)
+    );
 
     List<Map<String, Object>> applyList = new ArrayList<>();
     Map<String, Object> apply = new HashMap<>();
@@ -95,20 +107,7 @@ public class UserService {
     if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
       throw new DockingException(ErrorCode.PASSWORD_MISS_MATCH);
     }
-    //아이디가 빈값일때
-    if (requestDto.getUsername().isEmpty()) {
-      throw new DockingException(ErrorCode.USERNAME_NOT_FOUND);
-    }
 
-    //패스워드 빈값일때
-    if (requestDto.getPassword().isEmpty()) {
-      throw new DockingException(ErrorCode.USERNAME_NOT_FOUND);
-    }
-
-    //아이디 불일치일때
-    if (!user.getUsername().equals(requestDto.getUsername())) {
-      throw new DockingException(ErrorCode.USERNAME_MISS_MATCH);
-    }
 
     Map<String, Object> data = new HashMap<>();
     data.put("nickname", user.getNickname());
