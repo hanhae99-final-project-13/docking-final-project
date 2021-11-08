@@ -113,6 +113,7 @@ public class UserService {
 
     List<Map<String, Object>> eduList = new ArrayList<>();
     Map<String, Object> edu = new HashMap<>();
+
     LoginResponseDto loginResponseDto = LoginResponseDto.of(user, jwtTokenProvider.createToken(requestDto.getUsername(), requestDto.getUsername()), eduList, applyList);
 
     apply.put("applyState", "디폴트");
@@ -158,10 +159,14 @@ public class UserService {
 
     if (userDetails != null) {
       List<Map<String, Object>> applyList = new ArrayList<>();
-
       Map<String, Object> apply = new HashMap<>();
 
       data.put("nickname", userDetails.getUser().getNickname());
+      List<Map<String, Object>> eduList = new ArrayList<>();
+      Map<String, Object> edu = new HashMap<>();
+
+
+      data.put("userId", userDetails.getUser().getUserId());
       data.put("nickname", userDetails.getUser().getNickname());
       data.put("email", userDetails.getUser().getEmail());
       data.put("userImgUrl", userDetails.getUser().getUserImgUrl());
@@ -222,23 +227,6 @@ public class UserService {
 
 
   }
-
-
-  //이메일 인증 확인
-  @Transactional
-  public void singUpConfirm(String email, String authKey) throws Exception {
-
-    User user = userRepository.findByEmail(email).orElseThrow(
-        () -> new IllegalArgumentException("인증번호가 만료되었습니다. 다시 회원가입 해주세요")
-    );
-    if (user.getAuthKey().equalsIgnoreCase(authKey)) {
-      user.confirm();
-    } else {
-      throw new DockingException(ErrorCode.POST_NOT_FOUND);
-    }
-
-  }
-
 
   public Map<String, Object> findUserId(UserInquriryRequestDto userInquriryRequestDto) {
     String email = userInquriryRequestDto.getEmail();

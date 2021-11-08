@@ -84,14 +84,12 @@ public class User {
 
 
   public User(String password, String nickname, String email, Long kakaoId) {
-
     this.password = password;
     this.nickname = nickname;
     this.email = email;
     this.kakaoId = kakaoId;
     this.authKey = "";
     this.authCheck = true;
-
   }
 
   public User(SignupRequestDto requestDto, String password) {
@@ -104,13 +102,10 @@ public class User {
     this.phoneNumber = requestDto.getPhoneNumber();
   }
 
-  public User confirm() {
-    this.authKey = "";
-    this.authCheck = true;
-    return this;
-
+  public void confirm(UpdateRequestDto requestDto) {
+    this.nickname = requestDto.getNickname();
+    this.userImgUrl = requestDto.getUserImgUrl();
   }
-
 
   public void update(UpdateRequestDto requestDto) {
     this.nickname = requestDto.getNickname();
