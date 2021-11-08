@@ -1,9 +1,11 @@
 package com.sparta.dockingfinalproject.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sparta.dockingfinalproject.education.Education;
 import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
 import com.sparta.dockingfinalproject.wish.Wish;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -64,6 +66,8 @@ public class User {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     @JsonIgnore
     private List<Wish> wishList;
+
+
 
 
 
