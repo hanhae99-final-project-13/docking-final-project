@@ -91,7 +91,7 @@ class PostServiceTest {
         "보호소", "10", "귀여움", "https://www.naver.com",
         new Post());
 
-    user = new User(1L, "user1", "aa1234", "홍길동", "sss@naver.com", "", "",  0L, "", true, "", new ArrayList<>());
+    user = new User(1L, "user1", "aa1234", "홍길동", "sss@naver.com", "", "",  0L, "", true, "");
 
     userDetails = new UserDetailsImpl(user);
 
@@ -132,7 +132,7 @@ class PostServiceTest {
 
     Pageable pageable = PageRequest.of(0, 6);
 
-    when(postRepository.findAllByOrderByModifiedAtDesc(pageable)).thenReturn(pages);
+    when(postRepository.findAllByOrderByCreatedAtDesc(pageable)).thenReturn(pages);
 
     Map<String, Object> home = postService.home(userDetails);
     Map<String, Object> data = (Map<String, Object>) home.get("data");

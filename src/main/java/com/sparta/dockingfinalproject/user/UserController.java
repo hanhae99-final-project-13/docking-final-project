@@ -31,10 +31,7 @@ public class UserController {
 
   //회원가입 요청
   @PostMapping("/signup")
-
-  //bindingResult가 뭘까?????????????
-  public Map<String, Object> registerUser(@RequestBody SignupRequestDto requestDto)
-	  throws Exception {
+  public Map<String, Object> registerUser(@RequestBody SignupRequestDto requestDto) {
 	return userService.registerUser(requestDto);
   }
 
