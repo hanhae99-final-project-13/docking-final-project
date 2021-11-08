@@ -1,13 +1,11 @@
 package com.sparta.dockingfinalproject.user.mail;
 
 
-import com.sparta.dockingfinalproject.exception.DockingException;
 import java.util.Random;
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
@@ -68,15 +66,12 @@ public class MailSendService {
     mes+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
     mes+= "<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>";
     mes+= "<div style='font-size:130%'>";
-    mes+= "CODE : <strong>";
-    mes+= "<a href='http://localhost:8080/user/signUpConfirm?email=";
-    mes += to;
-    mes += "&authKey=";
+    mes+= "임시비밀번호 : <strong>";
     mes += ePw;
-    mes += "' target='_blenk'>이메일 인증</a></strong><div><br/>";
+    mes += "</strong><div><br/>";
     mes+= "</div>";
     message.setText(mes, "utf-8", "html");//내용
-    message.setFrom(new InternetAddress("wldms2494@gmail.com","Docking team"));
+    message.setFrom(new InternetAddress("choiseonkang@gmail.com","Docking team"));
 
     return message;
 

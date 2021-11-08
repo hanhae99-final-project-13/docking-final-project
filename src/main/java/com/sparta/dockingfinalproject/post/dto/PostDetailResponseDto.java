@@ -25,6 +25,7 @@ public class PostDetailResponseDto {
   private String tag;
   private String url;
   private List<String> img;
+  private String extra;
   private String isAdopted;
   private boolean heart;
 
@@ -36,6 +37,7 @@ public class PostDetailResponseDto {
             .postId(post.getPostId())
             .breed(pet.getBreed())
             .sex(pet.getSex())
+            .age(pet.getAge())
             .weight(pet.getWeight())
             .lostLocation(pet.getLostLocation())
             .ownerType(pet.getOwnerType())
@@ -44,6 +46,7 @@ public class PostDetailResponseDto {
             .tag(pet.getTag())
             .url(pet.getUrl())
             .img(getImgs(pet.getImg()))
+            .extra(pet.getExtra())
             .isAdopted(pet.getIsAdopted())
             .heart(heart)
             .build();
@@ -58,6 +61,7 @@ public class PostDetailResponseDto {
         .postId(post.getPostId())
         .breed(pet.getBreed())
         .sex(pet.getSex())
+        .age(pet.getAge())
         .weight(pet.getWeight())
         .lostLocation(pet.getLostLocation())
         .ownerType(pet.getOwnerType())
@@ -65,6 +69,7 @@ public class PostDetailResponseDto {
         .tag(pet.getTag())
         .url(pet.getUrl())
         .img(getImgs(pet.getImg()))
+        .extra(pet.getExtra())
         .isAdopted(pet.getIsAdopted())
         .build();
   }
