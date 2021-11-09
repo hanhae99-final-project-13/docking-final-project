@@ -4,7 +4,6 @@ import com.sparta.dockingfinalproject.alarm.dto.AlarmResponseDto;
 import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
-import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.User;
 import java.util.ArrayList;
 import java.util.HashMap;
