@@ -111,10 +111,6 @@ public class UserService {
 
 	Education education = educationRepository.findByUser(user).orElse(null);
 
-	Alarm alarm = new Alarm();
-	alarm.addUser(user);
-	alarmRepository.save(alarm);
-
 	Map<String, Object> data = new HashMap<>();
 
 	List<Map<String, Object>> applyList = new ArrayList<>();
