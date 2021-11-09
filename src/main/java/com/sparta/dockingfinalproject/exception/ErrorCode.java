@@ -44,7 +44,10 @@ public enum ErrorCode {
   COMMENT_NOT_FOUND(BAD_REQUEST, "해당 댓글을 찾을 수 없습니다."),
   FOSTERFORM_NOT_FOUND(BAD_REQUEST, "해당 입양신청서를 찾을 수 없습니다."),
   ALARM_NOT_FOUND(BAD_REQUEST, "해당 알람 내용을 찾을 수 없습니다."),
-  PET_NOT_FOUND(BAD_REQUEST, "해당 유기견을 찾을 수 없습니다.");
+  PET_NOT_FOUND(BAD_REQUEST, "해당 유기견을 찾을 수 없습니다."),
+
+  CLASSNUMBER_NOT_FOUND(BAD_REQUEST, "해당 페이지에 대한 정보가 없습니다.");
+
 
   private final HttpStatus httpStatus;
   private final String message;
