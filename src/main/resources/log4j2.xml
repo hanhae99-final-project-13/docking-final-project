@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration status="WARN">
+
+  <Properties>
+    <Property name="logFile">logFile</Property>
+    <Property name="consoleLayout">%style{%d{ISO8601}}{black} %highlight{%-5level
+      }[%style{%t}{bright,blue}] %style{%C{1.}}{bright,yellow}: %msg%n%throwable
+    </Property>
+    <Property name="fileLayout">%d [%t] %-5level %c(%M:%L) - %m%n</Property>
+  </Properties>
+
+  <Appenders>
+    <Console name="console" target="SYSTEM_OUT">
+      <PatternLayout pattern="${consoleLayout}" charset="UTF-8"/>
+    </Console>
+
+    <RollingFile name="file" fileName="logs/${logFile}.log"
+      filePattern="logs/${logFile}.%d{yyyy-MM-dd}-%i.log">
+      <PatternLayout pattern="${fileLayout}" charset="UTF-8"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+        <SizeBasedTriggeringPolicy size="10MB"/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="${BASE_DIR}">
+          <IfFileName glob="*.log"/>
+          <IfLastModified age="30d"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingFile>
+  </Appenders>
+
+  <Loggers>
+    <!--    모든 로그-->
+    <root level="info" additivity="false" >
+      <appender-ref ref="console" />
+      <appender-ref ref="file" />
+    </root>
+    <!--    특정 로그-->
+    <logger name="org.springframework" level="warn" additivity="false" >
+      <appender-ref ref="console" />
+      <appender-ref ref="file" />
+    </logger>
+    <logger name="org.apache.http" level="warn" additivity="false" >
+      <appender-ref ref="console" />
+      <appender-ref ref="file" />
+    </logger>
+  </Loggers>
+
+</Configuration>
