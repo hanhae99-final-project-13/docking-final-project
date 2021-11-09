@@ -8,6 +8,7 @@ import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
+import com.sparta.dockingfinalproject.user.dto.LoginCheckResponseDto;
 import com.sparta.dockingfinalproject.user.dto.LoginResponseDto;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
@@ -127,7 +128,6 @@ public class UserService {
 	edu.put("심화지식", education.getAdvanced());
 	edu.put("심화지식2", education.getCore());
 	eduList.add(edu);
-
 	applyList.add(apply);
 
 	return SuccessResult.success(loginResponseDto);
@@ -174,29 +174,24 @@ public class UserService {
 	  List<Map<String, Object>> eduList = new ArrayList<>();
 	  Map<String, Object> edu = new HashMap<>();
 
-	  data.put("userId", userDetails.getUser().getUserId());
-	  data.put("nickname", userDetails.getUser().getNickname());
-	  data.put("email", userDetails.getUser().getEmail());
-	  data.put("userImgUrl", userDetails.getUser().getUserImgUrl());
-	  data.put("phone", userDetails.getUser().getPhoneNumber());
-	  data.put("eduList", eduList);
-	  data.put("alarmCount", 5);
-	  data.put("applyList", applyList);
+	  LoginCheckResponseDto loginCheckResponseDto = LoginCheckResponseDto.of(
+		  userDetails, eduList, applyList);
+
 
 	  apply.put("applyState", "디폴트");
 	  apply.put("postId", "디폴트");
 	  edu.put("필수지식", education.getBasic());
 	  edu.put("심화지식", education.getAdvanced());
 	  edu.put("심화지식2", education.getCore());
-
 	  applyList.add(apply);
 	  eduList.add(edu);
+
+	  return SuccessResult.success(loginCheckResponseDto);
 	} else {
 	  throw new DockingException(ErrorCode.USER_NOT_FOUND);
 	}
 
-	System.out.println("로그인 체크완료");
-	return SuccessResult.success(data);
+
 
   }
 
@@ -215,9 +210,11 @@ public class UserService {
 	  throw new DockingException(ErrorCode.USERNAME_DUPLICATE);
 	}
 
+
 	return SuccessResult.success(data);
 
   }
+
 
   //닉네임 중복 체크
   public Map<String, Object> nicknameDoubleCheck(String nickname) {
