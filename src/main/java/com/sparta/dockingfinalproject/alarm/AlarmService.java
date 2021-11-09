@@ -15,39 +15,37 @@ import org.springframework.stereotype.Service;
 @Service
 public class AlarmService {
 
-  private final AlarmRepository alarmRepositoroy;
+  private final AlarmRepository alarmRepository;
 
-  public AlarmService(AlarmRepository alarmRepositoroy) {
-    this.alarmRepositoroy = alarmRepositoroy;
+  public AlarmService(AlarmRepository alarmRepository) {
+    this.alarmRepository = alarmRepository;
   }
 
-  public Map<String, Object> getAlarms(UserDetailsImpl userDetails) {
-    System.out.println(userDetails.getUser().getUsername());
-    List<Alarm> alarms = alarmRepositoroy.findAllByUserOrderByCreatedAtDesc(userDetails.getUser());
-
-    List<AlarmResponseDto> dataAlarms = new ArrayList<>();
-    for (Alarm alarm : alarms) {
-      AlarmResponseDto alarmResponseDto = AlarmResponseDto.builder()
-                                                      .alarmId(alarm.getAlarmId())
-                                                      .alarmContent(alarm.getAlarmContent())
-                                                      .build();
-      dataAlarms.add(alarmResponseDto);
-    }
+  public Map<String, Object> getAlarms(User user) {
+    List<Alarm> alarms = alarmRepository.findAllByUserOrderByCreatedAtDesc(user);
 
     Map<String, Object> data = new HashMap<>();
-    data.put("data", dataAlarms);
-    data.put("alarmCount", getAlarmCount(userDetails.getUser()));
-
+    data.put("data", getResponseAlarms(alarms));
+    data.put("alarmCount", getAlarmCount(user));
     return SuccessResult.success(data);
   }
 
+  private List<AlarmResponseDto> getResponseAlarms(List<Alarm> alarms) {
+    List<AlarmResponseDto> dataAlarms = new ArrayList<>();
+    for (Alarm alarm : alarms) {
+      AlarmResponseDto alarmResponseDto = getAlarmResponseDto(alarm);
+      dataAlarms.add(alarmResponseDto);
+    }
+    return dataAlarms;
+  }
+
   public int getAlarmCount(User user) {
-    List<Alarm> alarms = alarmRepositoroy.findAllByUserAndStatusTrueOrderByCreatedAtDesc(user);
+    List<Alarm> alarms = alarmRepository.findAllByUserAndStatusTrueOrderByCreatedAtDesc(user);
     return alarms.size();
   }
 
-  public Map<String, Object> deleteAlarms() {
-    alarmRepositoroy.deleteAll();
+  public Map<String, Object> deleteAlarms(User user) {
+    alarmRepository.deleteAllByUser(user);
 
     Map<String, String> data = new HashMap<>();
     data.put("msg", "삭제 완료되었습니다.");
@@ -55,22 +53,31 @@ public class AlarmService {
     return SuccessResult.success(data);
   }
 
-  public Map<String, Object> getAlarm(Long alarmId, UserDetailsImpl userDetails) {
-    Alarm alarm = alarmRepositoroy.findById(alarmId).orElseThrow(
-        () -> new DockingException(ErrorCode.ALARM_NOT_FOUND)
-    );
-
-    alarm.updateStatus();
-    alarmRepositoroy.save(alarm);
-
-    AlarmResponseDto dataAlarm = AlarmResponseDto.builder()
-                                      .alarmId(alarm.getAlarmId())
-                                      .alarmContent(alarm.getAlarmContent())
-                                      .build();
+  public Map<String, Object> getAlarm(Long alarmId, User user) {
+    Alarm alarm = findAlarm(alarmId);
+    modifyAlarmStatus(alarm);
 
     Map<String, Object> data = new HashMap<>();
-    data.put("data", dataAlarm);
-    data.put("alarmCount", getAlarmCount(userDetails.getUser()));
+    data.put("data", getAlarmResponseDto(alarm));
+    data.put("alarmCount", getAlarmCount(user));
     return SuccessResult.success(data);
+  }
+
+  private Alarm findAlarm(Long alarmId) {
+    return alarmRepository.findById(alarmId).orElseThrow(
+        () -> new DockingException(ErrorCode.ALARM_NOT_FOUND)
+    );
+  }
+
+  private void modifyAlarmStatus(Alarm alarm) {
+    alarm.updateStatus();
+    alarmRepository.save(alarm);
+  }
+
+  private AlarmResponseDto getAlarmResponseDto(Alarm alarm) {
+    return AlarmResponseDto.builder()
+        .alarmId(alarm.getAlarmId())
+        .alarmContent(alarm.getAlarmContent())
+        .build();
   }
 }

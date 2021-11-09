@@ -19,16 +19,16 @@ public class AlarmController {
 
   @GetMapping("/alarms")
   public Map<String, Object> getAlarms(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return alarmService.getAlarms(userDetails);
+    return alarmService.getAlarms(userDetails.getUser());
   }
 
   @DeleteMapping("/alarms")
-  public Map<String, Object> deleteAlarms() {
-    return alarmService.deleteAlarms();
+  public Map<String, Object> deleteAlarms(UserDetailsImpl userDetails) {
+    return alarmService.deleteAlarms(userDetails.getUser());
   }
 
   @GetMapping("/alarms/{alarmId}")
   public Map<String, Object> getAlarm(@PathVariable Long alarmId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return alarmService.getAlarm(alarmId, userDetails);
+    return alarmService.getAlarm(alarmId, userDetails.getUser());
   }
 }
