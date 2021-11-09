@@ -10,15 +10,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AlarmService {
 
-  private final AlarmRepositoroy alarmRepositoroy;
+  private final AlarmRepository alarmRepositoroy;
 
-  public AlarmService(AlarmRepositoroy alarmRepositoroy) {
+  public AlarmService(AlarmRepository alarmRepositoroy) {
     this.alarmRepositoroy = alarmRepositoroy;
   }
 

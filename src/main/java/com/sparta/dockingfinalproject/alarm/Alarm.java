@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -38,6 +39,12 @@ public class Alarm extends Timestamped {
     }
 
     public void updateStatus() {
+        this.status = false;
+    }
+
+    public Alarm(String alarmContent){
+
+        this.alarmContent = alarmContent;
         this.status = false;
     }
 }

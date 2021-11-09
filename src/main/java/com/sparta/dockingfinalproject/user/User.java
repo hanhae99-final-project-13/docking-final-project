@@ -1,5 +1,7 @@
 package com.sparta.dockingfinalproject.user;
 
+import com.sparta.dockingfinalproject.alarm.Alarm;
+import com.sparta.dockingfinalproject.alarm.AlarmRepository;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
 import javax.persistence.Column;
@@ -20,6 +22,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @Entity
 public class User {
+
+
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -100,12 +104,14 @@ public class User {
     this.userImgUrl = "이미지url";
     this.kakaoId = null;
     this.phoneNumber = requestDto.getPhoneNumber();
+
   }
 
   public void confirm(UpdateRequestDto requestDto) {
     this.nickname = requestDto.getNickname();
     this.userImgUrl = requestDto.getUserImgUrl();
   }
+
 
   public void update(UpdateRequestDto requestDto) {
     this.nickname = requestDto.getNickname();
