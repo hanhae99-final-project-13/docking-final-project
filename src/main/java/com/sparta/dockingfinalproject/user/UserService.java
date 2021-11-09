@@ -239,8 +239,6 @@ public class UserService {
     return SuccessResult.success(data);
   }
 
-  }
-
   public Map<String, Object> findUserId(UserInquriryRequestDto userInquriryRequestDto) {
 	String email = userInquriryRequestDto.getEmail();
 	User findUser = userRepository.findByEmail(email).orElseThrow(
