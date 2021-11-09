@@ -14,7 +14,6 @@ import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -30,7 +29,6 @@ public class Alarm extends Timestamped {
   private String alarmContent;
 
   @Column(nullable = false)
-  @ColumnDefault(value = "true")
   private boolean status;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -39,6 +37,7 @@ public class Alarm extends Timestamped {
 
   public Alarm(String alarmContent) {
     this.alarmContent = alarmContent;
+    this.status = true;
   }
 
   public void addUser(User user) {
