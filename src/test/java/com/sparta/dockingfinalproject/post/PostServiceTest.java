@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-import com.sparta.dockingfinalproject.alarm.AlarmRepositoroy;
+import com.sparta.dockingfinalproject.alarm.AlarmRepository;
 import com.sparta.dockingfinalproject.comment.CommentRepository;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.pet.Pet;
@@ -51,7 +51,7 @@ class PostServiceTest {
   private CommentRepository commentRepository;
 
   @Mock
-  private AlarmRepositoroy alarmRepositoroy;
+  private AlarmRepository alarmRepository;
 
   @Mock
   private UserRepository userRepository;

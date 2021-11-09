@@ -11,33 +11,41 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Alarm extends Timestamped {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long alarmId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long alarmId;
 
-    @Column(nullable = false)
-    private String alarmContent;
+  @Column(nullable = false)
+  private String alarmContent;
 
-    @Column(nullable = false)
-    private boolean status;
+  @Column(nullable = false)
+  @ColumnDefault(value = "true")
+  private boolean status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID", nullable = false)
-    private User user;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "USER_ID", nullable = false)
+  private User user;
 
-    public void addUser(User user) {
-        this.user = user;
-    }
+  public Alarm(String alarmContent) {
+    this.alarmContent = alarmContent;
+  }
 
-    public void updateStatus() {
-        this.status = false;
-    }
+  public void addUser(User user) {
+    this.user = user;
+  }
+
+  public void updateStatus() {
+    this.status = false;
+  }
 }

@@ -53,7 +53,7 @@ class AlarmServiceTest {
     when(alarmRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(alarms);
     when(alarmRepository.findAllByUserAndStatusTrueOrderByCreatedAtDesc(user)).thenReturn(alarms);
 
-    Map<String, Object> data = (Map<String, Object>) alarmService.getAlarms(userDetails).get("data");
+    Map<String, Object> data = (Map<String, Object>) alarmService.getAlarms(user).get("data");
     List<AlarmResponseDto> findAlarms = (List<AlarmResponseDto>) data.get("data");
 
     assertThat(data.get("alarmCount")).isEqualTo(2);
@@ -66,7 +66,7 @@ class AlarmServiceTest {
   void getAlarm() {
     when(alarmRepository.findById(10L)).thenReturn(Optional.of(alarm1));
 
-    Map<String, Object> alarm = (Map<String, Object>) alarmService.getAlarm(10L, userDetails).get("data");
+    Map<String, Object> alarm = (Map<String, Object>) alarmService.getAlarm(10L, user).get("data");
     AlarmResponseDto alarmResponseDto = (AlarmResponseDto) alarm.get("data");
 
     assertThat(alarmResponseDto.getAlarmId()).isEqualTo(10L);
@@ -77,7 +77,7 @@ class AlarmServiceTest {
   void modifyAlarmStatus() {
     when(alarmRepository.findById(10L)).thenReturn(Optional.of(alarm1));
 
-    Map<String, Object> alarm = (Map<String, Object>) alarmService.getAlarm(10L, userDetails).get("data");
+    Map<String, Object> alarm = (Map<String, Object>) alarmService.getAlarm(10L, user).get("data");
 
     assertThat(alarmRepository.findById(10L).get().isStatus()).isFalse();
   }
