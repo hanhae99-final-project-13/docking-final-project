@@ -46,16 +46,17 @@ public class UserService {
 
   //회원 등록
   public Map<String, Object> registerUser(SignupRequestDto requestDto) {
-    validateUser(requestDto);
+	validateUser(requestDto);
 
-    String password = requestDto.getPassword();
-    password = passwordEncoder.encode(password);
+	//패스워드 인코딩
+	String password = requestDto.getPassword();
+	password = passwordEncoder.encode(password);
 
-    User user = new User(requestDto, password);
-    userRepository.save(user);
+	User user = new User(requestDto, password);
+	userRepository.save(user);
 
-    Education education = new Education(user);
-    educationRepository.save(education);
+	Education education = new Education(user);
+	educationRepository.save(education);
 
     Alarm alarm = new Alarm("회원가입을 축하합니다");
     alarm.addUser(user);
@@ -64,82 +65,83 @@ public class UserService {
     Map<String, Object> data = new HashMap<>();
     data.put("msg", "회원가입 축하합니다!");
 
-    return SuccessResult.success(data);
+	return SuccessResult.success(data);
   }
 
   private void validateUser(SignupRequestDto requestDto) {
-    String username = requestDto.getUsername();
-    String password = requestDto.getPassword();
-    String pwcheck = requestDto.getPwcheck();
-    String nickname = requestDto.getNickname();
+	String username = requestDto.getUsername();
+	String password = requestDto.getPassword();
+	String pwcheck = requestDto.getPwcheck();
+	String nickname = requestDto.getNickname();
 
-    usernameEmpty(username);
-    nicknameEmpty(nickname);
+	usernameEmpty(username);
 
-    Optional<User> findUser = userRepository.findByUsername(username);
-    if (findUser.isPresent()) {
-      throw new DockingException(ErrorCode.USERNAME_DUPLICATE);
-    }
+	Optional<User> findUser = userRepository.findByUsername(username);
+	if (findUser.isPresent()) {
+	  throw new DockingException(ErrorCode.USERNAME_DUPLICATE);
+	}
 
-    findUser = userRepository.findByNickname(nickname);
-    if (findUser.isPresent()) {
-      throw new DockingException(ErrorCode.NICKNAME_DUPLICATE);
-    }
+	if (nickname.isEmpty()) {
+	  throw new DockingException(ErrorCode.NICKNAME_NOT_FOUND);
+	}
 
-    if (!password.equals(pwcheck)) {
-      throw new DockingException(ErrorCode.PASSWORD_MISS_MATCH);
-    }
+	findUser = userRepository.findByNickname(nickname);
+	if (findUser.isPresent()) {
+	  throw new DockingException(ErrorCode.NICKNAME_DUPLICATE);
+	}
+
+	if (!password.equals(pwcheck)) {
+	  throw new DockingException(ErrorCode.PASSWORD_MISS_MATCH);
+	}
   }
 
   //로그인
   public Map<String, Object> login(SignupRequestDto requestDto) {
-    User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
-        () -> new DockingException(ErrorCode.USERNAME_NOT_FOUND)
-    );
+	String username = requestDto.getUsername();
+	usernameEmpty(username);
 
-    usernameEmpty(requestDto.getUsername());
+	//패스워드 빈값일때
+	if (requestDto.getPassword().isEmpty()) {
+	  throw new DockingException(ErrorCode.PASSWORD_EMPTY);
+	}
 
-    if (requestDto.getPassword().isEmpty()) {
-      throw new DockingException(ErrorCode.PASSWORD_EMPTY);
-    }
+	User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
+		() -> new DockingException(ErrorCode.USERNAME_NOT_FOUND)
+	);
 
-    if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
-      throw new DockingException(ErrorCode.PASSWORD_MISS_MATCH);
-    }
+	//패스워드 불일치일때
+	if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
+	  throw new DockingException(ErrorCode.PASSWORD_MISS_MATCH);
+	}
 
-    Education education = educationRepository.findByUser(user).orElse(null);
+	Education education = educationRepository.findByUser(user).orElse(null);
+	Map<String, Object> data = new HashMap<>();
+	List<Map<String, Object>> applyList = new ArrayList<>();
+	Map<String, Object> apply = new HashMap<>();
 
-    Alarm alarm = new Alarm();
-    alarm.addUser(user);
-    alarmRepository.save(alarm);
+	List<Map<String, Object>> eduList = new ArrayList<>();
+	Map<String, Object> edu = new HashMap<>();
 
-    Map<String, Object> data = new HashMap<>();
+	LoginResponseDto loginResponseDto = LoginResponseDto.of(user,
+		jwtTokenProvider.createToken(requestDto.getUsername(), requestDto.getUsername()), eduList,
+		applyList);
 
-    List<Map<String, Object>> applyList = new ArrayList<>();
-    Map<String, Object> apply = new HashMap<>();
-    apply.put("applyState", "디폴트");
-    apply.put("postId", "디폴트");
-    applyList.add(apply);
+	apply.put("applyState", "디폴트");
+	apply.put("postId", "디폴트");
+	edu.put("필수지식", education.getBasic());
+	edu.put("심화지식", education.getAdvanced());
+	edu.put("심화지식2", education.getCore());
+	eduList.add(edu);
+	applyList.add(apply);
 
-    List<Map<String, Object>> eduList = new ArrayList<>();
-    Map<String, Object> edu = new HashMap<>();
-    edu.put("필수지식", education.getBasic());
-    edu.put("심화지식", education.getAdvanced());
-    edu.put("심화지식2", education.getCore());
-    eduList.add(edu);
-
-    LoginResponseDto loginResponseDto = LoginResponseDto.of(user,
-        jwtTokenProvider.createToken(requestDto.getUsername(), requestDto.getUsername()), eduList,
-        applyList);
-
-    return SuccessResult.success(loginResponseDto);
+	return SuccessResult.success(loginResponseDto);
   }
 
-
   private void usernameEmpty(String username) {
-    if (username.isEmpty()) {
-      throw new DockingException(ErrorCode.USERNAME_EMPTY);
-    }
+	//아이디가 빈값일때
+	if (username.isEmpty()) {
+	  throw new DockingException(ErrorCode.USERNAME_EMPTY);
+	}
   }
 
   private void nicknameEmpty(String nickname) {
@@ -157,9 +159,10 @@ public class UserService {
     );
     findUser.update(requestDto);
 
-    Map<String, String> data = new HashMap<>();
-    data.put("msg", "사용자 정보가 수정 되었습니다");
-    return SuccessResult.success(data);
+	//리턴 data 생성
+	Map<String, String> data = new HashMap<>();
+	data.put("msg", "사용자 정보가 수정 되었습니다");
+	return SuccessResult.success(data);
 
   }
 
@@ -167,52 +170,57 @@ public class UserService {
   //로그인 체크
   public Map<String, Object> loginCheck(UserDetailsImpl userDetails) {
 
-    Map<String, Object> data = new HashMap<>();
+	Map<String, Object> data = new HashMap<>();
 
-    User user = userDetails.getUser();
+	User user = userDetails.getUser();
 
-    Education education = educationRepository.findByUser(user).orElse(null);
+	Education education = educationRepository.findByUser(user).orElse(null);
 
-    if (userDetails != null) {
+	if (userDetails != null) {
+	  List<Map<String, Object>> applyList = new ArrayList<>();
+	  Map<String, Object> apply = new HashMap<>();
 
-      List<Map<String, Object>> applyList = new ArrayList<>();
-      Map<String, Object> apply = new HashMap<>();
-      apply.put("applyState", "디폴트");
-      apply.put("postId", "디폴트");
-      applyList.add(apply);
+	  List<Map<String, Object>> eduList = new ArrayList<>();
+	  Map<String, Object> edu = new HashMap<>();
 
-      List<Map<String, Object>> eduList = new ArrayList<>();
-      Map<String, Object> edu = new HashMap<>();
-      edu.put("필수지식", education.getBasic());
-      edu.put("심화지식", education.getAdvanced());
-      edu.put("심화지식2", education.getCore());
-      eduList.add(edu);
+	  LoginCheckResponseDto loginCheckResponseDto = LoginCheckResponseDto.of(
+		  userDetails, eduList, applyList);
 
-      LoginCheckResponseDto loginCheckResponseDto = LoginCheckResponseDto.of(
-          userDetails, eduList, applyList);
 
-      return SuccessResult.success(loginCheckResponseDto);
+	  apply.put("applyState", "디폴트");
+	  apply.put("postId", "디폴트");
+	  edu.put("필수지식", education.getBasic());
+	  edu.put("심화지식", education.getAdvanced());
+	  edu.put("심화지식2", education.getCore());
+	  applyList.add(apply);
+	  eduList.add(edu);
 
-    } else {
-      throw new DockingException(ErrorCode.USER_NOT_FOUND);
+	  return SuccessResult.success(loginCheckResponseDto);
+	} else {
+	  throw new DockingException(ErrorCode.USER_NOT_FOUND);
+	}
 
-    }
+
+
   }
 
 
   //아이디 중복 체크
   public Map<String, Object> idDoubleCheck(String username) {
 
-    Map<String, Object> data = new HashMap<>();
-    Optional<User> found = userRepository.findByUsername(username);
-    usernameEmpty(username);
+	Map<String, Object> data = new HashMap<>();
+	Optional<User> found = userRepository.findByUsername(username);
 
-    if (!found.isPresent()) {
-      data.put("msg", "아이디 중복 확인 완료");
-    } else {
-      throw new DockingException(ErrorCode.USERNAME_DUPLICATE);
-    }
-    return SuccessResult.success(data);
+	usernameEmpty(username);
+
+	if (!found.isPresent()) {
+	  data.put("msg", "아이디 중복 확인 완료");
+	} else {
+	  throw new DockingException(ErrorCode.USERNAME_DUPLICATE);
+	}
+
+
+	return SuccessResult.success(data);
 
   }
 
@@ -231,30 +239,31 @@ public class UserService {
     return SuccessResult.success(data);
   }
 
+  }
 
   public Map<String, Object> findUserId(UserInquriryRequestDto userInquriryRequestDto) {
-    String email = userInquriryRequestDto.getEmail();
-    User findUser = userRepository.findByEmail(email).orElseThrow(
-        () -> new DockingException(ErrorCode.EMAIL_NOT_FOUND)
-    );
+	String email = userInquriryRequestDto.getEmail();
+	User findUser = userRepository.findByEmail(email).orElseThrow(
+		() -> new DockingException(ErrorCode.EMAIL_NOT_FOUND)
+	);
 
-    Map<String, String> data = new HashMap<>();
-    data.put("username", findUser.getUsername());
-    return SuccessResult.success(data);
+	Map<String, String> data = new HashMap<>();
+	data.put("username", findUser.getUsername());
+	return SuccessResult.success(data);
   }
 
   @Transactional
   public Map<String, Object> findUserPw(UserInquriryRequestDto userInquriryRequestDto,
-      String tempPw) {
-    String username = userInquriryRequestDto.getUsername();
-    User user = userRepository.findByUsername(username).orElseThrow(
-        () -> new DockingException(ErrorCode.USER_NOT_FOUND)
-    );
-    user.setPassword(tempPw);
+	  String tempPw) {
+	String username = userInquriryRequestDto.getUsername();
+	User user = userRepository.findByUsername(username).orElseThrow(
+		() -> new DockingException(ErrorCode.USER_NOT_FOUND)
+	);
+	user.setPassword(tempPw);
 
-    Map<String, String> data = new HashMap<>();
-    data.put("msg", "임시 비밀번호를 해당 이메일로 보냈습니다.");
-    return SuccessResult.success(data);
+	Map<String, String> data = new HashMap<>();
+	data.put("msg", "임시 비밀번호를 해당 이메일로 보냈습니다.");
+	return SuccessResult.success(data);
   }
 
 
