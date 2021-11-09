@@ -9,6 +9,9 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '8'
 
 configurations {
+    all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
     compileOnly {
         extendsFrom annotationProcessor
     }
@@ -31,7 +34,7 @@ dependencies {
 
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
-   // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.1'
 
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
@@ -51,6 +54,9 @@ dependencies {
 
     // Dependency on local binaries
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    //log4j2
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 }
 
 test {
