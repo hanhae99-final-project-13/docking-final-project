@@ -1,6 +1,6 @@
 package com.sparta.dockingfinalproject.post;
 
-import com.sparta.dockingfinalproject.alarm.AlarmRepositoroy;
+import com.sparta.dockingfinalproject.alarm.AlarmRepository;
 import com.sparta.dockingfinalproject.comment.CommentRepository;
 import com.sparta.dockingfinalproject.comment.dto.CommentResponseDto;
 import com.sparta.dockingfinalproject.comment.dto.CommentResultDto;
@@ -36,16 +36,16 @@ public class PostService {
   private final WishRepository wishRepository;
   private final PetRepository petRepository;
   private final CommentRepository commentRepository;
-  private final AlarmRepositoroy alarmRepositoroy;
+  private final AlarmRepository alarmRepository;
 
   public PostService(PostRepository postRepository, WishRepository wishRepository,
       PetRepository petRepository, CommentRepository commentRepository,
-      AlarmRepositoroy alarmRepositoroy) {
+      AlarmRepository alarmRepository) {
     this.postRepository = postRepository;
     this.wishRepository = wishRepository;
     this.petRepository = petRepository;
     this.commentRepository = commentRepository;
-    this.alarmRepositoroy = alarmRepositoroy;
+    this.alarmRepository = alarmRepository;
   }
 
   public Map<String, Object> home(UserDetailsImpl userDetails) {
@@ -71,7 +71,7 @@ public class PostService {
 
   private int getAlarmCount(UserDetailsImpl userDetails) {
     if (userDetails != null) {
-      return alarmRepositoroy.findAllByUserAndStatusTrueOrderByCreatedAtDesc(userDetails.getUser()).size();
+      return alarmRepository.findAllByUserAndStatusTrueOrderByCreatedAtDesc(userDetails.getUser()).size();
     }
     return 0;
   }

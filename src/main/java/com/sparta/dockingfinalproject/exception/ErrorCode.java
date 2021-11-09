@@ -17,6 +17,8 @@ public enum ErrorCode {
 
   NICKNAME_DUPLICATE(BAD_REQUEST, "중복된 닉네임이 존재합니다."),
   NICKNAME_NOT_FOUND(BAD_REQUEST, "닉네임 중복확인을 먼저 해주세요."),
+  NICKNAME_EMPTY(BAD_REQUEST, "닉네임을 입력해주세요"),
+
 
   EMAIL_DUPLICATE(BAD_REQUEST, "중복된 이메일이 존재합니다."),
   IMAGE_NOT_FOUND(BAD_REQUEST, "이미지가 없습니다."),
