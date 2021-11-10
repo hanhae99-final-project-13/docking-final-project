@@ -62,8 +62,8 @@ public class UserService {
     alarm.addUser(user);
     alarmRepository.save(alarm);
 
-    Map<String, Object> data = new HashMap<>();
-    data.put("msg", "회원가입 축하합니다!");
+	Map<String, Object> data = new HashMap<>();
+	data.put("msg", "회원가입 축하합니다!");
 
 	return SuccessResult.success(data);
   }
@@ -95,6 +95,7 @@ public class UserService {
 	}
   }
 
+
   //로그인
   public Map<String, Object> login(SignupRequestDto requestDto) {
 	String username = requestDto.getUsername();
@@ -115,27 +116,41 @@ public class UserService {
 	}
 
 	Education education = educationRepository.findByUser(user).orElse(null);
-	Map<String, Object> data = new HashMap<>();
-	List<Map<String, Object>> applyList = new ArrayList<>();
-	Map<String, Object> apply = new HashMap<>();
 
-	List<Map<String, Object>> eduList = new ArrayList<>();
-	Map<String, Object> edu = new HashMap<>();
+	Map<String, Object> data = new HashMap<>();
+
+	List<Map<String, Object>> applyList = getApplyList();
+
+	List<Map<String, Object>> eduList = getEduList(education);
 
 	LoginResponseDto loginResponseDto = LoginResponseDto.of(user,
 		jwtTokenProvider.createToken(requestDto.getUsername(), requestDto.getUsername()), eduList,
 		applyList);
 
+
+	return SuccessResult.success(loginResponseDto);
+  }
+
+  private List<Map<String, Object>> getApplyList() {
+	List<Map<String, Object>> applyList = new ArrayList<>();
+	Map<String, Object> apply = new HashMap<>();
 	apply.put("applyState", "디폴트");
 	apply.put("postId", "디폴트");
+	applyList.add(apply);
+	return applyList;
+  }
+
+
+  private List<Map<String, Object>> getEduList(Education education) {
+	List<Map<String, Object>> eduList = new ArrayList<>();
+	Map<String, Object> edu = new HashMap<>();
 	edu.put("필수지식", education.getBasic());
 	edu.put("심화지식", education.getAdvanced());
 	edu.put("심화지식2", education.getCore());
 	eduList.add(edu);
-	applyList.add(apply);
-
-	return SuccessResult.success(loginResponseDto);
+	return eduList;
   }
+
 
   private void usernameEmpty(String username) {
 	//아이디가 빈값일때
@@ -177,25 +192,13 @@ public class UserService {
 	Education education = educationRepository.findByUser(user).orElse(null);
 
 	if (userDetails != null) {
-	  List<Map<String, Object>> applyList = new ArrayList<>();
-	  Map<String, Object> apply = new HashMap<>();
 
-	  List<Map<String, Object>> eduList = new ArrayList<>();
-	  Map<String, Object> edu = new HashMap<>();
+	  List<Map<String, Object>> applyList = getApplyList();
+
+	  List<Map<String, Object>> eduList = getEduList(education);
 
 	  LoginCheckResponseDto loginCheckResponseDto = LoginCheckResponseDto.of(
-		  userDetails, eduList, applyList);
-
-
-	  apply.put("applyState", "디폴트");
-	  apply.put("postId", "디폴트");
-	  edu.put("필수지식", education.getBasic());
-	  edu.put("심화지식", education.getAdvanced());
-	  edu.put("심화지식2", education.getCore());
-	  applyList.add(apply);
-	  eduList.add(edu);
-
-	  return SuccessResult.success(loginCheckResponseDto);
+		  userDetails, eduList, applyList);	  return SuccessResult.success(loginCheckResponseDto);
 	} else {
 	  throw new DockingException(ErrorCode.USER_NOT_FOUND);
 	}
@@ -203,6 +206,7 @@ public class UserService {
 
 
   }
+
 
 
   //아이디 중복 체크
