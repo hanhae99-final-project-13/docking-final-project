@@ -3,6 +3,8 @@ package com.sparta.dockingfinalproject.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.dockingfinalproject.education.Education;
+import com.sparta.dockingfinalproject.education.EducationRepository;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.dto.KakaoUserInfoDto;
 import java.util.UUID;
@@ -25,11 +27,14 @@ public class KakaoUserService {
 
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
+  private final EducationRepository educationRepository;
 
-  public KakaoUserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+  public KakaoUserService(UserRepository userRepository, PasswordEncoder passwordEncoder,EducationRepository educationRepository) {
 
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
+    this.educationRepository = educationRepository;
+
   }
 
   public User kakaoLogin(String code) throws JsonProcessingException {
@@ -64,7 +69,11 @@ public class KakaoUserService {
       String userImgUrl = kakaoUserInfo.getUserImgUrl();
 
       kakaoUser = new User(username, password, nickname, email, kakaoId, userImgUrl);
+
       userRepository.save(kakaoUser);
+
+      Education education = new Education(kakaoUser);
+      educationRepository.save(education);
     }
 
     // 4. 강제 로그인 처리
@@ -88,7 +97,7 @@ public class KakaoUserService {
     MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
     body.add("grant_type", "authorization_code");
     body.add("client_id", "b288c56fd31bb6f686ba8a3a39ba7fb2");
-    body.add("redirect_uri", "http://imcute.shop/oauth/callback/kakao");
+    body.add("redirect_uri", "http://localhost:3000/oauth/callback/kakao");
     System.out.println("현재 코드 값 " + code);
     body.add("code", code);
 

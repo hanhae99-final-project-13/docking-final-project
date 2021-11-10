@@ -2,6 +2,8 @@ package com.sparta.dockingfinalproject.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sparta.dockingfinalproject.common.SuccessResult;
+import com.sparta.dockingfinalproject.education.Education;
+import com.sparta.dockingfinalproject.education.EducationRepository;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
@@ -19,11 +21,13 @@ public class KakaoUserController {
 
   private final KakaoUserService kakaoUserService;
   private final JwtTokenProvider jwtTokenProvider;
+  private final EducationRepository educationRepository;
 
-  public KakaoUserController(KakaoUserService kakaoUserService, JwtTokenProvider jwtTokenProvider) {
+  public KakaoUserController(KakaoUserService kakaoUserService, JwtTokenProvider jwtTokenProvider, EducationRepository educationRepository) {
 
     this.jwtTokenProvider = jwtTokenProvider;
     this.kakaoUserService = kakaoUserService;
+    this.educationRepository = educationRepository;
   }
 
   //카카오 인가 코드 받기
@@ -35,6 +39,8 @@ public class KakaoUserController {
     User user = kakaoUserService.kakaoLogin(code);
     Map<String, Object> data = new HashMap<>();
 
+   Education education = educationRepository.findByUser(user).orElse(null);
+
     if (code != null) {
 
       Map<String, Object> apply = new HashMap<>();
@@ -45,7 +51,6 @@ public class KakaoUserController {
       data.put("email", user.getEmail());
       data.put("userImgUrl", user.getUserImgUrl());
       data.put("phone", user.getPhoneNumber());
-//            data.put("eduList", user.getEduList());
       data.put("eduList", eduList);
 
       data.put("alarmCount", 3);
@@ -54,10 +59,11 @@ public class KakaoUserController {
       apply.put("applyState", "디폴트");
       apply.put("postId", "디폴트");
       applyList.add(apply);
-      edu.put("필수지식", false);
+      edu.put("필수지식",false);
       edu.put("심화지식", false);
       edu.put("심화지식2", false);
       eduList.add(edu);
+
 
     } else {
       throw new DockingException(ErrorCode.CODE_NOT_FOUND);
