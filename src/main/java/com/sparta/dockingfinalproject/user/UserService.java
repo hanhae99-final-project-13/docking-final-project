@@ -89,11 +89,8 @@ public class UserService {
 
 	List<Map<String, Object>> eduList = getEduList(user);
 
-	List<Map<String, Object>> applyList = getApplyList();
-
 	LoginResponseDto loginResponseDto = LoginResponseDto.of(user,
-		jwtTokenProvider.createToken(requestDto.getUsername(), requestDto.getUsername()), eduList,
-		applyList);
+		jwtTokenProvider.createToken(requestDto.getUsername(), requestDto.getUsername()), eduList);
 
 	return SuccessResult.success(loginResponseDto);
   }
@@ -102,7 +99,7 @@ public class UserService {
   //회원정보 수정
   @Transactional
   public Map<String, Object> updateUser(UserDetailsImpl userDetails, UpdateRequestDto requestDto) {
-	nicknameEmpty(requestDto.getNickname());
+//	nicknameEmpty(requestDto.getNickname());
 
 	User findUser = userRepository.findById(userDetails.getUser().getUserId()).orElseThrow(
 		() -> new DockingException(ErrorCode.USER_NOT_FOUND)
@@ -120,15 +117,12 @@ public class UserService {
 
 	User user = userDetails.getUser();
 
-	Education education = educationRepository.findByUser(user).orElse(null);
-
 	if (userDetails != null) {
 
-	  List<Map<String, Object>> applyList = getApplyList();
 	  List<Map<String, Object>> eduList = getEduList(user);
 
 	  LoginCheckResponseDto loginCheckResponseDto = LoginCheckResponseDto.of(
-		  userDetails, eduList, applyList);
+		  userDetails, eduList);
 	  return SuccessResult.success(loginCheckResponseDto);
 
 	} else {
@@ -214,6 +208,11 @@ public class UserService {
 	  throw new DockingException(ErrorCode.USERNAME_DUPLICATE);
 	}
 
+	Optional<User> findUser2 = userRepository.findByNickname(nickname);
+	if (findUser2.isPresent()) {
+	  throw new DockingException(ErrorCode.NICKNAME_DUPLICATE);
+	}
+
 	if (!password.equals(pwcheck)) {
 	  throw new DockingException(ErrorCode.PASSWORD_MISS_MATCH);
 	}
@@ -240,15 +239,6 @@ public class UserService {
 	edu.put("심화지식2", education.getCore());
 	eduList.add(edu);
 	return eduList;
-  }
-
-  private List<Map<String, Object>> getApplyList() {
-	List<Map<String, Object>> applyList = new ArrayList<>();
-	Map<String, Object> apply = new HashMap<>();
-	apply.put("applyState", "noConnection");
-	apply.put("postId", "noConnection");
-	applyList.add(apply);
-	return applyList;
   }
 
 
