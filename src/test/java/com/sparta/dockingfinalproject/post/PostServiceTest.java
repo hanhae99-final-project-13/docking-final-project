@@ -51,7 +51,7 @@ class PostServiceTest {
   private CommentRepository commentRepository;
 
   @Mock
-  private AlarmRepository alarmRepositoroy;
+  private AlarmRepository alarmRepository;
 
   @Mock
   private UserRepository userRepository;
