@@ -18,9 +18,9 @@ public class LoginResponseDto {
   private List<Map<String, Object>> eduList;
   private int alarmCount;
   private String token;
-  private List<Map<String, Object>> applyList;
 
-  public static LoginResponseDto of(User user, String token, List<Map<String, Object>> eduList, List<Map<String, Object>> applyList) {
+
+  public static LoginResponseDto of(User user, String token, List<Map<String, Object>> eduList) {
     return LoginResponseDto.builder()
         .userId(user.getUserId())
         .nickname(user.getNickname())
@@ -30,7 +30,6 @@ public class LoginResponseDto {
         .eduList(eduList)
         .alarmCount(5)
         .token(token)
-        .applyList(applyList)
         .build();
   }
 }

@@ -101,17 +101,11 @@ public class User {
     this.password = password;
     this.nickname = requestDto.getNickname();
     this.email = requestDto.getEmail();
-    this.userImgUrl = "이미지url";
+    this.userImgUrl = "https://gorokke.shop/image/profileDefaultImg.jpg";
     this.kakaoId = null;
     this.phoneNumber = requestDto.getPhoneNumber();
 
   }
-
-  public void confirm(UpdateRequestDto requestDto) {
-    this.nickname = requestDto.getNickname();
-    this.userImgUrl = requestDto.getUserImgUrl();
-  }
-
 
   public void update(UpdateRequestDto requestDto) {
     this.nickname = requestDto.getNickname();
