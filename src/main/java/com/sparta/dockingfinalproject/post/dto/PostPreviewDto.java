@@ -1,5 +1,6 @@
 package com.sparta.dockingfinalproject.post.dto;
 
+import com.sparta.dockingfinalproject.pet.IsAdopted;
 import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.pet.Sex;
 import com.sparta.dockingfinalproject.post.Post;
@@ -20,7 +21,7 @@ public class PostPreviewDto {
   private String ownerType;
   private String address;
   private String img;
-  private String isAdopted;
+  private IsAdopted isAdopted;
 
   public static PostPreviewDto of(Post post) {
     Pet pet = post.getPet();

@@ -151,8 +151,7 @@ public class ApiService {
       Element eElement = (Element) nNode;
 
       String petNo = getItemValue("desertionNo", eElement);
-      String breed = getItemValue("kindCd", eElement);
-
+      String breed = getItemValue("kindCd", eElement).replaceAll("\\[", "").replaceAll("개", "").replaceAll("\\]", "");
       String sex = getItemValue("sexCd", eElement);
       if (!sex.equalsIgnoreCase("f") && !sex.equalsIgnoreCase("m")) {
         continue;
@@ -173,10 +172,13 @@ public class ApiService {
       String extra = getItemValue("specialMark", eElement);
 
       String processState = getItemValue("processState", eElement);
+      if (processState == null) {
+        continue;
+      }
       if (processState.contains("종료")) {
-        isAdopted = "보호종료";
+        isAdopted = "adopted";
       } else {
-        isAdopted = "보호중";
+        isAdopted = "abandoned";
       }
 
       System.out.printf(

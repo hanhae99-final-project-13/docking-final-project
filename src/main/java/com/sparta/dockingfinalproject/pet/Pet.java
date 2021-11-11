@@ -56,8 +56,9 @@ public class Pet extends Timestamped {
   @Column
   private String url;
 
+  @Enumerated(value = EnumType.STRING)
   @Column(nullable = false)
-  private String isAdopted;
+  private IsAdopted isAdopted;
 
   @Column(nullable = false)
   private String ownerType;
@@ -89,7 +90,7 @@ public class Pet extends Timestamped {
     this.phone = phone;
     this.img = img;
     this.extra = extra;
-    this.isAdopted = isAdopted;
+    this.isAdopted = IsAdopted.of(isAdopted);
     this.petNo = petNo;
   }
 
@@ -113,7 +114,7 @@ public class Pet extends Timestamped {
     this.img = temp;
 
     this.extra = petRequestDto.getExtra();
-    this.isAdopted = petRequestDto.getIsAdopted();
+    this.isAdopted = IsAdopted.of(petRequestDto.getIsAdopted());
   }
 
   public void addPost(Post post) {
@@ -121,7 +122,7 @@ public class Pet extends Timestamped {
   }
 
   public void updateStatus(String isAdopted) {
-    this.isAdopted = isAdopted;
+    this.isAdopted = IsAdopted.of(isAdopted);
   }
 
   public Pet update(PetRequestDto petRequestDto) {
@@ -169,7 +170,7 @@ public class Pet extends Timestamped {
     }
 
     if (petCheck(petRequestDto.getIsAdopted())) {
-      this.isAdopted = petRequestDto.getIsAdopted();
+      this.isAdopted = IsAdopted.of(petRequestDto.getIsAdopted());
     }
 
     return this;

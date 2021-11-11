@@ -1,5 +1,6 @@
 package com.sparta.dockingfinalproject.post.dto;
 
+import com.sparta.dockingfinalproject.pet.IsAdopted;
 import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.pet.Sex;
 import com.sparta.dockingfinalproject.post.Post;
@@ -26,7 +27,7 @@ public class PostDetailResponseDto {
   private String url;
   private List<String> img;
   private String extra;
-  private String isAdopted;
+  private IsAdopted isAdopted;
   private boolean heart;
 
   public static PostDetailResponseDto getPostDetailResponseDto(Post post, boolean heart) {
