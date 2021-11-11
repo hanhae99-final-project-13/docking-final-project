@@ -23,7 +23,7 @@ public class WishController {
     return wishService.addWishAndDeleteWish(wishRequestDto.getPostId(), userDetails);
   }
 
-  @GetMapping("/{userId}/wishes")
+  @GetMapping("/user/wishes")
   public Map<String, Object> getWishes(@AuthenticationPrincipal UserDetailsImpl userDetails) {
     return wishService.getWishes(userDetails.getUser());
   }

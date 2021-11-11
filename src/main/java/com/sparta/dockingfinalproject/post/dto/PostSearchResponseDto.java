@@ -1,5 +1,6 @@
 package com.sparta.dockingfinalproject.post.dto;
 
+import com.sparta.dockingfinalproject.pet.IsAdopted;
 import com.sparta.dockingfinalproject.pet.Sex;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,7 +19,7 @@ public class PostSearchResponseDto {
   private String ownerType;
   private String address;
   private List<String> img;
-  private String isAdopted;
+  private IsAdopted isAdopted;
   private LocalDateTime createdAt;
   private LocalDateTime modifiedAt;
 }

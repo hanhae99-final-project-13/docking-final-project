@@ -3,6 +3,7 @@ package com.sparta.dockingfinalproject.wish;
 import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
+import com.sparta.dockingfinalproject.pet.IsAdopted;
 import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.pet.Sex;
 import com.sparta.dockingfinalproject.post.Post;
@@ -86,7 +87,7 @@ public class WishService {
       String ownerType = pet.getOwnerType();
       String address = pet.getAddress();
       String img = pet.getImg();
-      String isAdopted = pet.getIsAdopted();
+      IsAdopted isAdopted = pet.getIsAdopted();
 
       wishResultDto = new WishResultDto(wishId, postId, createdAt, modifiedAt, breed, sex, age,
           ownerType, address, img, isAdopted);

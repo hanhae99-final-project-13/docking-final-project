@@ -53,7 +53,7 @@ public class PostController {
   }
 
   // 보호상태 변경
-  @PatchMapping("/{postId}/completions")
+  @PatchMapping("/posts/{postId}/completions")
   public Map<String, Object> updateStatus(@PathVariable Long postId,
       @RequestBody StatusDto statusDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
     return postService.updateStatus(postId, statusDto, userDetails);

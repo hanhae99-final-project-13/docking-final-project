@@ -7,6 +7,7 @@ import com.sparta.dockingfinalproject.comment.dto.CommentResultDto;
 import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
+import com.sparta.dockingfinalproject.pet.IsAdopted;
 import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.pet.PetRepository;
 import com.sparta.dockingfinalproject.pet.dto.PetRequestDto;
@@ -102,7 +103,6 @@ public class PostService {
     return false;
   }
 
-  //Comment return data 가공하기
   private ArrayList<CommentResultDto> getCommentList(Post findPost) {
     ArrayList<CommentResultDto> commentDtoList = new ArrayList<>();
 
@@ -182,7 +182,7 @@ public class PostService {
   @Transactional
   public Map<String, Object> updateStatus(Long postId, StatusDto statusDto,
       UserDetailsImpl userDetails) {
-    String newStatus = statusDto.getNewStatus();
+    IsAdopted newStatus = IsAdopted.of(statusDto.getNewStatus());
 
     Long userId = userDetails.getUser().getUserId();
 
@@ -194,15 +194,17 @@ public class PostService {
     // 보호 상태 업데이트하기
     if (userId.equals(writerId)) {
       Pet findPet = findPost.getPet();
-      String status = findPet.getIsAdopted();
+      IsAdopted status = findPet.getIsAdopted();
       String isAdopted = "";
 
       if (newStatus.equals(status)) {
         throw new DockingException(ErrorCode.NO_DIFFERENCE);
-      } else if (newStatus.equals("보호종료")) {
-        isAdopted = "보호종료";
-      } else if (newStatus.equals("입양진행중")) {
-        isAdopted = "입양진행중";
+      } else if (newStatus.equals(IsAdopted.of("adopted"))) {
+        isAdopted = "adopted";
+      } else if (newStatus.equals(IsAdopted.of("abandoned"))) {
+        isAdopted = "abandoned";
+      } else {
+        throw new IllegalArgumentException("올바른 보호상태가 아닙니다.");
       }
 
       findPet.updateStatus(isAdopted);
