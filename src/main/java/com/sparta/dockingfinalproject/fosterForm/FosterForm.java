@@ -1,5 +1,6 @@
 package com.sparta.dockingfinalproject.fosterForm;
 
+import com.sparta.dockingfinalproject.common.Timestamped;
 import com.sparta.dockingfinalproject.fosterForm.dto.FosterFormRequestDto;
 import com.sparta.dockingfinalproject.pet.Sex;
 import com.sparta.dockingfinalproject.post.Post;
@@ -20,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class FosterForm {
+public class FosterForm extends Timestamped {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -72,6 +73,10 @@ public class FosterForm {
   @Column(nullable = false)
   private String roomUrl;
 
+  @Enumerated(value = EnumType.STRING)
+  @Column(nullable = false)
+  private Acceptance acceptance;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "USER_ID", nullable = false)
   private User user;
@@ -80,7 +85,7 @@ public class FosterForm {
   @JoinColumn(name = "POST_ID", nullable = false)
   private Post post;
 
-  public FosterForm(Post post, FosterFormRequestDto fosterFormRequestDto, User user) {
+  public FosterForm(Post post, FosterFormRequestDto fosterFormRequestDto, User user, Acceptance acceptance) {
     this.name = fosterFormRequestDto.getName();
     this.fosterAge = fosterFormRequestDto.getFosterAge();
     this.gender = fosterFormRequestDto.getGender();
@@ -96,8 +101,13 @@ public class FosterForm {
     this.anxiety = fosterFormRequestDto.getAnxiety();
     this.bark = fosterFormRequestDto.getBark();
     this.roomUrl = fosterFormRequestDto.getRoomUrl();
+    this.acceptance = acceptance;
     this.user = user;
     this.post = post;
+  }
+
+  public void updateAcceptance(Acceptance acceptance){
+    this.acceptance = acceptance;
   }
 
 }
