@@ -1,5 +1,6 @@
 package com.sparta.dockingfinalproject.fosterForm.dto;
 
+import com.sparta.dockingfinalproject.fosterForm.Acceptance;
 import com.sparta.dockingfinalproject.fosterForm.FosterForm;
 import com.sparta.dockingfinalproject.pet.Sex;
 import lombok.Builder;
@@ -25,6 +26,7 @@ public class FosterFormResultDto {
   private String anxiety;
   private String bark;
   private String roomUrl;
+  private Acceptance acceptance;
   private Long postId;
 
   public static FosterFormResultDto of(FosterForm fosterForm) {
@@ -45,6 +47,7 @@ public class FosterFormResultDto {
         .anxiety(fosterForm.getAnxiety())
         .bark(fosterForm.getBark())
         .roomUrl(fosterForm.getRoomUrl())
+        .acceptance(fosterForm.getAcceptance())
         .postId(fosterForm.getPost().getPostId())
         .build();
   }

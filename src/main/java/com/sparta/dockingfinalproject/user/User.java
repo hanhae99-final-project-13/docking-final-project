@@ -112,4 +112,9 @@ public class User {
     this.userImgUrl = requestDto.getUserImgUrl();
 
   }
+
+  public boolean validateUser(Long userId) {
+    return this.userId.equals(userId);
+  }
+
 }

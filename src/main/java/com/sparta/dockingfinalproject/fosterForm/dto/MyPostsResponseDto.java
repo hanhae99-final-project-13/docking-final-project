@@ -7,16 +7,16 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class FormsInPostDto {
+public class MyPostsResponseDto {
 
   private PostPreviewDto postPreview;
-  private List<FormPreviewDto> formPreviews;
+  private List<FosterFormPreviewDto> formPreviews;
 
-  public static FormsInPostDto of(PostPreviewDto postPreviewDto,
-      List<FormPreviewDto> formPreviewDtos) {
-    return FormsInPostDto.builder()
+  public static MyPostsResponseDto of(PostPreviewDto postPreviewDto,
+      List<FosterFormPreviewDto> fosterFormPreviewDtos) {
+    return MyPostsResponseDto.builder()
         .postPreview(postPreviewDto)
-        .formPreviews(formPreviewDtos)
+        .formPreviews(fosterFormPreviewDtos)
         .build();
   }
 }

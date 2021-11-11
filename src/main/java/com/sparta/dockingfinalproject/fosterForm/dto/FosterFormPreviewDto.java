@@ -1,15 +1,14 @@
 package com.sparta.dockingfinalproject.fosterForm.dto;
 
-
+import com.sparta.dockingfinalproject.fosterForm.Acceptance;
 import com.sparta.dockingfinalproject.fosterForm.FosterForm;
 import com.sparta.dockingfinalproject.pet.Sex;
-import com.sparta.dockingfinalproject.post.dto.PostPreviewDto;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class FosterPreviewDto {
+public class FosterFormPreviewDto {
 
   private Long fosterFormId;
   private String name;
@@ -17,18 +16,17 @@ public class FosterPreviewDto {
   private Sex gender;
   private String phone;
   private String fosterAddress;
-  private PostPreviewDto postPreview;
+  private Acceptance acceptance;
 
-  public static FosterPreviewDto of(FosterForm fosterForm, PostPreviewDto postPreviewDto) {
-    return FosterPreviewDto.builder()
+  public static FosterFormPreviewDto of(FosterForm fosterForm) {
+    return FosterFormPreviewDto.builder()
         .fosterFormId(fosterForm.getFosterFormId())
         .name(fosterForm.getName())
         .fosterAge(fosterForm.getFosterAge())
         .gender(fosterForm.getGender())
         .phone(fosterForm.getPhone())
         .fosterAddress(fosterForm.getFosterAddress())
-        .postPreview(postPreviewDto)
+        .acceptance(fosterForm.getAcceptance())
         .build();
   }
-
 }
