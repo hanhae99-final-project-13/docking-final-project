@@ -140,7 +140,7 @@ public class ApiService {
     Pet pet = new Pet();
 
     //관리자 로그인 정보 가져오기
-    adminLogin();
+    adminSignup();
     username = userRequestDto.getUsername();
     user = userRepository.findByUsername(username).orElseThrow(
         () -> new IllegalArgumentException("유저가 존재하지 않습니다"));
@@ -253,7 +253,7 @@ public class ApiService {
   }
 
 
-  private void adminLogin() {
+  private void adminSignup() {
     // 관리자 계정 생성
     SignupRequestDto signupRequestDto = new SignupRequestDto();
 
@@ -266,11 +266,15 @@ public class ApiService {
 
     userService.registerUser(signupRequestDto);
 
-    // 관리자 로그인
+
+    adminLogin();
+
+  }
+
+  // 관리자 로그인
+  private void adminLogin() {
     userRequestDto.setUsername("administrator");
     userRequestDto.setPassword("docking1023");
-
-//    user = userService.login(userRequestDto);
   }
 
 }
