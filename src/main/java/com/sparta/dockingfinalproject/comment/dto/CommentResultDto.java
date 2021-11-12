@@ -1,12 +1,10 @@
 package com.sparta.dockingfinalproject.comment.dto;
 
 import com.sparta.dockingfinalproject.comment.Comment;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -16,6 +14,7 @@ public class CommentResultDto {
   private Long commentId;
   private String comment;
   private String nickname;
+  private String userImgUrl;
   private LocalDateTime createdAt;
   private LocalDateTime modifiedAt;
 
@@ -24,6 +23,7 @@ public class CommentResultDto {
         .commentId(comment.getCommentId())
         .comment(comment.getComment())
         .nickname(comment.getUser().getNickname())
+        .userImgUrl(comment.getUser().getUserImgUrl())
         .createdAt(comment.getCreatedAt())
         .modifiedAt(comment.getModifiedAt())
         .build();

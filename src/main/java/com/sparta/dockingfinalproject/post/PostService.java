@@ -120,8 +120,9 @@ public class PostService {
     LocalDateTime createdAt = crd.getCreatedAt();
     LocalDateTime modifiedAt = crd.getModifiedAt();
     String nickname = crd.getUser().getNickname();
+    String userImgUrl = crd.getUser().getUserImgUrl();
 
-    return new CommentResultDto(commentId, comment, nickname, createdAt, modifiedAt);
+    return new CommentResultDto(commentId, comment, nickname, userImgUrl, createdAt, modifiedAt);
   }
 
   @Transactional
