@@ -82,3 +82,138 @@
 
  - @JasonManagedReference, @JsonBackReference추가
 <img src = "https://user-images.githubusercontent.com/80088918/141600314-b932f7d8-aa26-4e99-bffd-f8e0e868dc72.jpg" width="500" >
+
+
+#### 리팩토링 
+- 리팩토링 전
+```java
+publicMap<String,Object> home(UserDetailsImpluserDetails) {
+	Pageablepageable =PageRequest.of(0, 6);
+	Page<Post> postPage = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+	List<Post> posts = postPage.getContent();
+	List<PostDetailResponseDto> postList = new ArrayList<>();
+  for (Postpost : posts) {
+		PostDetailResponseDtopostDetailResponseDto =PostDetailResponseDto.getPostDetailResponseDto(post);
+    postList.add(postDetailResponseDto);
+  }
+	Map<String,Object> data = new HashMap<>();
+  data.put("postList", postList);
+  data.put("alarmCount",alarmRepository.findAllByUserAndStatusTrueOrderByCreatedAtDesc(userDetails.getUser()));
+  returnSuccessResult.success(data);
+}
+
+@Transactional
+publicMap<String,Object> getPost(LongpostId,UserDetailsImpluserDetails) {
+	PostfindPost = bringPost(postId);
+	LonguserId =userDetails.getUser().getUserId();
+	Optional<Wish> findWish = null;
+
+  boolean heart = false;
+	if (userId != null) {
+    if (userDetails!= null) {
+      findWish = wishRepository.findAllByUserAndPost(userDetails.getUser(), findPost);
+      if (findWish.isPresent()) {
+        heart = true;
+      }
+      findPost.addViewCount();
+    }
+		PostDetailResponseDtopostResponseDto =PostDetailResponseDto.getPostDetailResponseDto(findPost, heart);
+
+		//Comment return data가공하기
+		ArrayList<CommentResultDto> commentDtoList = new ArrayList<>();
+		List<CommentResponseDto> commentResponseDto = commentRepository.findAllByPost(findPost);
+    for (CommentResponseDtocrd : commentResponseDto) {
+			LongcommentId = crd.getCommentId();
+			Stringcomment = crd.getComment();
+			LocalDateTimecreatedAt = crd.getCreatedAt();
+			LocalDateTimemodifiedAt = crd.getModifiedAt();
+			Stringnickname = crd.getUser().getNickname();
+			Stringurl = crd.getUser().getUserImgUrl();
+			CommentResultDtocommentResultDto = new CommentResultDto(commentId, comment, nickname, url, createdAt, modifiedAt);
+      commentDtoList.add(commentResultDto);
+    }
+		Map<String,Object> data = new HashMap<>();
+    data.put("post", postResponseDto);
+    data.put("commentList", commentDtoList);
+    returnSuccessResult.success(data);
+  }
+}
+```
+
+- 리팩토링 후
+```java
+publicMap<String,Object> home(UserDetailsImpluserDetails) {
+	List<Post> posts = getPagePostSix();
+
+	Map<String,Object> data = new HashMap<>();
+	data.put("postList", getPostList(posts));
+	data.put("alarmCount", getAlarmCount(userDetails));
+
+  returnSuccessResult.success(data);
+}
+
+private List<Post> getPagePostSix() {
+    Pageable pageable = PageRequest.of(0, 6);
+    Page<Post> postPage = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+    return postPage.getContent();
+}
+
+private List<PostPreviewDto> getPostList(List<Post> posts) {
+    List<PostPreviewDto> postList = new ArrayList<>();
+    for (Post post : posts) {
+      PostPreviewDto postPreviewDto = PostPreviewDto.of(post);
+      postList.add(postPreviewDto);
+    }
+    return postList;
+}
+
+private int getAlarmCount(UserDetailsImpl userDetails) {
+    if (userDetails != null) {
+      return alarmRepository.findAllByUserAndStatusTrueOrderByCreatedAtDesc(userDetails.getUser()).size();
+    }
+    return 0;
+}
+
+@Transactional
+public Map<String, Object> getPost(Long postId, UserDetailsImpl userDetails) {
+  Post findPost = bringPost(postId);
+  boolean heart = getHeart(userDetails, findPost);
+
+  findPost.addViewCount();
+
+  PostDetailResponseDto postResponseDto = PostDetailResponseDto.getPostDetailResponseDto(findPost, heart);
+
+  Map<String, Object> data = new HashMap<>();
+  data.put("post", postResponseDto);
+  data.put("commentList", getCommentList(findPost));
+
+  return SuccessResult.success(data);
+}
+
+private Post bringPost(Long postId) {
+  return postRepository.findById(postId).orElseThrow(
+      () -> new DockingException(ErrorCode.POST_NOT_FOUND)
+  );
+}
+
+private boolean getHeart(UserDetailsImpl userDetails, Post findPost) {
+	if (userDetails != null) {
+	  Optional<Wish> findWish = wishRepository.findAllByUserAndPost(userDetails.getUser(), findPost);
+    if (findWish.isPresent()) {
+      return true;
+    }
+  }
+  return false;
+}
+
+private ArrayList<CommentResultDto> getCommentList(Post findPost) {
+	ArrayList<CommentResultDto> commentDtoList = new ArrayList<>();
+
+  List<CommentResponseDto> commentResponseDto = commentRepository.findAllByPost(findPost);
+  for (CommentResponseDto crd : commentResponseDto) {
+    CommentResultDto commentResultDto = getCommentResult(crd);
+    commentDtoList.add(commentResultDto);
+  }
+  return commentDtoList;
+}
+```
