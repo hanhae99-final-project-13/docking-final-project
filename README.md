@@ -74,3 +74,7 @@
 
 
 - jpa 순환참조 오류
+
+<img src = "https://user-images.githubusercontent.com/80088918/141600277-6a7a1dd4-a333-43d6-9efc-7410e8286f60.jpg" width="500" >
+<img src = "https://user-images.githubusercontent.com/80088918/141600308-62caac66-c9ba-4299-b5ad-b2d4a7a069de.jpg" width="500" >
+<img src = "https://user-images.githubusercontent.com/80088918/141600314-b932f7d8-aa26-4e99-bffd-f8e0e868dc72.jpg" width="500" >
