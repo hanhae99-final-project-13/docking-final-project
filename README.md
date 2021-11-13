@@ -7,7 +7,7 @@
 너도 가족을 찾니?
 나도 가족을 찾아!
 
-유기견 입양을 생각하고 있다면, 입양의 A to Z
+Getting your family 
 
 우리의 운명적인 만남 "*GETTING개팅:laughing:*"
 
