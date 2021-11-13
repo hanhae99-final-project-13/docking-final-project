@@ -48,7 +48,7 @@
 
 |                                                                                                         댓글 CRUD :crystal_ball:|
 |--------------------------------------------------------------------------------------------------------------------------------|
-|<img src = "https://user-images.githubusercontent.com/80088918/141599414-81b08db4-2954-4c43-8b8c-cb942425dd8c.gif" >|
+|<img src = "https://user-images.githubusercontent.com/80088918/141599414-81b08db4-2954-4c43-8b8c-cb942425dd8c.gif" width="200" >|
 
 
 
