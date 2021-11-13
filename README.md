@@ -54,7 +54,7 @@
 
 ## :mag_right: Project Architecture :mag_right:
 
-<img src = "https://user-images.githubusercontent.com/42162127/141604726-470f5e02-8ab1-4c21-bcd5-cc53466fe0f9.jpg" width="500" >
+<img src = "https://user-images.githubusercontent.com/80088918/141607475-bc0c659b-dc59-4d9a-b7f8-0e5114a56e69.jpg" width="600" >
 
 
 
