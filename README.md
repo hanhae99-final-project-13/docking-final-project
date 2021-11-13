@@ -73,7 +73,7 @@
 ## BackEnd - 어려웠던 점:balloon:
 
 
-- jpa 순환참조 오류
+## jpa 순환참조 오류
 
 <img src = "https://user-images.githubusercontent.com/80088918/141600277-6a7a1dd4-a333-43d6-9efc-7410e8286f60.jpg" width="500" >
 
