@@ -1,4 +1,4 @@
-# docking-final-project
+# getting-final-project
 
 
 :house_with_garden:Intro 
