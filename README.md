@@ -7,7 +7,7 @@
 너도 가족을 찾니?
 나도 가족을 찾아!
 
-Getting your family 
+Getting your family   
 
 우리의 운명적인 만남 "*GETTING개팅:laughing:*"
 
