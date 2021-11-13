@@ -54,14 +54,14 @@
 
 ## :mag_right: Project Architecture :mag_right:
 
-<img src = "https://user-images.githubusercontent.com/80088918/141522884-f5682b71-43f3-41d4-aa24-221e2865f6e2.jpg" width="500" >
+<img src = "https://user-images.githubusercontent.com/80088918/141522884-f5682b71-43f3-41d4-aa24-221e2865f" width="500" >
 
 
 
 ## FrontEnd  - 어려웠던 점:balloon:
 
 1. Footer를 원하는 페이지에만 나타나게 하기가 어려웠습니다.  
-    
+
     Footer는 라우트가 아닌 컴포넌트 였기 때문에  Footer에서 location, match, history 를 사용하여 원하는 페이지에서만 나오게 예외처리 할 수가 없습니다. 
     
     해결 방법으로 Footer에 withRouter 라는 Hook을 사용하여 props로 history 받아와 pathname으로 원하는 페이지에만 나타나게 구현하였습니다.
