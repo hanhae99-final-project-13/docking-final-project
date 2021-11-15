@@ -12,6 +12,7 @@ import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.pet.PetRepository;
 import com.sparta.dockingfinalproject.pet.dto.PetRequestDto;
 import com.sparta.dockingfinalproject.post.dto.PostDetailResponseDto;
+import com.sparta.dockingfinalproject.post.dto.PostPreviewDto;
 import com.sparta.dockingfinalproject.post.dto.PostSearchResponseDto;
 import com.sparta.dockingfinalproject.post.dto.StatusDto;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
@@ -50,9 +51,7 @@ public class PostService {
   }
 
   public Map<String, Object> home(UserDetailsImpl userDetails) {
-    Pageable pageable = PageRequest.of(0, 6);
-    Page<Post> postPage = postRepository.findAllByOrderByCreatedAtDesc(pageable);
-    List<Post> posts = postPage.getContent();
+    List<Post> posts = getPagePostSix();
 
     Map<String, Object> data = new HashMap<>();
     data.put("postList", getPostList(posts));
@@ -61,11 +60,17 @@ public class PostService {
     return SuccessResult.success(data);
   }
 
-  private List<PostDetailResponseDto> getPostList(List<Post> posts) {
-    List<PostDetailResponseDto> postList = new ArrayList<>();
+  private List<Post> getPagePostSix() {
+    Pageable pageable = PageRequest.of(0, 6);
+    Page<Post> postPage = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+    return postPage.getContent();
+  }
+
+  private List<PostPreviewDto> getPostList(List<Post> posts) {
+    List<PostPreviewDto> postList = new ArrayList<>();
     for (Post post : posts) {
-      PostDetailResponseDto postDetailResponseDto = PostDetailResponseDto.getPostDetailResponseDto(post);
-      postList.add(postDetailResponseDto);
+      PostPreviewDto postPreviewDto = PostPreviewDto.of(post);
+      postList.add(postPreviewDto);
     }
     return postList;
   }
