@@ -64,7 +64,6 @@ public class KakaoUserService {
 	// 3. 필요시에 회원가입
 	User kakaoUser = registerKakaoOrUpdateKakao(kakaoUserInfo);
 
-	// 5. 강제 로그인 처리
 	return SuccessResult.success(forceLogin(kakaoUser));
   }
 
@@ -212,7 +211,6 @@ public class KakaoUserService {
 	Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
 		userDetails.getAuthorities());
 	SecurityContextHolder.getContext().setAuthentication(authentication);
-	System.out.println("강제 로그인 완료");
 
 	Map<String, Object> data = new HashMap<>();
 	data.put("userId", kakaoUser.getUserId());

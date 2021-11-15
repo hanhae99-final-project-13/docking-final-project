@@ -10,8 +10,8 @@ import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
-import com.sparta.dockingfinalproject.user.dto.LoginCheckResponseDto;
-import com.sparta.dockingfinalproject.user.dto.LoginResponseDto;
+import com.sparta.dockingfinalproject.user.dto.response.LoginCheckResponseDto;
+import com.sparta.dockingfinalproject.user.dto.response.LoginResponseDto;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserInquriryRequestDto;
@@ -217,6 +217,11 @@ public class UserService {
 	Optional<User> findUser2 = userRepository.findByNickname(nickname);
 	if (findUser2.isPresent()) {
 	  throw new DockingException(ErrorCode.NICKNAME_DUPLICATE);
+	}
+
+	Optional<User> findUser3 = userRepository.findByEmail(requestDto.getEmail());
+	if(findUser3.isPresent()){
+	  throw new DockingException(ErrorCode.EMAIL_DUPLICATE);
 	}
 
 	if (!password.equals(pwcheck)) {
