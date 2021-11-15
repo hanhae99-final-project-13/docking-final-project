@@ -68,6 +68,7 @@ public class KakaoUserService {
 	// 4. 없다면 카카오 정보로 user 만들기
 	Map<String, Object> data = new HashMap<>();
 	if (kakaoUser == null) {
+
 	  kakaoUser = registerUserwithKakaoInfo(kakaoUserInfo, kakaoId);
 	  data.put("userId", kakaoUser.getUserId());
 	  data.put("nickname", kakaoUser.getNickname());
@@ -85,6 +86,7 @@ public class KakaoUserService {
 	  edu.put("심화지식2", education.getCore());
 	  eduList.add(edu);
 	  data.put("eduList", eduList);
+
 	}
 
 

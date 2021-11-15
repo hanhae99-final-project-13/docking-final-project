@@ -1,7 +1,5 @@
 package com.sparta.dockingfinalproject.user;
 
-import com.sparta.dockingfinalproject.alarm.Alarm;
-import com.sparta.dockingfinalproject.alarm.AlarmRepository;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
 import javax.persistence.Column;
@@ -22,7 +20,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @Entity
 public class User {
-
 
 
   @Id
@@ -51,65 +48,59 @@ public class User {
   @Column(unique = true)
   private Long kakaoId;
 
-  @Column
-  private String authKey;
-
-  @Column
-  private boolean authCheck;
 
   @Column(nullable = false)
   private String phoneNumber;
 
   public User(String username, String password, String nickname, String email, String userImgUrl,
-      String phoneNumber) {
+	  String phoneNumber) {
 
-    this.username = username;
-    this.password = password;
-    this.nickname = nickname;
-    this.email = email;
-    this.userImgUrl = userImgUrl;
-    this.kakaoId = null;
-    this.phoneNumber = phoneNumber;
+	this.username = username;
+	this.password = password;
+	this.nickname = nickname;
+	this.email = email;
+	this.userImgUrl = userImgUrl;
+	this.kakaoId = null;
+	this.phoneNumber = phoneNumber;
 
 
   }
 
   public User(String username, String password, String nickname, String email, Long kakaoId,
-      String userImgUrl) {
-    this.username = username;
-    this.password = password;
-    this.nickname = nickname;
-    this.email = email;
-    this.kakaoId = kakaoId;
-    this.userImgUrl = userImgUrl;
-    this.phoneNumber = "";
-    this.authCheck = true;
+	  String userImgUrl) {
+	this.username = username;
+	this.password = password;
+	this.nickname = nickname;
+	this.email = email;
+	this.kakaoId = kakaoId;
+	this.userImgUrl = userImgUrl;
+	this.phoneNumber = "";
+
   }
 
 
   public User(String password, String nickname, String email, Long kakaoId) {
-    this.password = password;
-    this.nickname = nickname;
-    this.email = email;
-    this.kakaoId = kakaoId;
-    this.authKey = "";
-    this.authCheck = true;
+	this.password = password;
+	this.nickname = nickname;
+	this.email = email;
+	this.kakaoId = kakaoId;
+
   }
 
   public User(SignupRequestDto requestDto, String password) {
-    this.username = requestDto.getUsername();
-    this.password = password;
-    this.nickname = requestDto.getNickname();
-    this.email = requestDto.getEmail();
-    this.userImgUrl = "https://gorokke.shop/image/profileDefaultImg.jpg";
-    this.kakaoId = null;
-    this.phoneNumber = requestDto.getPhoneNumber();
+	this.username = requestDto.getUsername();
+	this.password = password;
+	this.nickname = requestDto.getNickname();
+	this.email = requestDto.getEmail();
+	this.userImgUrl = "https://gorokke.shop/image/profileDefaultImg.jpg";
+	this.kakaoId = null;
+	this.phoneNumber = requestDto.getPhoneNumber();
 
   }
 
   public void update(UpdateRequestDto requestDto) {
-    this.nickname = requestDto.getNickname();
-    this.userImgUrl = requestDto.getUserImgUrl();
+	this.nickname = requestDto.getNickname();
+	this.userImgUrl = requestDto.getUserImgUrl();
 
   }
 

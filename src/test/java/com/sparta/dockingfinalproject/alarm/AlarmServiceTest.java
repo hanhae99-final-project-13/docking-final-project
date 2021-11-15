@@ -36,7 +36,7 @@ class AlarmServiceTest {
 
   @BeforeEach
   void init() {
-    user = new User(1L, "user1", "aa1234", "홍길동", "sss@naver.com", "", "",  0L, "", true, "");
+    user = new User(1L, "user1", "aa1234", "홍길동", "sss@naver.com", "", "",  0L, "");
     userDetails = new UserDetailsImpl(user);
 
     alarm1 = new Alarm(10L, "알람 test", true, user);

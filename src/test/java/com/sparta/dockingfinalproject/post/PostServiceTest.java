@@ -93,7 +93,7 @@ class PostServiceTest {
 		"보호소", "10", "귀여움", "https://www.naver.com",
 		new Post());
 
-	user = new User(1L, "user1", "aa1234", "홍길동", "sss@naver.com", "", "", 0L, "", true, "");
+	user = new User(1L, "user1", "aa1234", "홍길동", "sss@naver.com", "", "", 0L,  "");
 
 	userDetails = new UserDetailsImpl(user);
 
@@ -103,6 +103,7 @@ class PostServiceTest {
 	post3 = new Post(103L, 0L, pet, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 	post4 = new Post(104L, 0L, pet, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 	post5 = new Post(105L, 0L, pet, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+
   }
 
   @Test
@@ -118,6 +119,7 @@ class PostServiceTest {
 
 	assertThat(petRepository.findById(10L).get().getPetId()).isEqualTo(addPet.getPetId());
 	assertThat(postRepository.findById(100L).get().getPostId()).isEqualTo(addPost.getPostId());
+
   }
 
   @Test

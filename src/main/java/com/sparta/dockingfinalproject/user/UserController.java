@@ -6,6 +6,7 @@ import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserInquriryRequestDto;
+import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
 import com.sparta.dockingfinalproject.user.mail.MailSendService;
 import java.util.Map;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,7 +39,7 @@ public class UserController {
 
   //로그인 요청
   @PostMapping("/user/login")
-  public Map<String, Object> login(@RequestBody SignupRequestDto requestDto)
+  public Map<String, Object> login(@RequestBody UserRequestDto requestDto)
 	  throws DockingException {
 	return userService.login(requestDto);
   }

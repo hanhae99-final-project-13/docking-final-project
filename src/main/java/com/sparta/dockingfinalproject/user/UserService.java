@@ -15,6 +15,7 @@ import com.sparta.dockingfinalproject.user.dto.LoginResponseDto;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserInquriryRequestDto;
+import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +38,7 @@ public class UserService {
   public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
 	  JwtTokenProvider jwtTokenProvider,
 	  EducationRepository educationRepository, AlarmRepository alarmRepository) {
+
 	this.userRepository = userRepository;
 	this.passwordEncoder = passwordEncoder;
 	this.jwtTokenProvider = jwtTokenProvider;
@@ -70,11 +72,13 @@ public class UserService {
 
 
   //로그인
-  public Map<String, Object> login(SignupRequestDto requestDto) {
+  public Map<String, Object> login(UserRequestDto requestDto) {
 
-	User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
-		() -> new DockingException(ErrorCode.USERNAME_NOT_FOUND)
-	);
+//	User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
+//		() -> new DockingException(ErrorCode.USERNAME_NOT_FOUND)
+//	);
+
+	User user = userRepository.findByUsername(requestDto.getUsername()).orElse(null);
 
 	String username = requestDto.getUsername();
 	usernameEmpty(username);
@@ -128,6 +132,8 @@ public class UserService {
 	} else {
 	  throw new DockingException(ErrorCode.USER_NOT_FOUND);
 	}
+
+
   }
 
 

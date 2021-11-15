@@ -57,12 +57,11 @@ class WishServiceTest {
   void init() {
 	pet = new Pet(10L, "요크셔", Sex.M, 1, 3.5, "남양주시", "경기도 남양주시 도농동",
 		"010-1234-1236", "친근", "https://www.naver.com", IsAdopted.ADOPTED,
-
 		"보호소", "10", "귀여움", "https://www.naver.com",
 		new Post());
 
-	user = new User(1L, "user1", "aa1234", "홍길동", "sss@naver.com", "", "", 0L, "", true, "");
-	userDetails = new UserDetailsImpl(user);
+    user = new User(1L, "user1", "aa1234", "홍길동", "sss@naver.com", "", "",  0L,  "");
+    userDetails = new UserDetailsImpl(user);
 
 	post = new Post(100L, 0L, pet, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 	post1 = new Post(101L, 0L, pet, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
@@ -92,6 +91,7 @@ class WishServiceTest {
 	Map<String, Object> deleteResult = wishService.addWishAndDeleteWish(post.getPostId(),
 		userDetails);
 	Map<String, Object> data = (Map<String, Object>) deleteResult.get("data");
+
 
 	assertThat(data.get("msg")).isEqualTo("관심목록에서 삭제되었습니다.");
   }
