@@ -11,12 +11,13 @@ import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
 import com.sparta.dockingfinalproject.security.jwt.TokenDto;
-import com.sparta.dockingfinalproject.user.dto.response.LoginCheckResponseDto;
-import com.sparta.dockingfinalproject.user.dto.response.LoginResponseDto;
+import com.sparta.dockingfinalproject.token.RefreshToken;
+import com.sparta.dockingfinalproject.token.RefreshTokenRepository;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserInquriryRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
+import com.sparta.dockingfinalproject.user.dto.response.LoginCheckResponseDto;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,17 +35,19 @@ public class UserService {
   private final JwtTokenProvider jwtTokenProvider;
   private final EducationRepository educationRepository;
   private final AlarmRepository alarmRepository;
+  private final RefreshTokenRepository refreshTokenRepository;
 
 
   public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
 	  JwtTokenProvider jwtTokenProvider,
-	  EducationRepository educationRepository, AlarmRepository alarmRepository) {
+	  EducationRepository educationRepository, AlarmRepository alarmRepository, RefreshTokenRepository refreshTokenRepository) {
 
 	this.userRepository = userRepository;
 	this.passwordEncoder = passwordEncoder;
 	this.jwtTokenProvider = jwtTokenProvider;
 	this.educationRepository = educationRepository;
 	this.alarmRepository = alarmRepository;
+	this.refreshTokenRepository = refreshTokenRepository;
   }
 
   //회원 등록
@@ -73,10 +76,19 @@ public class UserService {
 
 
   //로그인
+  @Transactional
   public Map<String, Object> login(UserRequestDto requestDto) {
 
 	TokenDto tokenDto = jwtTokenProvider.createToken(requestDto.getUsername(),
 		requestDto.getUsername());
+
+	//리프레시 토큰을 저장하기.
+	RefreshToken refreshToken = RefreshToken.builder()
+		.key(requestDto.getUsername())
+		.value(tokenDto.getRefreshToken())
+		.build();
+
+	refreshTokenRepository.save(refreshToken);
 
 	User user = userRepository.findByUsername(requestDto.getUsername()).orElse(null);
 
@@ -96,18 +108,12 @@ public class UserService {
 	data.put("nickname", user.getUserId());
 	data.put("email", user.getEmail());
 	data.put("userImgUrl", user.getUserImgUrl());
-	data.put("alarmCount",5 );
+	data.put("alarmCount", 5);
 	data.put("token", tokenDto.getAccessToken());
-	data.put("refreshToken",tokenDto.getRefreshToken());
+	data.put("refreshToken", tokenDto.getRefreshToken());
 
-
-	List<Map<String, Object>> eduList =getEduList(user);
+	List<Map<String, Object>> eduList = getEduList(user);
 	data.put("eduList", eduList);
-
-
-
-
-
 
 	return SuccessResult.success(data);
   }
@@ -233,7 +239,7 @@ public class UserService {
 	}
 
 	Optional<User> findUser3 = userRepository.findByEmail(requestDto.getEmail());
-	if(findUser3.isPresent()){
+	if (findUser3.isPresent()) {
 	  throw new DockingException(ErrorCode.EMAIL_DUPLICATE);
 	}
 
