@@ -71,132 +71,133 @@ class PostServiceTest {
 
   @BeforeEach
   void init() {
-    List<String> temp = new ArrayList<>();
-    temp.add("https://www.naver.com");
-    petRequestDto = PetRequestDto.builder()
-        .breed("요크셔")
-        .sex("m")
-        .age(1)
-        .weight(3.5)
-        .lostLocation("남양주시")
-        .ownerType("보호소")
-        .address("경기도 남양주시 도농동")
-        .phone("010-1234-1236")
-        .url("https://www.naver.com")
-        .img(temp)
-        .extra("귀여움")
-        .isAdopted("ADOPTED")
-        .build();
+	List<String> temp = new ArrayList<>();
+	temp.add("https://www.naver.com");
+	petRequestDto = PetRequestDto.builder()
+		.breed("요크셔")
+		.sex("m")
+		.age(1)
+		.weight(3.5)
+		.lostLocation("남양주시")
+		.ownerType("보호소")
+		.address("경기도 남양주시 도농동")
+		.phone("010-1234-1236")
+		.url("https://www.naver.com")
+		.img(temp)
+		.extra("귀여움")
+		.isAdopted("ADOPTED")
+		.build();
 
-    pet = new Pet(10L, "요크셔", Sex.M, 1, 3.5, "남양주시", "경기도 남양주시 도농동",
-        "010-1234-1236", "친근", "https://www.naver.com", IsAdopted.ADOPTED,
-        "보호소", "10", "귀여움", "https://www.naver.com",
-        new Post());
+	pet = new Pet(10L, "요크셔", Sex.M, 1, 3.5, "남양주시", "경기도 남양주시 도농동",
+		"010-1234-1236", "친근", "https://www.naver.com", IsAdopted.ADOPTED,
+		"보호소", "10", "귀여움", "https://www.naver.com",
+		new Post());
 
-    user = new User(1L, "user1", "aa1234", "홍길동", "sss@naver.com", "", "",  0L, "", true, "");
+	user = new User(1L, "user1", "aa1234", "홍길동", "sss@naver.com", "", "", 0L, "", true, "");
 
-    userDetails = new UserDetailsImpl(user);
+	userDetails = new UserDetailsImpl(user);
 
-    post = new Post(100L, 0L, pet, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-    post1 = new Post(101L, 0L, pet, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-    post2 = new Post(102L, 0L, pet, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-    post3 = new Post(103L, 0L, pet, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-    post4 = new Post(104L, 0L, pet, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-    post5 = new Post(105L, 0L, pet, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+	post = new Post(100L, 0L, pet, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+	post1 = new Post(101L, 0L, pet, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+	post2 = new Post(102L, 0L, pet, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+	post3 = new Post(103L, 0L, pet, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+	post4 = new Post(104L, 0L, pet, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+	post5 = new Post(105L, 0L, pet, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
   }
 
   @Test
   @DisplayName("Pet 저장, Post 저장")
   void addPost() {
-    Post addPost = new Post();
-    Pet addPet = new Pet();
+	Post addPost = new Post();
+	Pet addPet = new Pet();
 
-    when(petRepository.findById(10L)).thenReturn(Optional.of(addPet));
-    when(postRepository.findById(100L)).thenReturn(Optional.of(addPost));
+	when(petRepository.findById(10L)).thenReturn(Optional.of(addPet));
+	when(postRepository.findById(100L)).thenReturn(Optional.of(addPost));
 
-    postService.addPost(petRequestDto, userDetails);
+	postService.addPost(petRequestDto, userDetails);
 
-    assertThat(petRepository.findById(10L).get().getPetId()).isEqualTo(addPet.getPetId());
-    assertThat(postRepository.findById(100L).get().getPostId()).isEqualTo(addPost.getPostId());
+	assertThat(petRepository.findById(10L).get().getPetId()).isEqualTo(addPet.getPetId());
+	assertThat(postRepository.findById(100L).get().getPostId()).isEqualTo(addPost.getPostId());
   }
 
   @Test
   @DisplayName("home 화면 6개 게시글 조회")
   void getHomePosts() {
-    List<Post> posts = new ArrayList<>();
-    posts.add(post);
-    posts.add(post1);
-    posts.add(post2);
-    posts.add(post3);
-    posts.add(post4);
-    posts.add(post5);
-    Page<Post> pages = new PageImpl<>(posts);
+	List<Post> posts = new ArrayList<>();
+	posts.add(post);
+	posts.add(post1);
+	posts.add(post2);
+	posts.add(post3);
+	posts.add(post4);
+	posts.add(post5);
+	Page<Post> pages = new PageImpl<>(posts);
 
-    Pageable pageable = PageRequest.of(0, 6);
+	Pageable pageable = PageRequest.of(0, 6);
 
-    when(postRepository.findAllByOrderByCreatedAtDesc(pageable)).thenReturn(pages);
+	when(postRepository.findAllByOrderByCreatedAtDesc(pageable)).thenReturn(pages);
 
-    Map<String, Object> home = postService.home(userDetails);
-    Map<String, Object> data = (Map<String, Object>) home.get("data");
-    List<PostPreviewDto> postList = (List<PostPreviewDto>) data.get("postList");
+	Map<String, Object> home = postService.home(userDetails);
+	Map<String, Object> data = (Map<String, Object>) home.get("data");
+	List<PostPreviewDto> postList = (List<PostPreviewDto>) data.get("postList");
 
-    assertThat(postList.size()).isEqualTo(6);
-    assertThat(postList.get(0).getPostId()).isEqualTo(100L);
-    assertThat(postList.get(1).getPostId()).isEqualTo(101L);
-    assertThat(postList.get(2).getPostId()).isEqualTo(102L);
-    assertThat(postList.get(3).getPostId()).isEqualTo(103L);
-    assertThat(postList.get(4).getPostId()).isEqualTo(104L);
-    assertThat(postList.get(5).getPostId()).isEqualTo(105L);
+	assertThat(postList.size()).isEqualTo(6);
+	assertThat(postList.get(0).getPostId()).isEqualTo(100L);
+	assertThat(postList.get(1).getPostId()).isEqualTo(101L);
+	assertThat(postList.get(2).getPostId()).isEqualTo(102L);
+	assertThat(postList.get(3).getPostId()).isEqualTo(103L);
+	assertThat(postList.get(4).getPostId()).isEqualTo(104L);
+	assertThat(postList.get(5).getPostId()).isEqualTo(105L);
   }
 
   @Test
   @DisplayName("게시글 단건 조회")
   void getPost() {
-    when(postRepository.findById(post.getPostId())).thenReturn(Optional.of(post));
+	when(postRepository.findById(post.getPostId())).thenReturn(Optional.of(post));
 
-    assertThat(postRepository.findById(100L).get().getPostId()).isEqualTo(post.getPostId());
+	assertThat(postRepository.findById(100L).get().getPostId()).isEqualTo(post.getPostId());
   }
 
   @Test
   @DisplayName("게시글 단건 조회_게시글 없는 경우")
   void getPostNotFound() {
-    when(postRepository.findById(post.getPostId())).thenReturn(Optional.of(post));
+	when(postRepository.findById(post.getPostId())).thenReturn(Optional.of(post));
 
-    assertThat(postRepository.findById(100L).get().getPostId()).isEqualTo(post.getPostId());
-    assertThrows(DockingException.class,
-        () -> postService.getPost(99L, userDetails), "해당 게시글을 찾을 수 없습니다.");
+	assertThat(postRepository.findById(100L).get().getPostId()).isEqualTo(post.getPostId());
+	assertThrows(DockingException.class,
+		() -> postService.getPost(99L, userDetails), "해당 게시글을 찾을 수 없습니다.");
   }
 
   @Test
   @DisplayName("게시글 수정")
   void updatePost() {
-    when(postRepository.findById(100L)).thenReturn(Optional.of(post));
+	when(postRepository.findById(100L)).thenReturn(Optional.of(post));
 
-    List<String> temp = new ArrayList<>();
-    temp.add("https://www.naver.com");
-    petRequestDto = PetRequestDto.builder()
-        .breed("요크셔테리어")
-        .sex("m")
-        .age(2)
-        .weight(3.8)
-        .lostLocation("구리시")
-        .ownerType("입양진행중")
-        .address("경기도 구리시")
-        .phone("010-1234-1236")
-        .url("https://www.naver.com")
-        .img(temp)
-        .extra("귀여움")
-        .isAdopted("ADOPTED")
-        .build();
+	List<String> temp = new ArrayList<>();
+	temp.add("https://www.naver.com");
+	petRequestDto = PetRequestDto.builder()
+		.breed("요크셔테리어")
+		.sex("m")
+		.age(2)
+		.weight(3.8)
+		.lostLocation("구리시")
+		.ownerType("입양진행중")
+		.address("경기도 구리시")
+		.phone("010-1234-1236")
+		.url("https://www.naver.com")
+		.img(temp)
+		.extra("귀여움")
+		.isAdopted("ADOPTED")
 
-    postService.updatePost(post.getPostId(), petRequestDto, userDetails);
+		.build();
 
-    Pet updatePet = post.getPet();
-    assertThat(updatePet.getBreed()).isEqualTo("요크셔테리어");
-    assertThat(updatePet.getAge()).isEqualTo(2);
-    assertThat(updatePet.getLostLocation()).isEqualTo("구리시");
-    assertThat(updatePet.getOwnerType()).isEqualTo("입양진행중");
-    assertThat(updatePet.getAddress()).isEqualTo("경기도 구리시");
+	postService.updatePost(post.getPostId(), petRequestDto, userDetails);
+
+	Pet updatePet = post.getPet();
+	assertThat(updatePet.getBreed()).isEqualTo("요크셔테리어");
+	assertThat(updatePet.getAge()).isEqualTo(2);
+	assertThat(updatePet.getLostLocation()).isEqualTo("구리시");
+	assertThat(updatePet.getOwnerType()).isEqualTo("입양진행중");
+	assertThat(updatePet.getAddress()).isEqualTo("경기도 구리시");
   }
 
   @Test
