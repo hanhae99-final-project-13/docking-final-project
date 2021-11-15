@@ -1,9 +1,12 @@
 package com.sparta.dockingfinalproject.security.jwt;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,7 +27,7 @@ public class JwtTokenProvider {
     private String secretKey = "docking";
 
     // 토큰 유효시간
-    private Long tokenValidTime = 24*60*60*1000L;
+    private Long tokenValidTime = 30*1000L;
 //        private Long tokenValidTime = *1000L;
 
     private final UserDetailsService userDetailsService;
@@ -70,10 +73,13 @@ public class JwtTokenProvider {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
-        } catch (Exception e) {
+        }  catch (ExpiredJwtException e) {
+            e.printStackTrace();
+        }catch (Exception e) {
 
-            System.out.println("토큰 유효시간 만료" + e.getMessage());
-            return false;
+            e.printStackTrace();
+
         }
+        return false;
     }
 }
