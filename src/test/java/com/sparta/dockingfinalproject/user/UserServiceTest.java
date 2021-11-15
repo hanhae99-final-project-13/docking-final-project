@@ -9,6 +9,7 @@
 //import com.sparta.dockingfinalproject.education.EducationRepository;
 //import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
 //import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
+//import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
 //import java.util.Optional;
 //import org.junit.Before;
 //import org.junit.jupiter.api.DisplayName;
@@ -34,16 +35,16 @@
 //
 //  @Before
 //  public void setup() {
-//	SignupRequestDto reuqestDto = new SignupRequestDto(
-//		"wldms", "thd123", "thd123", "wldms@email.com", "지은님", "imgurl", 1234, "010-1234-5678");
-////	SignupRequestDto.builder();
+//
+//
+//	UserRequestDto requestDto = new UserRequestDto("wldms", "thd123");
 //
 //  }
 //
 //  @Test
 //  @DisplayName("로그인")
 //  void login() {
-//	SignupRequestDto requestDto = new SignupRequestDto();
+//	UserRequestDto requestDto = new UserRequestDto();
 //
 //	//given
 //	UserService userService = new UserService(userRepository, passwordEncoder, jwtTokenProvider,
@@ -53,12 +54,7 @@
 ////	user.setUserId(1L);
 //	user.setUsername("wldms");
 //	user.setPassword("thd123");
-////	user.setNickname("지은님");
-////	user.setEmail("wldms2494@email.com");
-////	user.setBadge("silver");
-////	user.setUserImgUrl("imageUrl");
-////	user.setKakaoId(2L);
-////	user.setPhoneNumber("01012345678");
+////
 //
 //	given(userRepository.findByUsername("wldms")).willReturn(Optional.of(user));
 //
