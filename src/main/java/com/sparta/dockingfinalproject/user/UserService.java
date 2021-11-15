@@ -10,6 +10,7 @@ import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
+import com.sparta.dockingfinalproject.security.jwt.TokenDto;
 import com.sparta.dockingfinalproject.user.dto.response.LoginCheckResponseDto;
 import com.sparta.dockingfinalproject.user.dto.response.LoginResponseDto;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
@@ -74,9 +75,8 @@ public class UserService {
   //로그인
   public Map<String, Object> login(UserRequestDto requestDto) {
 
-//	User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
-//		() -> new DockingException(ErrorCode.USERNAME_NOT_FOUND)
-//	);
+	TokenDto tokenDto = jwtTokenProvider.createToken(requestDto.getUsername(),
+		requestDto.getUsername());
 
 	User user = userRepository.findByUsername(requestDto.getUsername()).orElse(null);
 
@@ -91,12 +91,25 @@ public class UserService {
 	  throw new DockingException(ErrorCode.PASSWORD_MISS_MATCH);
 	}
 
-	List<Map<String, Object>> eduList = getEduList(user);
+	Map<String, Object> data = new HashMap<>();
 
-	LoginResponseDto loginResponseDto = LoginResponseDto.of(user,
-		jwtTokenProvider.createToken(requestDto.getUsername(), requestDto.getUsername()), eduList);
+	data.put("nickname", user.getUserId());
+	data.put("email", user.getEmail());
+	data.put("userImgUrl", user.getUserImgUrl());
+	data.put("alarmCount",5 );
+	data.put("token", tokenDto.getAccessToken());
+	data.put("refreshToken",tokenDto.getRefreshToken());
 
-	return SuccessResult.success(loginResponseDto);
+
+	List<Map<String, Object>> eduList =getEduList(user);
+	data.put("eduList", eduList);
+
+
+
+
+
+
+	return SuccessResult.success(data);
   }
 
 
