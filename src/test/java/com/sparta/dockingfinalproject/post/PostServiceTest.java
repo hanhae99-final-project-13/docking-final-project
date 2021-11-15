@@ -7,11 +7,13 @@ import static org.mockito.Mockito.when;
 import com.sparta.dockingfinalproject.alarm.AlarmRepository;
 import com.sparta.dockingfinalproject.comment.CommentRepository;
 import com.sparta.dockingfinalproject.exception.DockingException;
+import com.sparta.dockingfinalproject.pet.IsAdopted;
 import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.pet.PetRepository;
 import com.sparta.dockingfinalproject.pet.Sex;
 import com.sparta.dockingfinalproject.pet.dto.PetRequestDto;
 import com.sparta.dockingfinalproject.post.dto.PostDetailResponseDto;
+import com.sparta.dockingfinalproject.post.dto.PostPreviewDto;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.User;
 import com.sparta.dockingfinalproject.user.UserRepository;
@@ -83,11 +85,11 @@ class PostServiceTest {
         .url("https://www.naver.com")
         .img(temp)
         .extra("귀여움")
-        .isAdopted("true")
+        .isAdopted("ADOPTED")
         .build();
 
     pet = new Pet(10L, "요크셔", Sex.M, 1, 3.5, "남양주시", "경기도 남양주시 도농동",
-        "010-1234-1236", "친근", "https://www.naver.com", "true",
+        "010-1234-1236", "친근", "https://www.naver.com", IsAdopted.ADOPTED,
         "보호소", "10", "귀여움", "https://www.naver.com",
         new Post());
 
@@ -136,7 +138,7 @@ class PostServiceTest {
 
     Map<String, Object> home = postService.home(userDetails);
     Map<String, Object> data = (Map<String, Object>) home.get("data");
-    List<PostDetailResponseDto> postList = (List<PostDetailResponseDto>) data.get("postList");
+    List<PostPreviewDto> postList = (List<PostPreviewDto>) data.get("postList");
 
     assertThat(postList.size()).isEqualTo(6);
     assertThat(postList.get(0).getPostId()).isEqualTo(100L);
@@ -184,7 +186,7 @@ class PostServiceTest {
         .url("https://www.naver.com")
         .img(temp)
         .extra("귀여움")
-        .isAdopted("true")
+        .isAdopted("ADOPTED")
         .build();
 
     postService.updatePost(post.getPostId(), petRequestDto, userDetails);

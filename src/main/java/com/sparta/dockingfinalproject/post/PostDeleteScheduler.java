@@ -23,7 +23,7 @@ public class PostDeleteScheduler {
   @Scheduled(cron = "0 0 3 * * *")
   public void adoptedPostDelete() {
     System.out.println("입양완료 3일 경과 Post 삭제");
-    List<Pet> petList = petRepository.findAllByIsAdoptedOrderByModifiedAtDesc(IsAdopted.adopted);
+    List<Pet> petList = petRepository.findAllByIsAdoptedOrderByModifiedAtDesc(IsAdopted.ADOPTED);
 
     for (Pet pet : petList) {
       LocalDateTime modifiedAt = pet.getModifiedAt();
