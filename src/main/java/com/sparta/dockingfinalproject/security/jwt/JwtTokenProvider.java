@@ -25,6 +25,7 @@ public class JwtTokenProvider {
 
     // 토큰 유효시간
     private Long tokenValidTime = 24*60*60*1000L;
+//        private Long tokenValidTime = *1000L;
 
     private final UserDetailsService userDetailsService;
 
@@ -70,6 +71,8 @@ public class JwtTokenProvider {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
+
+            System.out.println("토큰 유효시간 만료" + e.getMessage());
             return false;
         }
     }

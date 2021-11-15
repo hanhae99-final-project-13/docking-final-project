@@ -61,38 +61,10 @@ public class KakaoUserService {
 	// 2. 토큰으로 카카오 API 호출
 	KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(accessToken);
 
-	// 3. DB 에 중복된 Kakao Id 가 있는지 확인
-	Long kakaoId = kakaoUserInfo.getId();
-	User kakaoUser = userRepository.findByKakaoId(kakaoId).orElse(null);
+	// 3. 필요시에 회원가입
+	User kakaoUser = registerKakaoOrUpdateKakao(kakaoUserInfo);
 
-	// 4. 없다면 카카오 정보로 user 만들기
-	Map<String, Object> data = new HashMap<>();
-	if (kakaoUser == null) {
-	  kakaoUser = registerUserwithKakaoInfo(kakaoUserInfo, kakaoId);
-	  data.put("userId", kakaoUser.getUserId());
-	  data.put("nickname", kakaoUser.getNickname());
-	  data.put("email", kakaoUser.getEmail());
-	  data.put("userImgUrl", kakaoUser.getUserImgUrl());
-	  data.put("phone", kakaoUser.getPhoneNumber());
-	  data.put("token", jwtTokenProvider.createToken(kakaoUser.getEmail(), kakaoUser.getEmail()));
-
-	  List<Map<String, Object>> eduList = new ArrayList<>();
-	  Map<String, Object> edu = new HashMap<>();
-	  Education education = new Education(kakaoUser);
-	  educationRepository.save(education);
-	  edu.put("필수지식", education.getBasic());
-	  edu.put("심화지식", education.getAdvanced());
-	  edu.put("심화지식2", education.getCore());
-	  eduList.add(edu);
-	  data.put("eduList", eduList);
-	}
-
-
-	// 5. 강제 로그인 처리
-	forceLogin(kakaoUser);
-
-
-	return SuccessResult.success(data);
+	return SuccessResult.success(forceLogin(kakaoUser));
   }
 
   //////////////////////////////////////////////////////////////////////////////////
@@ -110,6 +82,7 @@ public class KakaoUserService {
 	body.add("grant_type", "authorization_code");
 	body.add("client_id", "b288c56fd31bb6f686ba8a3a39ba7fb2");
 	body.add("redirect_uri", "http://getting.co.kr/oauth/callback/kakao");
+
 	System.out.println("현재 코드 값 " + code);
 	body.add("code", code);
 
@@ -180,39 +153,83 @@ public class KakaoUserService {
 
   }
 
-  private User registerUserwithKakaoInfo(KakaoUserInfoDto kakaoUserInfo, Long kakaoId) {
-	User kakaoUser;
-	// 회원가입
-	// username: kakao nickname
-	String nickname = kakaoUserInfo.getNickname();
+  private User registerKakaoOrUpdateKakao(KakaoUserInfoDto kakaoUserInfoDto) {
+	User sameUser = userRepository.findByEmail(kakaoUserInfoDto.getEmail()).orElse(null);
 
-	// password: random UUID
-	String password = UUID.randomUUID().toString();
-	String encodedPassword = passwordEncoder.encode(password);
+	if (sameUser == null) {
+	  return registerKakaoUserIfNeeded(kakaoUserInfoDto);
+	} else {
+	  return updateKakaoUser(sameUser, kakaoUserInfoDto);
+	}
 
-	// email: kakao email
-	String email = kakaoUserInfo.getEmail();
+  }
 
-	// role: 일반 사용자
-	//UserRoleEnum role = UserRoleEnum.USER;
-	String username = email;
+  private User updateKakaoUser(User sameUser, KakaoUserInfoDto kakaoUserInfoDto) {
 
-	//kakaoUserinfo에서 이미지파일 꺼내서 정보에 추가하기
-	String userImgUrl = kakaoUserInfo.getUserImgUrl();
+	if (sameUser.getKakaoId() == null) {
+	  sameUser.setKakaoId(kakaoUserInfoDto.getId());
+	  userRepository.save(sameUser);
+	}
+	return sameUser;
 
-	kakaoUser = new User(username, password, nickname, email, kakaoId, userImgUrl);
+  }
 
-	userRepository.save(kakaoUser);
+
+  private User registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
+
+	Long kakaoId = kakaoUserInfo.getId();
+	User kakaoUser = userRepository.findByKakaoId(kakaoId).orElse(null);
+
+	if (kakaoUser == null) {
+
+	  //같은 이메일의 유저가 없다면
+	  //신규회원가입
+	  String nickname = kakaoUserInfo.getNickname();
+	  String password = UUID.randomUUID().toString();
+	  String encodedPassword = passwordEncoder.encode(password);
+
+	  String email = kakaoUserInfo.getEmail();
+	  String username = email;
+
+	  String userImgUrl = kakaoUserInfo.getUserImgUrl();
+
+	  kakaoUser = new User(username, encodedPassword, nickname, email, kakaoId, userImgUrl);
+
+	  userRepository.save(kakaoUser);
+	  Education education = new Education(kakaoUser);
+	  educationRepository.save(education);
+
+
+	}
 
 	return kakaoUser;
   }
 
-  private void forceLogin(User kakaoUser) {
+
+  private Map<String, Object> forceLogin(User kakaoUser) {
 	UserDetails userDetails = new UserDetailsImpl(kakaoUser);
 	Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
 		userDetails.getAuthorities());
 	SecurityContextHolder.getContext().setAuthentication(authentication);
-	System.out.println("강제 로그인 완료");
+
+	Map<String, Object> data = new HashMap<>();
+	data.put("userId", kakaoUser.getUserId());
+	data.put("nickname", kakaoUser.getNickname());
+	data.put("email", kakaoUser.getEmail());
+	data.put("userImgUrl", kakaoUser.getUserImgUrl());
+	data.put("phone", kakaoUser.getPhoneNumber());
+	data.put("token", jwtTokenProvider.createToken(kakaoUser.getEmail(), kakaoUser.getEmail()));
+
+	List<Map<String, Object>> eduList = new ArrayList<>();
+	Map<String, Object> edu = new HashMap<>();
+	Education education = new Education(kakaoUser);
+	edu.put("필수지식", education.getBasic());
+	edu.put("심화지식", education.getAdvanced());
+	edu.put("심화지식2", education.getCore());
+	eduList.add(edu);
+	data.put("eduList", eduList);
+
+	return data;
   }
 
 

@@ -1,4 +1,4 @@
-package com.sparta.dockingfinalproject.user.dto;
+package com.sparta.dockingfinalproject.user.dto.response;
 
 import com.sparta.dockingfinalproject.user.User;
 import java.util.List;
