@@ -36,7 +36,7 @@ import org.xml.sax.SAXException;
 
 @Component
 @RequiredArgsConstructor
-public class ApiService {
+public class PublicApiInitializer {
 
   private final PetRepository petRepository;
   private final PostRepository postRepository;
@@ -47,9 +47,14 @@ public class ApiService {
   String username = "";
   User user = new User();
 
-  //API 접속하여 XML 받기
   @PostConstruct
-  public List<Pet> addApiList() throws IOException, ParserConfigurationException, SAXException {
+  public void initializeDB() throws IOException, ParserConfigurationException, SAXException {
+    URL url = connectApi();
+    NodeList nodeList = getNodeList(url);
+    saveItemValue(nodeList);
+  }
+
+  public URL connectApi() throws IOException {
     //http://openapi.animal.go.kr/openapi/service/rest/abandonmentPublicSrvc/abandonmentPublic?bgnde=20210101&endde=20211026&pageNo=1&numOfRows=50&upkind=417000&ServiceKey=emAh2BSy7Cp9iKEgAVpuhP4TUmO6CSHXjRKB3fKJO7SdCYceeDIy%2BhxUTnjeLIv6LpAUoWPuvGcWDhePFxZfWQ%3D%3D
     StringBuilder urlBuilder = new StringBuilder(
         "http://openapi.animal.go.kr/openapi/service/rest/abandonmentPublicSrvc/abandonmentPublic"); /*URL*/
@@ -88,12 +93,10 @@ public class ApiService {
     bufferedReader.close();
     conn.disconnect();
 
-    return getNodeList(url);
+    return url;
   }
 
-
-  //XML을 DATA화
-  private List<Pet> getNodeList(URL url)
+  public NodeList getNodeList(URL url)
       throws ParserConfigurationException, SAXException, IOException {
 
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -109,69 +112,22 @@ public class ApiService {
     NodeList nodeList = doc.getElementsByTagName("item");
     System.out.println("리스트 계 : " + nodeList.getLength());
 
-    List<Pet> pet = saveItemValue(nodeList);
-
-    return pet;
+    return nodeList;
   }
 
+  public List<Pet> getProcessState(NodeList nodeList) {
 
-  // item 하위노드 값 꺼내기
-  private static String getItemValue(String tag, Element eElement) {
-    NodeList childNodeList = null;
-    Node childNodeValue = null;
-    try {
-      childNodeList = eElement.getElementsByTagName(tag).item(0).getChildNodes();
-      childNodeValue = (Node) childNodeList.item(0);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    if (childNodeValue == null) {
-      return null;
-    }
-    return childNodeValue.getNodeValue();
-  }
-
-
-  // 아이템 정보 추출하여 db에 저장
-  private List<Pet> saveItemValue(NodeList nodeList) {
-
-    ArrayList<Pet> list = new ArrayList<>();
+    ArrayList<Pet> apiPetList = new ArrayList<>();
     String isAdopted = null;
     Pet pet = new Pet();
 
-    //관리자 로그인 정보 가져오기
-    adminSignup();
-    username = userRequestDto.getUsername();
-    user = userRepository.findByUsername(username).orElseThrow(
-        () -> new IllegalArgumentException("유저가 존재하지 않습니다"));
-
-    // for문 돌며 아이템값 pet, post db에 저장하기
     for (int i = 0; i < nodeList.getLength(); i++) {
       Node nNode = nodeList.item(i);
       Element eElement = (Element) nNode;
 
-      String petNo = getItemValue("desertionNo", eElement);
-      String breed = getItemValue("kindCd", eElement).replaceAll("\\[", "").replaceAll("개", "").replaceAll("\\]", "");
-      String sex = getItemValue("sexCd", eElement);
-      if (!sex.equalsIgnoreCase("f") && !sex.equalsIgnoreCase("m")) {
-        continue;
-      }
+      String petNo = getProcessState("desertionNo", eElement);
 
-      String age = getItemValue("age", eElement);
-      String weight = getItemValue("weight", eElement);
-      String lostLocation = getItemValue("happenPlace", eElement);
-      String ownerType = getItemValue("careNm", eElement);
-
-      String careAddr = getItemValue("careAddr", eElement);
-      String careAddr1 = careAddr.split("\\s")[0];
-      String careAddr2 = careAddr.split("\\s")[1].split("\\s")[0];
-      String address = careAddr1 + " " + careAddr2;
-
-      String phone = getItemValue("careTel", eElement);
-      String img = getItemValue("popfile", eElement);
-      String extra = getItemValue("specialMark", eElement);
-
-      String processState = getItemValue("processState", eElement);
+      String processState = getProcessState("processState", eElement);
       if (processState == null) {
         continue;
       }
@@ -180,10 +136,59 @@ public class ApiService {
       } else {
         isAdopted = "abandoned";
       }
+      pet = pet.updateStatus(isAdopted);
+      apiPetList.add(pet);
+    }
 
-      System.out.printf(
-          "%s번째 [ %s // %s // %s // %s // %s // %s // %s // %s // %s // %s // %s // %s ]", i, petNo,
-          breed, sex, age, weight, lostLocation, ownerType, address, phone, img, extra, isAdopted);
+    return apiPetList;
+  }
+
+  private List<Pet> saveItemValue(NodeList nodeList) {
+
+    ArrayList<Pet> apiPetList = new ArrayList<>();
+    String isAdopted = null;
+    Pet pet = new Pet();
+
+    adminSignup();
+    username = userRequestDto.getUsername();
+    user = userRepository.findByUsername(username).orElseThrow(
+        () -> new IllegalArgumentException("유저가 존재하지 않습니다"));
+
+    for (int i = 0; i < nodeList.getLength(); i++) {
+      Node nNode = nodeList.item(i);
+      Element eElement = (Element) nNode;
+
+      String petNo = getProcessState("desertionNo", eElement);
+      String breed = getProcessState("kindCd", eElement).replaceAll("\\[개\\]\\p{Z}", "");
+
+      String sex = getProcessState("sexCd", eElement);
+      if (!sex.equalsIgnoreCase("f") && !sex.equalsIgnoreCase("m")) {
+        continue;
+      }
+
+      String age = getProcessState("age", eElement);
+      String weight = getProcessState("weight", eElement);
+      String lostLocation = getProcessState("happenPlace", eElement);
+      String ownerType = getProcessState("careNm", eElement);
+
+      String careAddr = getProcessState("careAddr", eElement);
+      String careAddr1 = careAddr.split("\\s")[0];
+      String careAddr2 = careAddr.split("\\s")[1].split("\\s")[0];
+      String address = careAddr1 + " " + careAddr2;
+
+      String phone = getProcessState("careTel", eElement);
+      String img = getProcessState("popfile", eElement);
+      String extra = getProcessState("specialMark", eElement);
+
+      String processState = getProcessState("processState", eElement);
+      if (processState == null) {
+        continue;
+      }
+      if (processState.contains("종료")) {
+        isAdopted = "adopted";
+      } else {
+        isAdopted = "abandoned";
+      }
 
       pet = Pet.builder()
           .breed(breed)
@@ -200,47 +205,31 @@ public class ApiService {
           .petNo(petNo)
           .build();
 
-      list.add(pet);
+      apiPetList.add(pet);
       petRepository.save(pet);
 
       Post post = new Post(pet, user);
       postRepository.save(post);
-
     }
 
-    return list;
+    return apiPetList;
   }
 
-
-  // 아이템 정보 추출하여 map에 저장
-  private void createItemValueMap(NodeList nList) {
-    List<Map<String, String>> list = new ArrayList<>();
-    for (int i = 0; i < nList.getLength(); i++) {
-      Map<String, String> map = new HashMap<>();
-      Node nNode = nList.item(i);
-      Element eElement = (Element) nNode;
-
-      map.put("petNo", getItemValue("desertionNo", eElement));
-      map.put("breed", getItemValue("kindCd", eElement));
-      map.put("sex", getItemValue("sexCd", eElement));
-      map.put("age", getItemValue("age", eElement));
-      map.put("weight", getItemValue("weight", eElement));
-      map.put("lostLocation", getItemValue("happenPlace", eElement));
-      map.put("ownerType", getItemValue("careNm", eElement));
-      map.put("address", getItemValue("careAddr", eElement));
-      map.put("phone", getItemValue("careTel", eElement));
-      map.put("img", getItemValue("popfile", eElement));
-      map.put("extra", getItemValue("specialMark", eElement));
-      map.put("isAdopted", getItemValue("processState", eElement));
-
-      list.add(map);
-
-      System.out.println(map);
+  private static String getProcessState(String tag, Element eElement) {
+    NodeList childNodeList = null;
+    Node childNodeValue = null;
+    try {
+      childNodeList = eElement.getElementsByTagName(tag).item(0).getChildNodes();
+      childNodeValue = (Node) childNodeList.item(0);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+    if (childNodeValue == null) {
+      return null;
+    }
+    return childNodeValue.getNodeValue();
   }
 
-
-  //오늘 날짜 계산하기
   public static String today() {
     SimpleDateFormat dtf = new SimpleDateFormat("yyyyMMdd");
     Calendar calendar = Calendar.getInstance();
@@ -252,29 +241,48 @@ public class ApiService {
     return formattedDate;
   }
 
-
   private void adminSignup() {
-    // 관리자 계정 생성
     SignupRequestDto signupRequestDto = new SignupRequestDto();
-
     signupRequestDto.setUsername("administrator");
     signupRequestDto.setPassword("docking1023");
     signupRequestDto.setPwcheck("docking1023");
     signupRequestDto.setNickname("관리자");
     signupRequestDto.setEmail("administrator@sparta.com");
-	signupRequestDto.setPhoneNumber("0107777777");
+    signupRequestDto.setPhoneNumber("0107777777");
 
     userService.registerUser(signupRequestDto);
 
-
     adminLogin();
-
   }
 
-  // 관리자 로그인
   private void adminLogin() {
     userRequestDto.setUsername("administrator");
     userRequestDto.setPassword("docking1023");
   }
 
+  private void createItemValueMap(NodeList nList) {
+    List<Map<String, String>> list = new ArrayList<>();
+    for (int i = 0; i < nList.getLength(); i++) {
+      Map<String, String> map = new HashMap<>();
+      Node nNode = nList.item(i);
+      Element eElement = (Element) nNode;
+
+      map.put("petNo", getProcessState("desertionNo", eElement));
+      map.put("breed", getProcessState("kindCd", eElement));
+      map.put("sex", getProcessState("sexCd", eElement));
+      map.put("age", getProcessState("age", eElement));
+      map.put("weight", getProcessState("weight", eElement));
+      map.put("lostLocation", getProcessState("happenPlace", eElement));
+      map.put("ownerType", getProcessState("careNm", eElement));
+      map.put("address", getProcessState("careAddr", eElement));
+      map.put("phone", getProcessState("careTel", eElement));
+      map.put("img", getProcessState("popfile", eElement));
+      map.put("extra", getProcessState("specialMark", eElement));
+      map.put("isAdopted", getProcessState("processState", eElement));
+
+      list.add(map);
+
+      System.out.println(map);
+    }
+  }
 }

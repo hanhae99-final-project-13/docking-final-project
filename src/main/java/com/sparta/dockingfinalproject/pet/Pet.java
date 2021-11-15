@@ -121,8 +121,9 @@ public class Pet extends Timestamped {
     this.post = post;
   }
 
-  public void updateStatus(String isAdopted) {
+  public Pet updateStatus(String isAdopted) {
     this.isAdopted = IsAdopted.of(isAdopted);
+    return this;
   }
 
   public Pet update(PetRequestDto petRequestDto) {

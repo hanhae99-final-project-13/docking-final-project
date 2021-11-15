@@ -53,4 +53,8 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
       String address, Pageable pageable);
 
   List<Pet> findAllByIsAdoptedOrderByModifiedAtDesc(IsAdopted isAdopted);
+
+  List<Pet> findAllByIsAdoptedOrderByPetNoDesc(IsAdopted isAdopted);
+
+  Pet findByPetNo(String petNo);
 }
