@@ -1,13 +1,14 @@
 package com.sparta.dockingfinalproject.security.jwt;
 
-import com.sparta.dockingfinalproject.exception.DockingException;
-import com.sparta.dockingfinalproject.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import java.util.Base64;
+import java.util.Date;
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,11 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Base64;
-import java.util.Date;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,7 +25,6 @@ public class JwtTokenProvider {
 
   private String secretKey = "docking";
 
-  private String secretKeyOfRefreshToken = "accessdocking";
 
   // 토큰 유효시간
   private Long acessTokenValidTime = 60 * 60 * 1000L;//test30seconds
@@ -59,7 +54,6 @@ public class JwtTokenProvider {
 		.compact();
 
 	String refreshToken = Jwts.builder()
-//		.setClaims(claims)
 		.setIssuedAt(now)
 		.setExpiration(new Date(now.getTime() + refreshTokenValidTime))
 		.signWith(SignatureAlgorithm.HS256, secretKey)
