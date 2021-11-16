@@ -20,6 +20,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         // 헤더에서 jwt 토큰 받아옴
+        //api 호출 시 헤더의 accessToken을 확인하고 유효한지, 만료기간이 지났는지 체크
 
 
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);

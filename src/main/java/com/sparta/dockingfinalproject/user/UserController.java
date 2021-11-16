@@ -3,12 +3,15 @@ package com.sparta.dockingfinalproject.user;
 
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
+import com.sparta.dockingfinalproject.security.jwt.TokenDto;
+import com.sparta.dockingfinalproject.security.jwt.TokenRequestDto;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserInquriryRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
 import com.sparta.dockingfinalproject.user.mail.MailSendService;
 import java.util.Map;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -87,4 +90,11 @@ public class UserController {
     Map<String, Object> result = userService.findUserPw(userInquriryRequestDto, tempPw);
     return result;
   }
+
+//reissue -> accessToken을 새로 반환한다.
+  @PostMapping("/reissue")
+  public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto){
+	return ResponseEntity.ok(userService.reissue(tokenRequestDto));
+  }
+
 }

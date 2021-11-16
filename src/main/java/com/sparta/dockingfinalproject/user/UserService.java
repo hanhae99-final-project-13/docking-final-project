@@ -11,6 +11,7 @@ import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
 import com.sparta.dockingfinalproject.security.jwt.TokenDto;
+import com.sparta.dockingfinalproject.security.jwt.TokenRequestDto;
 import com.sparta.dockingfinalproject.token.RefreshToken;
 import com.sparta.dockingfinalproject.token.RefreshTokenRepository;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.transaction.Transactional;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -219,6 +221,19 @@ public class UserService {
   }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
   private void validateUser(SignupRequestDto requestDto) {
 	String username = requestDto.getUsername();
 	String password = requestDto.getPassword();
@@ -272,6 +287,35 @@ public class UserService {
   }
 
 
+  @Transactional
+  public TokenDto reissue(TokenRequestDto tokenRequestDto) {
+	//1.리프레시 토큰 검증하기
+	if(!jwtTokenProvider.validateToken(tokenRequestDto.getRefreshToken())){
+	  throw new RuntimeException("Refresh 토큰이 유효하지 않습니다");
+	  	}
+
+	//2.accessToke에서 유저 가져오기
+	String username = jwtTokenProvider.getAccessTokenPayload(tokenRequestDto.getAccessToken());
+
+	System.out.println(username);
+
+
+	RefreshToken refreshToken = refreshTokenRepository.findByKey(username).orElseThrow(
+		() -> new RuntimeException("로그아웃 된 사용자 입니다.")
+	);
+
+	if(!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())){
+	  throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다");
+	}
+	//suspicious
+	TokenDto tokenDto = jwtTokenProvider.createToken(username, username);
+
+	RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
+	refreshTokenRepository.save(newRefreshToken);
+
+	return tokenDto;
+
+  }
 }
 
 

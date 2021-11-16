@@ -1,5 +1,6 @@
 package com.sparta.dockingfinalproject.token;
 
+import java.sql.Ref;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,6 +18,11 @@ public class RefreshToken {
 
   @Column
   private String value;
+
+  public RefreshToken updateValue(String token) {
+    this.value = token;
+    return this;
+  }
 
   @Builder
   public RefreshToken(String key, String value) {

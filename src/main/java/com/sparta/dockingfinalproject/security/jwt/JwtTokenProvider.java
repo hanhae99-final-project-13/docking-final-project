@@ -1,9 +1,12 @@
 package com.sparta.dockingfinalproject.security.jwt;
 
+import com.sparta.dockingfinalproject.exception.DockingException;
+import com.sparta.dockingfinalproject.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +29,12 @@ public class JwtTokenProvider {
 
   private String secretKey = "docking";
 
-  // 토큰 유효시간
-  private Long acessTokenValidTime = 30 * 1000L;//test30seconds
+  private String secretKeyOfRefreshToken = "accessdocking";
 
-  private Long refreshTokenValidTime = 3 * 60 * 1000L; //test3분
+  // 토큰 유효시간
+  private Long acessTokenValidTime = 60 * 60 * 1000L;//test30seconds
+
+  private Long refreshTokenValidTime = 60 * 60 * 1000L; //test3분
 
   private final UserDetailsService userDetailsService;
 
@@ -54,7 +59,7 @@ public class JwtTokenProvider {
 		.compact();
 
 	String refreshToken = Jwts.builder()
-		.setClaims(claims)
+//		.setClaims(claims)
 		.setIssuedAt(now)
 		.setExpiration(new Date(now.getTime() + refreshTokenValidTime))
 		.signWith(SignatureAlgorithm.HS256, secretKey)
@@ -95,4 +100,11 @@ public class JwtTokenProvider {
 	  return false;
 	}
   }
+
+  public String getAccessTokenPayload(String accessToken) {
+
+	return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(accessToken)
+		.getBody().getSubject();
+  }
+
 }
