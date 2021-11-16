@@ -19,13 +19,13 @@ import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserInquriryRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
 import com.sparta.dockingfinalproject.user.dto.response.LoginCheckResponseDto;
+import com.sparta.dockingfinalproject.user.dto.response.LoginResponseDto;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.transaction.Transactional;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +42,8 @@ public class UserService {
 
   public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
 	  JwtTokenProvider jwtTokenProvider,
-	  EducationRepository educationRepository, AlarmRepository alarmRepository, RefreshTokenRepository refreshTokenRepository) {
+	  EducationRepository educationRepository, AlarmRepository alarmRepository,
+	  RefreshTokenRepository refreshTokenRepository) {
 
 	this.userRepository = userRepository;
 	this.passwordEncoder = passwordEncoder;
@@ -81,17 +82,6 @@ public class UserService {
   @Transactional
   public Map<String, Object> login(UserRequestDto requestDto) {
 
-	TokenDto tokenDto = jwtTokenProvider.createToken(requestDto.getUsername(),
-		requestDto.getUsername());
-
-	//리프레시 토큰을 저장하기.
-	RefreshToken refreshToken = RefreshToken.builder()
-		.key(requestDto.getUsername())
-		.value(tokenDto.getRefreshToken())
-		.build();
-
-	refreshTokenRepository.save(refreshToken);
-
 	User user = userRepository.findByUsername(requestDto.getUsername()).orElse(null);
 
 	String username = requestDto.getUsername();
@@ -105,26 +95,30 @@ public class UserService {
 	  throw new DockingException(ErrorCode.PASSWORD_MISS_MATCH);
 	}
 
-	Map<String, Object> data = new HashMap<>();
+	TokenDto tokenDto = jwtTokenProvider.createToken(requestDto.getUsername(),
+		requestDto.getUsername());
 
-	data.put("nickname", user.getUserId());
-	data.put("email", user.getEmail());
-	data.put("userImgUrl", user.getUserImgUrl());
-	data.put("alarmCount", 5);
-	data.put("token", tokenDto.getAccessToken());
-	data.put("refreshToken", tokenDto.getRefreshToken());
+	//리프레시 토큰을 저장하기.
+	RefreshToken refreshToken = RefreshToken.builder()
+		.key(requestDto.getUsername())
+		.value(tokenDto.getRefreshToken())
+		.build();
+
+	refreshTokenRepository.save(refreshToken);
 
 	List<Map<String, Object>> eduList = getEduList(user);
-	data.put("eduList", eduList);
 
-	return SuccessResult.success(data);
+	LoginResponseDto loginResponseDto = LoginResponseDto.of(
+		user, jwtTokenProvider.createToken(requestDto.getUsername(), requestDto.getUsername()),
+		eduList);
+
+	return SuccessResult.success(loginResponseDto);
   }
-
 
   //회원정보 수정
   @Transactional
   public Map<String, Object> updateUser(UserDetailsImpl userDetails, UpdateRequestDto requestDto) {
-//	nicknameEmpty(requestDto.getNickname());
+	//	nicknameEmpty(requestDto.getNickname());
 
 	User findUser = userRepository.findById(userDetails.getUser().getUserId()).orElseThrow(
 		() -> new DockingException(ErrorCode.USER_NOT_FOUND)
@@ -145,25 +139,44 @@ public class UserService {
 	if (userDetails != null) {
 
 	  List<Map<String, Object>> eduList = getEduList(user);
-
 	  LoginCheckResponseDto loginCheckResponseDto = LoginCheckResponseDto.of(
 		  userDetails, eduList);
 	  return SuccessResult.success(loginCheckResponseDto);
-
 	} else {
 	  throw new DockingException(ErrorCode.USER_NOT_FOUND);
 	}
 
-
   }
 
+
+  @Transactional
+  public TokenDto reissue(TokenRequestDto tokenRequestDto) {
+
+	if (!jwtTokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
+	  throw new RuntimeException("Refresh 토큰이 유효하지 않습니다");
+	}
+
+	String username = jwtTokenProvider.getAccessTokenPayload(tokenRequestDto.getAccessToken());
+	RefreshToken refreshToken = refreshTokenRepository.findByKey(username).orElseThrow(
+		() -> new RuntimeException("로그아웃 된 사용자 입니다.")	);
+
+	if (!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {
+	  throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다");
+	}
+	TokenDto tokenDto = jwtTokenProvider.createToken(username, username);
+
+	RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
+	refreshTokenRepository.save(newRefreshToken);
+
+	return tokenDto;
+
+  }
 
   //아이디 중복 체크
   public Map<String, Object> idDoubleCheck(String username) {
 
 	Map<String, Object> data = new HashMap<>();
 	Optional<User> found = userRepository.findByUsername(username);
-
 	usernameEmpty(username);
 
 	if (!found.isPresent()) {
@@ -171,9 +184,7 @@ public class UserService {
 	} else {
 	  throw new DockingException(ErrorCode.USERNAME_DUPLICATE);
 	}
-
 	return SuccessResult.success(data);
-
   }
 
 
@@ -219,19 +230,6 @@ public class UserService {
 	data.put("msg", "임시 비밀번호를 해당 이메일로 보냈습니다.");
 	return SuccessResult.success(data);
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   private void validateUser(SignupRequestDto requestDto) {
@@ -284,37 +282,6 @@ public class UserService {
 	edu.put("심화지식2", education.getCore());
 	eduList.add(edu);
 	return eduList;
-  }
-
-
-  @Transactional
-  public TokenDto reissue(TokenRequestDto tokenRequestDto) {
-	//1.리프레시 토큰 검증하기
-	if(!jwtTokenProvider.validateToken(tokenRequestDto.getRefreshToken())){
-	  throw new RuntimeException("Refresh 토큰이 유효하지 않습니다");
-	  	}
-
-	//2.accessToke에서 유저 가져오기
-	String username = jwtTokenProvider.getAccessTokenPayload(tokenRequestDto.getAccessToken());
-
-	System.out.println(username);
-
-
-	RefreshToken refreshToken = refreshTokenRepository.findByKey(username).orElseThrow(
-		() -> new RuntimeException("로그아웃 된 사용자 입니다.")
-	);
-
-	if(!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())){
-	  throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다");
-	}
-	//suspicious
-	TokenDto tokenDto = jwtTokenProvider.createToken(username, username);
-
-	RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
-	refreshTokenRepository.save(newRefreshToken);
-
-	return tokenDto;
-
   }
 }
 
