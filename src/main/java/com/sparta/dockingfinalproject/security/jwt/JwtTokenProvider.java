@@ -5,6 +5,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import java.util.Base64;
 import java.util.Date;
 import javax.annotation.PostConstruct;
@@ -25,11 +26,9 @@ public class JwtTokenProvider {
 
   private String secretKey = "docking";
 
+  private Long acessTokenValidTime = 30 * 60 * 1000L;//30분
 
-  // 토큰 유효시간
-  private Long acessTokenValidTime = 30 * 60 * 1000L;
-
-  private Long refreshTokenValidTime = 24 * 60 * 60 * 1000L;
+  private Long refreshTokenValidTime = 14 * 24 * 60 * 60 * 1000L;//2주
 
   private final UserDetailsService userDetailsService;
 
@@ -91,8 +90,13 @@ public class JwtTokenProvider {
 	  return !claims.getBody().getExpiration().before(new Date());
 	} catch (ExpiredJwtException e) {
 	  log.info("만료된 JWT 토큰입니다.");
-	  return false;
+	} catch (UnsupportedJwtException e) {
+	  log.info("지원되지 않는 JWT 토큰입니다.");
+	} catch (IllegalArgumentException e) {
+	  log.info("JWT 토큰이 잘못되었습니다.");
+	} catch (Exception e) {
 	}
+	return false;
   }
 
   public String getAccessTokenPayload(String accessToken) {

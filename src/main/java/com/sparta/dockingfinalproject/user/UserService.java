@@ -158,7 +158,7 @@ public class UserService {
 
 	String username = jwtTokenProvider.getAccessTokenPayload(tokenRequestDto.getAccessToken());
 	RefreshToken refreshToken = refreshTokenRepository.findByKey(username).orElseThrow(
-		() -> new RuntimeException("로그아웃 된 사용자 입니다.")	);
+		() -> new RuntimeException("로그아웃 된 사용자 입니다."));
 
 	if (!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {
 	  throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다");
