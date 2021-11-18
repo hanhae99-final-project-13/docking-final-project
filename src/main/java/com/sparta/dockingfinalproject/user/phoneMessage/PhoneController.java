@@ -30,7 +30,7 @@ public class PhoneController {
 
 	phoneService.sendMessage(requestDto);
 	data.put("msg", "인증 번호 발송 완료");} else {
-	  throw new DockingException(ErrorCode.NUMBER_NOT_FOUND);
+	  throw new DockingException(ErrorCode.NUMBER_REQUIRED);
 	}
 
 	return SuccessResult.success(data);

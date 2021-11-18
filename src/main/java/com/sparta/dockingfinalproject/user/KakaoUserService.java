@@ -10,6 +10,9 @@ import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
+import com.sparta.dockingfinalproject.security.jwt.TokenDto;
+import com.sparta.dockingfinalproject.token.RefreshToken;
+import com.sparta.dockingfinalproject.token.RefreshTokenRepository;
 import com.sparta.dockingfinalproject.user.dto.KakaoUserInfoDto;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,15 +40,17 @@ public class KakaoUserService {
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
   private final EducationRepository educationRepository;
+  private final RefreshTokenRepository refreshTokenRepository;
 
   public KakaoUserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
 	  JwtTokenProvider jwtTokenProvider,
-	  EducationRepository educationRepository) {
+	  EducationRepository educationRepository, RefreshTokenRepository refreshTokenRepository) {
 
 	this.userRepository = userRepository;
 	this.passwordEncoder = passwordEncoder;
 	this.educationRepository = educationRepository;
 	this.jwtTokenProvider = jwtTokenProvider;
+	this.refreshTokenRepository = refreshTokenRepository;
 
   }
 
@@ -192,6 +197,15 @@ public class KakaoUserService {
 	  String username = email;
 
 	  String userImgUrl = kakaoUserInfo.getUserImgUrl();
+
+	  TokenDto tokenDto = jwtTokenProvider.createToken(username, username);
+	  RefreshToken refreshToken = RefreshToken.builder()
+		  .key(username)
+		  .value(tokenDto.getRefreshToken())
+		  .build();
+
+	  refreshTokenRepository.save(refreshToken);
+
 
 	  kakaoUser = new User(username, encodedPassword, nickname, email, kakaoId, userImgUrl);
 

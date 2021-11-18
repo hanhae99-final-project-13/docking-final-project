@@ -29,7 +29,7 @@ public enum ErrorCode {
   PASSWORD_NOT_FOUND(BAD_REQUEST, "비밀번호가 틀렸습니다."),
 
   NUMBER_MISS_MATCH(BAD_REQUEST, "인증번호가 맞지 않습니다."),
-  NUMBER_NOT_FOUND(BAD_REQUEST, "핸드폰번호를 입력해주세요."),
+  NUMBER_REQUIRED(BAD_REQUEST, "핸드폰번호를 입력해주세요."),
 
   USER_NOT_FOUND(BAD_REQUEST, "회원 정보를 찾을 수 없습니다."),
   LOGIN_REQUIRED(BAD_REQUEST, "로그인이 필요합니다."),

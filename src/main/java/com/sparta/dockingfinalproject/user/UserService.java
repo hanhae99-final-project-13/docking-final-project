@@ -10,12 +10,16 @@ import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
-import com.sparta.dockingfinalproject.user.dto.response.LoginCheckResponseDto;
-import com.sparta.dockingfinalproject.user.dto.response.LoginResponseDto;
+import com.sparta.dockingfinalproject.security.jwt.TokenDto;
+import com.sparta.dockingfinalproject.security.jwt.TokenRequestDto;
+import com.sparta.dockingfinalproject.token.RefreshToken;
+import com.sparta.dockingfinalproject.token.RefreshTokenRepository;
 import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserInquriryRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
+import com.sparta.dockingfinalproject.user.dto.response.LoginCheckResponseDto;
+import com.sparta.dockingfinalproject.user.dto.response.LoginResponseDto;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,17 +37,20 @@ public class UserService {
   private final JwtTokenProvider jwtTokenProvider;
   private final EducationRepository educationRepository;
   private final AlarmRepository alarmRepository;
+  private final RefreshTokenRepository refreshTokenRepository;
 
 
   public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
 	  JwtTokenProvider jwtTokenProvider,
-	  EducationRepository educationRepository, AlarmRepository alarmRepository) {
+	  EducationRepository educationRepository, AlarmRepository alarmRepository,
+	  RefreshTokenRepository refreshTokenRepository) {
 
 	this.userRepository = userRepository;
 	this.passwordEncoder = passwordEncoder;
 	this.jwtTokenProvider = jwtTokenProvider;
 	this.educationRepository = educationRepository;
 	this.alarmRepository = alarmRepository;
+	this.refreshTokenRepository = refreshTokenRepository;
   }
 
   //회원 등록
@@ -72,11 +79,8 @@ public class UserService {
 
 
   //로그인
+  @Transactional
   public Map<String, Object> login(UserRequestDto requestDto) {
-
-//	User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
-//		() -> new DockingException(ErrorCode.USERNAME_NOT_FOUND)
-//	);
 
 	User user = userRepository.findByUsername(requestDto.getUsername()).orElse(null);
 
@@ -91,19 +95,30 @@ public class UserService {
 	  throw new DockingException(ErrorCode.PASSWORD_MISS_MATCH);
 	}
 
+	TokenDto tokenDto = jwtTokenProvider.createToken(requestDto.getUsername(),
+		requestDto.getUsername());
+
+	//리프레시 토큰을 저장하기.
+	RefreshToken refreshToken = RefreshToken.builder()
+		.key(requestDto.getUsername())
+		.value(tokenDto.getRefreshToken())
+		.build();
+
+	refreshTokenRepository.save(refreshToken);
+
 	List<Map<String, Object>> eduList = getEduList(user);
 
-	LoginResponseDto loginResponseDto = LoginResponseDto.of(user,
-		jwtTokenProvider.createToken(requestDto.getUsername(), requestDto.getUsername()), eduList);
+	LoginResponseDto loginResponseDto = LoginResponseDto.of(
+		user, jwtTokenProvider.createToken(requestDto.getUsername(), requestDto.getUsername()),
+		eduList);
 
 	return SuccessResult.success(loginResponseDto);
   }
 
-
   //회원정보 수정
   @Transactional
   public Map<String, Object> updateUser(UserDetailsImpl userDetails, UpdateRequestDto requestDto) {
-//	nicknameEmpty(requestDto.getNickname());
+	//	nicknameEmpty(requestDto.getNickname());
 
 	User findUser = userRepository.findById(userDetails.getUser().getUserId()).orElseThrow(
 		() -> new DockingException(ErrorCode.USER_NOT_FOUND)
@@ -124,25 +139,44 @@ public class UserService {
 	if (userDetails != null) {
 
 	  List<Map<String, Object>> eduList = getEduList(user);
-
 	  LoginCheckResponseDto loginCheckResponseDto = LoginCheckResponseDto.of(
 		  userDetails, eduList);
 	  return SuccessResult.success(loginCheckResponseDto);
-
 	} else {
 	  throw new DockingException(ErrorCode.USER_NOT_FOUND);
 	}
 
-
   }
 
+
+  @Transactional
+  public TokenDto reissue(TokenRequestDto tokenRequestDto) {
+
+	if (!jwtTokenProvider.validateToken(tokenRequestDto.getRefreshToken())) {
+	  throw new RuntimeException("Refresh 토큰이 유효하지 않습니다");
+	}
+
+	String username = jwtTokenProvider.getAccessTokenPayload(tokenRequestDto.getAccessToken());
+	RefreshToken refreshToken = refreshTokenRepository.findByKey(username).orElseThrow(
+		() -> new RuntimeException("로그아웃 된 사용자 입니다."));
+
+	if (!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {
+	  throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다");
+	}
+	TokenDto tokenDto = jwtTokenProvider.createToken(username, username);
+
+	RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
+	refreshTokenRepository.save(newRefreshToken);
+
+	return tokenDto;
+
+  }
 
   //아이디 중복 체크
   public Map<String, Object> idDoubleCheck(String username) {
 
 	Map<String, Object> data = new HashMap<>();
 	Optional<User> found = userRepository.findByUsername(username);
-
 	usernameEmpty(username);
 
 	if (!found.isPresent()) {
@@ -150,9 +184,7 @@ public class UserService {
 	} else {
 	  throw new DockingException(ErrorCode.USERNAME_DUPLICATE);
 	}
-
 	return SuccessResult.success(data);
-
   }
 
 
@@ -220,7 +252,7 @@ public class UserService {
 	}
 
 	Optional<User> findUser3 = userRepository.findByEmail(requestDto.getEmail());
-	if(findUser3.isPresent()){
+	if (findUser3.isPresent()) {
 	  throw new DockingException(ErrorCode.EMAIL_DUPLICATE);
 	}
 
@@ -251,8 +283,6 @@ public class UserService {
 	eduList.add(edu);
 	return eduList;
   }
-
-
 }
 
 

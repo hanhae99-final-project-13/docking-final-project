@@ -1,5 +1,6 @@
 package com.sparta.dockingfinalproject.user.dto.response;
 
+import com.sparta.dockingfinalproject.security.jwt.TokenDto;
 import com.sparta.dockingfinalproject.user.User;
 import java.util.List;
 import java.util.Map;
@@ -17,10 +18,10 @@ public class LoginResponseDto {
   private String phone;
   private List<Map<String, Object>> eduList;
   private int alarmCount;
-  private String token;
+  private TokenDto token;
 
 
-  public static LoginResponseDto of(User user, String token, List<Map<String, Object>> eduList) {
+  public static LoginResponseDto of(User user, TokenDto token, List<Map<String, Object>> eduList) {
     return LoginResponseDto.builder()
         .userId(user.getUserId())
         .nickname(user.getNickname())
