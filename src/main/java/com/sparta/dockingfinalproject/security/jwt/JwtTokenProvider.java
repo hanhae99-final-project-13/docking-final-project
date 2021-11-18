@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import java.util.Base64;
@@ -94,7 +95,10 @@ public class JwtTokenProvider {
 	  log.info("지원되지 않는 JWT 토큰입니다.");
 	} catch (IllegalArgumentException e) {
 	  log.info("JWT 토큰이 잘못되었습니다.");
+	} catch (MalformedJwtException e) {
+	  log.info("잘못된 JWT 서명입니다.");
 	} catch (Exception e) {
+
 	}
 	return false;
   }
