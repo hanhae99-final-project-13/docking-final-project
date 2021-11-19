@@ -247,7 +247,7 @@ public class PublicApiInitializer {
     signupRequestDto.setPassword("docking1023");
     signupRequestDto.setPwcheck("docking1023");
     signupRequestDto.setNickname("관리자");
-    signupRequestDto.setEmail("administrator@sparta.com");
+    signupRequestDto.setEmail("administrator1@sparta.com");
     signupRequestDto.setPhoneNumber("0107777777");
 
     userService.registerUser(signupRequestDto);

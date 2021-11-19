@@ -4,6 +4,7 @@ import com.sparta.dockingfinalproject.fosterForm.dto.AcceptanceRequestDto;
 import com.sparta.dockingfinalproject.fosterForm.dto.FosterFormRequestDto;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import java.util.Map;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ public class FosterFormController {
   // FosterForm 등록
   @PostMapping("posts/{postId}/adoptions")
   public Map<String, Object> addFosterForm(@PathVariable Long postId,
-      @RequestBody FosterFormRequestDto formRequestDto,
+      @Valid @RequestBody FosterFormRequestDto formRequestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
     return fosterFormService.addFosterForm(postId, formRequestDto, userDetails);
   }
@@ -50,7 +51,7 @@ public class FosterFormController {
   // 입양신청서 승낙, 반려
   @PatchMapping("/foster_forms/{fosterFormId}/acceptance")
   public Map<String, Object> acceptForms(@PathVariable Long fosterFormId,
-      @RequestBody AcceptanceRequestDto acceptanceRequestDto,
+      @Valid @RequestBody AcceptanceRequestDto acceptanceRequestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
     return fosterFormService.acceptForms(fosterFormId, acceptanceRequestDto, userDetails);
   }
