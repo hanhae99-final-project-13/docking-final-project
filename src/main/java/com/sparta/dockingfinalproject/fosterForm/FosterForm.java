@@ -88,7 +88,7 @@ public class FosterForm extends Timestamped {
   public FosterForm(Post post, FosterFormRequestDto fosterFormRequestDto, User user, Acceptance acceptance) {
     this.name = fosterFormRequestDto.getName();
     this.fosterAge = fosterFormRequestDto.getFosterAge();
-    this.gender = fosterFormRequestDto.getGender();
+    this.gender = Sex.of(fosterFormRequestDto.getGender());
     this.phone = fosterFormRequestDto.getPhone();
     this.job = fosterFormRequestDto.getJob();
     this.fosterAddress = fosterFormRequestDto.getFosterAddress();

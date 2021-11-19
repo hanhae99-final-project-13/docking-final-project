@@ -79,7 +79,7 @@ public class Pet extends Timestamped {
   @Builder
   public Pet(String breed, String sex, String age, String weight, String lostLocation,
       String ownerType,
-      String address, String phone, String img, String extra, String isAdopted, String petNo) {
+      String address,String phone, String tag, String img, String extra, String isAdopted, String petNo) {
     this.breed = breed;
     this.sex = Sex.of(sex);
     this.age = Integer.parseInt(age.replaceAll("[^0-9]", ""));
@@ -88,6 +88,7 @@ public class Pet extends Timestamped {
     this.ownerType = ownerType;
     this.address = address;
     this.phone = phone;
+    this.tag = tag;
     this.img = img;
     this.extra = extra;
     this.isAdopted = IsAdopted.of(isAdopted);
