@@ -83,7 +83,7 @@ public class Pet extends Timestamped {
     this.breed = breed;
     this.sex = Sex.of(sex);
     this.age = Integer.parseInt(age.replaceAll("[^0-9]", ""));
-    this.weight = Double.parseDouble(weight.replaceAll("[^0-9.]", ""));
+    this.weight = Double.parseDouble(weight.replace("..", ".").replaceAll("[^0-9.]", ""));
     this.lostLocation = lostLocation;
     this.ownerType = ownerType;
     this.address = address;
