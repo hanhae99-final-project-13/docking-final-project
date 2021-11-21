@@ -159,6 +159,7 @@ public class UserService {
 	System.out.println("리이슈 도착!!!!!!!!!!!!!!!!!!!!!!!!!!");
 	if (jwtTokenProvider.validateToken(tokenRequestDto.getRefreshToken()) != JwtReturn.SUCCESS) {
 	  throw new DockingException(ErrorCode.LOGIN_TOKEN_EXPIRE);
+
 	}
 
 	String username = jwtTokenProvider.getAccessTokenPayload(tokenRequestDto.getAccessToken());

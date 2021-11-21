@@ -22,12 +22,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	String token = jwtTokenProvider.resolveToken(request);
 
 	if (token != null && !token.isEmpty()) {
+
 	  token = token.replaceAll("Bearer", "");
 
 	}
 
 	if (token != null && jwtTokenProvider.validateToken(token) == JwtReturn.EXPIRED) {
 	  response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);//401
+
 	  return;
 	}
 	if (token != null && jwtTokenProvider.validateToken(token) == JwtReturn.FAIL) {
@@ -37,6 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	}
 
 	if (token != null && jwtTokenProvider.validateToken(token) == JwtReturn.SUCCESS) {
+
 	  Authentication authentication = jwtTokenProvider.getAuthentication(token);
 	  SecurityContextHolder.getContext().setAuthentication(authentication);
 	}

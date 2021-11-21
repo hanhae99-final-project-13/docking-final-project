@@ -97,7 +97,7 @@ public class JwtTokenProvider {
 		return JwtReturn.FAIL;
 	  }
 	} catch (ExpiredJwtException e) {
-	  log.info("jwt유효기간만료라로고!!!!!",e);
+	  log.info("jwt유효기간만료라로고!!!!!", e);
 	  log.info(e.getMessage());
 	  return JwtReturn.EXPIRED;
 	} catch (UnsupportedJwtException e) {
@@ -113,6 +113,7 @@ public class JwtTokenProvider {
 	  log.info(e.getMessage());
 	}
 	return JwtReturn.FAIL;
+
   }
 
   public String getAccessTokenPayload(String accessToken) {
