@@ -32,6 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	}
 	if (token != null && jwtTokenProvider.validateToken(token) == JwtReturn.FAIL) {
 	  response.setStatus(HttpServletResponse.SC_FORBIDDEN); //403
+
 	  return;
 	}
 
