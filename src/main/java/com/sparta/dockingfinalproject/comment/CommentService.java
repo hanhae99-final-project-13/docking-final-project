@@ -29,14 +29,8 @@ public class CommentService {
   @Transactional
   public Map<String, Object> addComment(CommentRequestDto commentRequestDto,
       UserDetailsImpl userDetails) {
-    if (userDetails == null) {
-      throw new DockingException(ErrorCode.LOGIN_REQUIRED);
-    }
-
-    User user = userDetails.getUser();
-    Post post = postRepository.findById(commentRequestDto.getPostId()).orElseThrow(
-        () -> new DockingException(ErrorCode.POST_NOT_FOUND)
-    );
+    User user = bringUser(userDetails);
+    Post post = bringPost(commentRequestDto);
 
     Comment comment = new Comment(post, commentRequestDto, user);
     Comment newComment = commentRepository.save(comment);
@@ -46,33 +40,22 @@ public class CommentService {
     data.put("msg", "댓글이 등록 되었습니다");
     data.put("newComment", commentResultDto);
     return SuccessResult.success(data);
-
   }
 
   //Comment 수정
   public Map<String, Object> updateComment(Long commentId, CommentEditRequestDto requestDto,
       UserDetailsImpl userDetails) {
-    if (userDetails == null) {
-      throw new DockingException(ErrorCode.LOGIN_REQUIRED);
-    }
-
-    Comment comment = commentRepository.findById(commentId).orElseThrow(
-        () -> new DockingException(ErrorCode.COMMENT_NOT_FOUND)
-    );
-    Long userId = userDetails.getUser().getUserId();
+    Long userId = bringUser(userDetails).getUserId();
+    Comment comment = bringComment(commentId);
     Long writerId = comment.getUser().getUserId();
 
     Map<String, Object> data = new HashMap<>();
     if (userId.equals(writerId)) {
-      Comment newComment = comment.update(requestDto);   //객체 변경만 한거...레포지토리 안들렸으니까
-
+      Comment newComment = comment.update(requestDto);
       Comment savedNewComment = commentRepository.save(newComment);
       Long updatedCommentId = savedNewComment.getCommentId();
 
-      Comment updatedComment = commentRepository.findById(updatedCommentId).orElseThrow(
-          () -> new DockingException(ErrorCode.COMMENT_NOT_FOUND)
-      );
-
+      Comment updatedComment = bringComment(updatedCommentId);
       CommentResultDto commentResultDto = CommentResultDto.of(updatedComment);
 
       data.put("msg", "댓글이 수정 되었습니다");
@@ -86,17 +69,10 @@ public class CommentService {
   //Comment 삭제
   @Transactional
   public Map<String, Object> deleteComment(Long commentId, UserDetailsImpl userDetails) {
-    if (userDetails == null) {
-      throw new DockingException(ErrorCode.LOGIN_REQUIRED);
-    }
-
-    Comment comment = commentRepository.findById(commentId).orElseThrow(
-        () -> new DockingException(ErrorCode.POST_NOT_FOUND)
-    );
-    Long userId = userDetails.getUser().getUserId();
+    Long userId = bringUser(userDetails).getUserId();
+    Comment comment = bringComment(commentId);
     Long writerId = comment.getUser().getUserId();
 
-    //db에 Comment 삭제
     Map<String, Object> data = new HashMap<>();
     if (userId.equals(writerId)) {
       commentRepository.deleteById(commentId);
@@ -107,4 +83,28 @@ public class CommentService {
     return SuccessResult.success(data);
   }
 
+  //로그인 체크 & User 가져오기
+  private User bringUser(UserDetailsImpl userDetails) {
+    if (userDetails != null) {
+      return userDetails.getUser();
+    } else {
+      throw new DockingException(ErrorCode.USER_NOT_FOUND);
+    }
+  }
+
+  //해당 Post 가져오기
+  private Post bringPost(CommentRequestDto commentRequestDto) {
+    return postRepository.findById(commentRequestDto.getPostId()).orElseThrow(
+        () -> new DockingException(ErrorCode.POST_NOT_FOUND)
+    );
+  }
+
+  //해당 Comment 가져오기
+  private Comment bringComment(Long commentId) {
+    return commentRepository.findById(commentId).orElseThrow(
+        () -> new DockingException(ErrorCode.COMMENT_NOT_FOUND)
+    );
+  }
+
 }
+
