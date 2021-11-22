@@ -1,7 +1,7 @@
 package com.sparta.dockingfinalproject.user;
 
 
-import com.sparta.dockingfinalproject.alarm.Alarm;
+import com.sparta.dockingfinalproject.alarm.model.Alarm;
 import com.sparta.dockingfinalproject.alarm.AlarmRepository;
 import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.education.Education;

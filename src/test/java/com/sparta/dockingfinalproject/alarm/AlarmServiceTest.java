@@ -1,11 +1,11 @@
 package com.sparta.dockingfinalproject.alarm;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.sparta.dockingfinalproject.alarm.dto.AlarmResponseDto;
+import com.sparta.dockingfinalproject.alarm.model.Alarm;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.User;
 import java.util.ArrayList;

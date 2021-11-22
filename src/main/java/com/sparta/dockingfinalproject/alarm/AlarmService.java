@@ -1,6 +1,7 @@
 package com.sparta.dockingfinalproject.alarm;
 
 import com.sparta.dockingfinalproject.alarm.dto.AlarmResponseDto;
+import com.sparta.dockingfinalproject.alarm.model.Alarm;
 import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
