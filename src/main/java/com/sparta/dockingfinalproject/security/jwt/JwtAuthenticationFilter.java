@@ -22,7 +22,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	String token = jwtTokenProvider.resolveToken(request);
 
 	if (token != null && !token.isEmpty()) {
-
 	  token = token.replaceAll("Bearer", "");
 
 	}

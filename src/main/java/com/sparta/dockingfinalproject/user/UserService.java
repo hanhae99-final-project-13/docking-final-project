@@ -82,11 +82,12 @@ public class UserService {
   //로그인
   @Transactional
   public Map<String, Object> login(UserRequestDto requestDto) {
+	usernameEmptyCheck(requestDto.getUsername());
+	passwordEmptyCheck(requestDto.getPassword());
 
 	User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
 		() -> new DockingException(ErrorCode.USERNAME_NOT_FOUND)
 	);
-
 	validateLogin(requestDto, user);
 
 	TokenDto tokenDto = jwtTokenProvider.createToken(requestDto.getUsername(),
@@ -103,7 +104,6 @@ public class UserService {
 
 	return SuccessResult.success(loginResponseDto);
   }
-
 
 
   private List<String> findUserAlarms(User user) {
@@ -159,7 +159,6 @@ public class UserService {
 	System.out.println("리이슈 도착!!!!!!!!!!!!!!!!!!!!!!!!!!");
 	if (jwtTokenProvider.validateToken(tokenRequestDto.getRefreshToken()) != JwtReturn.SUCCESS) {
 	  throw new DockingException(ErrorCode.LOGIN_TOKEN_EXPIRE);
-
 	}
 
 	String username = jwtTokenProvider.getAccessTokenPayload(tokenRequestDto.getAccessToken());
@@ -250,7 +249,6 @@ public class UserService {
 	passwordEmptyCheck(password);
 	passwordEmptyCheck(pwcheck);
 
-
 	Optional<User> findUser = userRepository.findByUsername(username);
 	if (findUser.isPresent()) {
 	  throw new DockingException(ErrorCode.USERNAME_DUPLICATE);
@@ -280,6 +278,7 @@ public class UserService {
 	}
   }
 
+
   private void usernameEmptyCheck(String username) {
 	if (username.isEmpty()) {
 	  throw new DockingException(ErrorCode.USERNAME_EMPTY);
@@ -293,7 +292,7 @@ public class UserService {
   }
 
   private void passwordEmptyCheck(String password) {
-	if(password.isEmpty()) {
+	if (password.isEmpty()) {
 	  throw new DockingException(ErrorCode.PASSWORD_EMPTY);
 	}
   }
@@ -305,6 +304,7 @@ public class UserService {
 		.build();
 
 	refreshTokenRepository.save(refreshToken);
+
   }
 
   private List<Map<String, Object>> getEduList(User user) {
