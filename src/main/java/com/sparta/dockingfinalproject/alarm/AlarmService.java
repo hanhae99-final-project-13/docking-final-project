@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AlarmService {
@@ -43,8 +44,9 @@ public class AlarmService {
     return alarms.size();
   }
 
+  @Transactional
   public Map<String, Object> deleteAlarms(User user) {
-    alarmRepository.deleteAllByUser(user);
+    alarmRepository.deleteByUser(user);
 
     Map<String, String> data = new HashMap<>();
     data.put("msg", "삭제 완료되었습니다.");
