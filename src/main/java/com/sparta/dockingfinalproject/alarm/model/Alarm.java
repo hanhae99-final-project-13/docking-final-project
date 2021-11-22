@@ -1,4 +1,4 @@
-package com.sparta.dockingfinalproject.alarm;
+package com.sparta.dockingfinalproject.alarm.model;
 
 
 import com.sparta.dockingfinalproject.common.Timestamped;

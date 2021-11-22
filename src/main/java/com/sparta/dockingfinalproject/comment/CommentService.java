@@ -1,6 +1,6 @@
 package com.sparta.dockingfinalproject.comment;
 
-import com.sparta.dockingfinalproject.alarm.Alarm;
+import com.sparta.dockingfinalproject.alarm.model.Alarm;
 import com.sparta.dockingfinalproject.alarm.AlarmRepository;
 import com.sparta.dockingfinalproject.comment.dto.CommentEditRequestDto;
 import com.sparta.dockingfinalproject.comment.dto.CommentRequestDto;
