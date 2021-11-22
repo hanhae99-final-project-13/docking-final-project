@@ -96,7 +96,7 @@ public class JwtTokenProvider {
 		return JwtReturn.FAIL;
 	  }
 	} catch (ExpiredJwtException e) {
-	  log.info("jwt유효기간만료라로고!!!!!", e);
+	  log.info("jwt토큰이 만료되었습니다.", e);
 	  log.info(e.getMessage());
 	  return JwtReturn.EXPIRED;
 	} catch (UnsupportedJwtException e) {
