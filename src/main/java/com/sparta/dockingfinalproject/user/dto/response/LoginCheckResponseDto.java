@@ -17,7 +17,7 @@ public class LoginCheckResponseDto {
   private List<Map<String, Object>> eduList;
   private int alarmCount;
 
-  public static LoginCheckResponseDto of(UserDetailsImpl userDetails, List<Map<String, Object>> eduList) {
+  public static LoginCheckResponseDto of(UserDetailsImpl userDetails, List<Map<String, Object>> eduList, int alarmCount) {
 	return LoginCheckResponseDto.builder()
 		.userId(userDetails.getUser().getUserId())
 		.nickname(userDetails.getUser().getNickname())
@@ -25,7 +25,7 @@ public class LoginCheckResponseDto {
 		.userImgUrl(userDetails.getUser().getUserImgUrl())
 		.phone(userDetails.getUser().getPhoneNumber())
 		.eduList(eduList)
-		.alarmCount(5)
+		.alarmCount(alarmCount)
 		.build();
   }
 
