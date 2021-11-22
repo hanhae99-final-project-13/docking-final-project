@@ -43,7 +43,7 @@ public class CommentService {
     CommentResultDto commentResultDto = CommentResultDto.of(newComment);
 
     saveCommentAlarm(post.getUser(), user.getNickname());
-    alarmByCount(post.getUser(), user.getNickname(), newComment.getComment());
+    alarmBySocketMessage(post.getUser(), user.getNickname(), newComment.getComment());
 
     Map<String, Object> data = new HashMap<>();
     data.put("msg", "댓글이 등록 되었습니다");
@@ -57,7 +57,7 @@ public class CommentService {
     alarmRepository.save(alarm);
   }
 
-  private void alarmByCount(User user, String alarmNickname, String comment) {
+  private void alarmBySocketMessage(User user, String alarmNickname, String comment) {
     List<Alarm> alarms = alarmRepository
         .findAllByUserAndStatusTrueOrderByCreatedAtDesc(user);
     Map<String, Object> result = new HashMap<>();

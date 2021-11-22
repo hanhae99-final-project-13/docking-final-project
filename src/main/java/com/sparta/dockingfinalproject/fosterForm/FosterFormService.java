@@ -1,5 +1,7 @@
 package com.sparta.dockingfinalproject.fosterForm;
 
+import com.sparta.dockingfinalproject.alarm.AlarmRepository;
+import com.sparta.dockingfinalproject.alarm.model.Alarm;
 import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -28,6 +31,8 @@ public class FosterFormService {
 
   private final FosterFormRepository fosterFormRepository;
   private final PostRepository postRepository;
+  private final AlarmRepository alarmRepository;
+  private final SimpMessageSendingOperations simpMessageSendingOperations;
 
 
   //입양신청서 등록
@@ -40,6 +45,9 @@ public class FosterFormService {
     validateTag(findPost);
     checkDuplicateRequest(user, findPost);
 
+    saveFosterAlarm(findPost.getUser(), user.getNickname());
+    alarmBySocketMessage(findPost.getUser(), user.getNickname());
+
     Acceptance acceptance = Acceptance.valueOf("waiting");
     FosterForm fosterForm = new FosterForm(findPost, fosterFormRequestDto, user, acceptance);
     fosterFormRepository.save(fosterForm);
@@ -49,6 +57,20 @@ public class FosterFormService {
     return SuccessResult.success(data);
   }
 
+  private void saveFosterAlarm(User user, String alarmNickname) {
+    Alarm alarm = new Alarm(alarmNickname + "님이 입양신청을 하였습니다.");
+    alarm.addUser(user);
+    alarmRepository.save(alarm);
+  }
+
+  private void alarmBySocketMessage(User user, String alarmNickname) {
+    List<Alarm> alarms = alarmRepository
+        .findAllByUserAndStatusTrueOrderByCreatedAtDesc(user);
+    Map<String, Object> result = new HashMap<>();
+    result.put("alarmCount", alarms.size()+1);
+    result.put("alarmNickname", alarmNickname);
+    simpMessageSendingOperations.convertAndSend("/sub/" + user.getUserId(), result);
+  }
 
   //입양 신청서 상세조회
   @Transactional
