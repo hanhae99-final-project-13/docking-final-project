@@ -18,10 +18,11 @@ public class LoginResponseDto {
   private String phone;
   private List<Map<String, Object>> eduList;
   private int alarmCount;
+  private List<String> alarmContents;
   private TokenDto token;
 
 
-  public static LoginResponseDto of(User user, TokenDto token, List<Map<String, Object>> eduList) {
+  public static LoginResponseDto of(User user, TokenDto token, List<Map<String, Object>> eduList, List<String> alarmContents) {
     return LoginResponseDto.builder()
         .userId(user.getUserId())
         .nickname(user.getNickname())
@@ -29,7 +30,8 @@ public class LoginResponseDto {
         .userImgUrl(user.getUserImgUrl())
         .phone(user.getPhoneNumber())
         .eduList(eduList)
-        .alarmCount(5)
+        .alarmCount(alarmContents.size())
+        .alarmContents(alarmContents)
         .token(token)
         .build();
   }

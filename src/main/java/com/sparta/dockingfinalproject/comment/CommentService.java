@@ -1,5 +1,7 @@
 package com.sparta.dockingfinalproject.comment;
 
+import com.sparta.dockingfinalproject.alarm.Alarm;
+import com.sparta.dockingfinalproject.alarm.AlarmRepository;
 import com.sparta.dockingfinalproject.comment.dto.CommentEditRequestDto;
 import com.sparta.dockingfinalproject.comment.dto.CommentRequestDto;
 import com.sparta.dockingfinalproject.comment.dto.CommentResultDto;
@@ -10,7 +12,9 @@ import com.sparta.dockingfinalproject.post.Post;
 import com.sparta.dockingfinalproject.post.PostRepository;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.User;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -24,6 +28,8 @@ public class CommentService {
 
   private final CommentRepository commentRepository;
   private final PostRepository postRepository;
+  private final AlarmRepository alarmRepository;
+  private final SimpMessageSendingOperations simpMessageSendingOperations;
 
   //Comment 등록
   @Transactional
@@ -36,10 +42,29 @@ public class CommentService {
     Comment newComment = commentRepository.save(comment);
     CommentResultDto commentResultDto = CommentResultDto.of(newComment);
 
+    saveCommentAlarm(post.getUser(), user.getNickname());
+    alarmByCount(post.getUser(), user.getNickname(), newComment.getComment());
+
     Map<String, Object> data = new HashMap<>();
     data.put("msg", "댓글이 등록 되었습니다");
     data.put("newComment", commentResultDto);
     return SuccessResult.success(data);
+  }
+
+  private void saveCommentAlarm(User user, String alarmNickname) {
+    Alarm alarm = new Alarm(alarmNickname + "님이 게시글에 댓글을 등록하였습니다.");
+    alarm.addUser(user);
+    alarmRepository.save(alarm);
+  }
+
+  private void alarmByCount(User user, String alarmNickname, String comment) {
+    List<Alarm> alarms = alarmRepository
+        .findAllByUserAndStatusTrueOrderByCreatedAtDesc(user);
+    Map<String, Object> result = new HashMap<>();
+    result.put("alarmCount", alarms.size()+1);
+    result.put("alarmNickname", alarmNickname);
+    result.put("comment", comment);
+    simpMessageSendingOperations.convertAndSend("/sub/" + user.getUserId(), result);
   }
 
   //Comment 수정
