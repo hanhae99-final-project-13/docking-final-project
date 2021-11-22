@@ -83,6 +83,7 @@ public class UserService {
   @Transactional
   public Map<String, Object> login(UserRequestDto requestDto) {
 	usernameEmptyCheck(requestDto.getUsername());
+
 	passwordEmptyCheck(requestDto.getPassword());
 
 	User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
@@ -174,9 +175,12 @@ public class UserService {
 	RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
 	refreshTokenRepository.save(newRefreshToken);
 
+	System.out.println("없데이트한 리프레시 토큰" + tokenDto.getRefreshToken());
+
 	return tokenDto;
 
   }
+
 
   //아이디 중복 체크
   public Map<String, Object> idDoubleCheck(String username) {
@@ -304,8 +308,8 @@ public class UserService {
 		.build();
 
 	refreshTokenRepository.save(refreshToken);
-
   }
+
 
   private List<Map<String, Object>> getEduList(User user) {
 	Education education = educationRepository.findByUser(user).orElse(null);
