@@ -1,4 +1,4 @@
-package com.sparta.dockingfinalproject.config;
+package com.sparta.dockingfinalproject.config.webSocket;
 
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;

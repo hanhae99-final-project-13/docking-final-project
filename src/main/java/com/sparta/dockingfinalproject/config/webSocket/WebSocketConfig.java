@@ -1,4 +1,4 @@
-package com.sparta.dockingfinalproject.config;
+package com.sparta.dockingfinalproject.config.webSocket;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
