@@ -1,5 +1,6 @@
 package com.sparta.dockingfinalproject.security.jwt;
 
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -85,13 +86,19 @@ public class JwtTokenProvider {
   }
 
   // 토큰의 유효성 + 만료일자 확인
-  public boolean validateToken(String jwtToken) {
+  public JwtReturn validateToken(String jwtToken) {
+	System.out.println(jwtToken);
 	try {
 	  Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
-	  return !claims.getBody().getExpiration().before(new Date());
+	  if (claims.getBody().getExpiration().after(new Date()) == true) {
+		return JwtReturn.SUCCESS;
+	  } else {
+		return JwtReturn.FAIL;
+	  }
 	} catch (ExpiredJwtException e) {
-	  log.info("만료된 JWT 토큰입니다.");
+	  log.info("jwt토큰이 만료되었습니다.", e);
 	  log.info(e.getMessage());
+	  return JwtReturn.EXPIRED;
 	} catch (UnsupportedJwtException e) {
 	  log.info("지원되지 않는 JWT 토큰입니다.");
 	  log.info(e.getMessage());
@@ -104,7 +111,8 @@ public class JwtTokenProvider {
 	} catch (Exception e) {
 	  log.info(e.getMessage());
 	}
-	return false;
+	return JwtReturn.FAIL;
+
   }
 
   public String getAccessTokenPayload(String accessToken) {
