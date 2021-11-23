@@ -7,10 +7,11 @@ import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.fosterForm.dto.AcceptanceRequestDto;
 import com.sparta.dockingfinalproject.fosterForm.dto.FosterFormPreviewDto;
-import com.sparta.dockingfinalproject.fosterForm.dto.MyPostsResponseDto;
 import com.sparta.dockingfinalproject.fosterForm.dto.FosterFormRequestDto;
 import com.sparta.dockingfinalproject.fosterForm.dto.FosterFormResultDto;
+import com.sparta.dockingfinalproject.fosterForm.dto.MyPostsResponseDto;
 import com.sparta.dockingfinalproject.fosterForm.dto.MyRequestsDto;
+import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.post.Post;
 import com.sparta.dockingfinalproject.post.PostRepository;
 import com.sparta.dockingfinalproject.post.dto.PostPreviewDto;
@@ -154,6 +155,7 @@ public class FosterFormService {
     Acceptance newAcceptance = Acceptance.of(acceptanceRequestDto.getAcceptance());
     Map<String, String> data = new HashMap<>();
     updateNewAcceptance(findFosterForm, data, acceptance, newAcceptance);
+    modifyPetAdopted(findFosterForm);
     return SuccessResult.success(data);
   }
 
@@ -188,6 +190,12 @@ public class FosterFormService {
       findFosterForm.updateAcceptance(newAcceptance);
       data.put("msg", "승낙여부가 <" + newAcceptance + ">(으)로 변경되었습니다.");
     }
+  }
+
+  private void modifyPetAdopted(FosterForm fosterForm){
+    Post post = fosterForm.getPost();
+    Pet pet = post.getPet();
+    pet.updateStatus("adopted");
   }
 
   //FosterForm writer 가져오기

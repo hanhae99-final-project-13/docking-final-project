@@ -7,17 +7,17 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class FosterFormRequestDto {
 
-  @Size(min = 2, max = 8, message = ErrorMessage.CHECK_AGE_LENGTH)
+//  @Size(min = 2, max = 8, message = ErrorMessage.CHECK_AGE_LENGTH)
   @NotBlank(message = ErrorMessage.NAME_REQUIRED)
   private String name;
 
@@ -29,6 +29,7 @@ public class FosterFormRequestDto {
   private String gender;
 
   @Pattern(regexp = "^\\d{2,3}\\d{3,4}\\d{4}$", message = ErrorMessage.CHECK_PHONE_LENGTH)
+  @Length(min = 9, max = 11, message = ErrorMessage.CHECK_PHONE_LENGTH)
   @NotNull(message = ErrorMessage.PHONE_REQUIRED)
   private String phone;
 

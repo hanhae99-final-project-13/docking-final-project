@@ -66,7 +66,7 @@ public class Pet extends Timestamped {
   @Column
   private String petNo;
 
-  @Column(nullable = false)
+  @Column(nullable = false, length = 3000)
   private String extra;
 
   @Column(nullable = false, length = 1500)
@@ -173,6 +173,10 @@ public class Pet extends Timestamped {
 
     if (petCheck(petRequestDto.getIsAdopted())) {
       this.isAdopted = IsAdopted.of(petRequestDto.getIsAdopted());
+    }
+
+    if (petRequestDto.getSex() != null) {
+      this.sex = Sex.of(petRequestDto.getSex());
     }
 
     return this;
