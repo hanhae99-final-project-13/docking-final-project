@@ -26,7 +26,7 @@ public enum ErrorCode {
 
   PASSWORD_EMPTY(BAD_REQUEST, "비밀번호를 입력해주세요."),
   PASSWORD_MISS_MATCH(BAD_REQUEST, "비밀번호와 비밀번호 확인이 일치하지 않습니다."),
-  PASSWORD_NOT_FOUND(BAD_REQUEST, "비밀번호가 틀렸습니다."),
+  PASSWORD_NOT_FOUND(BAD_REQUEST, "비밀번호를 다시 입력해주세요"),
 
   NUMBER_MISS_MATCH(BAD_REQUEST, "인증번호가 맞지 않습니다."),
   NUMBER_REQUIRED(BAD_REQUEST, "핸드폰번호를 입력해주세요."),
@@ -49,6 +49,7 @@ public enum ErrorCode {
   PET_NOT_FOUND(BAD_REQUEST, "해당 유기견을 찾을 수 없습니다."),
 
   CLASSNUMBER_NOT_FOUND(BAD_REQUEST, "해당 페이지에 대한 정보가 없습니다.");
+
 
 
   private final HttpStatus httpStatus;
