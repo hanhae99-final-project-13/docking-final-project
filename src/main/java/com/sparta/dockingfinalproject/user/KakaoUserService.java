@@ -86,7 +86,7 @@ public class KakaoUserService {
 	MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 	body.add("grant_type", "authorization_code");
 	body.add("client_id", "b288c56fd31bb6f686ba8a3a39ba7fb2");
-	body.add("redirect_uri", "http://getting.co.kr/oauth/callback/kakao");
+	body.add("redirect_uri", "https://getting.co.kr/oauth/callback/kakao");
 
 	System.out.println("현재 코드 값 " + code);
 	body.add("code", code);
