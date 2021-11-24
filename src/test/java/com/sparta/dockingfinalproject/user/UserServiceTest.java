@@ -66,6 +66,22 @@ class UserServiceTest {
 	userDetails = new UserDetailsImpl(user);
   }
 
+  @Test
+  @DisplayName("회원가입")
+  public void registerUser(){
+
+	SignupRequestDto requestDto = new SignupRequestDto("user1","aa1234","aa1234","sss@naver.com","홍길동","https://gorokke.shop/image/profileDefaultImg.jpg",1234, "");
+	User user = new User(requestDto,requestDto.getPassword());
+
+	when(passwordEncoder.encode(requestDto.getPassword())).thenReturn("aa1234");
+
+	userService.registerUser(requestDto);
+
+	assertEquals(user.getUsername(), requestDto.getUsername());
+	assertEquals(user.getPassword(), requestDto.getPassword());
+	assertEquals(user.getUserImgUrl(),requestDto.getUserImgUrl());
+
+  }
 
   @Test
   @DisplayName("로그인")
