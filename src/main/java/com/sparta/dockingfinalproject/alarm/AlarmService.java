@@ -2,6 +2,9 @@ package com.sparta.dockingfinalproject.alarm;
 
 import com.sparta.dockingfinalproject.alarm.dto.AlarmResponseDto;
 import com.sparta.dockingfinalproject.alarm.model.Alarm;
+import com.sparta.dockingfinalproject.alarm.model.AlarmType;
+import com.sparta.dockingfinalproject.comment.Comment;
+import com.sparta.dockingfinalproject.comment.CommentRepository;
 import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
@@ -17,9 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class AlarmService {
 
   private final AlarmRepository alarmRepository;
+  private final CommentRepository commentRepository;
 
-  public AlarmService(AlarmRepository alarmRepository) {
+  public AlarmService(AlarmRepository alarmRepository, CommentRepository commentRepository) {
     this.alarmRepository = alarmRepository;
+    this.commentRepository = commentRepository;
   }
 
   public Map<String, Object> getAlarms(User user) {
@@ -41,7 +46,7 @@ public class AlarmService {
   }
 
   public int getAlarmCount(User user) {
-    List<Alarm> alarms = alarmRepository.findAllByUserAndStatusTrueOrderByCreatedAtDesc(user);
+    List<Alarm> alarms = alarmRepository.findAllByUserAndCheckedTrueOrderByCreatedAtDesc(user);
     return alarms.size();
   }
 
@@ -72,14 +77,28 @@ public class AlarmService {
   }
 
   private void modifyAlarmStatus(Alarm alarm) {
-    alarm.updateStatus();
+    alarm.updateIsRead();
     alarmRepository.save(alarm);
   }
 
   private AlarmResponseDto getAlarmResponseDto(Alarm alarm) {
-    return AlarmResponseDto.builder()
-        .alarmId(alarm.getAlarmId())
-        .alarmContent(alarm.getAlarmContent())
-        .build();
+    AlarmType alarmType = alarm.getAlarmType();
+    String contentDetail = validAlarmType(alarm, alarmType);
+
+    return AlarmResponseDto.of(alarm, contentDetail);
+  }
+
+  private String validAlarmType(Alarm alarm, AlarmType alarmType) {
+    String contentDetail;
+    if (alarmType == AlarmType.COMMENT) {
+      Long commentId = alarm.getContentId();
+      Comment comment = commentRepository.findById(commentId).orElseThrow(
+          () -> new DockingException(ErrorCode.COMMENT_NOT_FOUND));
+      Long postId = comment.getPost().getPostId();
+      contentDetail = "[postId:" + postId + "] [comment:" + comment.getComment() + "]";
+    } else {
+      contentDetail = null;
+    }
+    return contentDetail;
   }
 }

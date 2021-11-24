@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AlarmRepository extends JpaRepository<Alarm, Long> {
   List<Alarm> findAllByUserOrderByCreatedAtDesc(User user);
-  List<Alarm> findAllByUserAndStatusTrueOrderByCreatedAtDesc(User user);
+  List<Alarm> findAllByUserAndCheckedTrueOrderByCreatedAtDesc(User user);
   void deleteByUser(User user);
 }
