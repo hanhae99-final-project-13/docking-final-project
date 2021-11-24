@@ -43,8 +43,10 @@ public class CommentService {
     Comment newComment = commentRepository.save(comment);
     CommentResultDto commentResultDto = CommentResultDto.of(newComment);
 
-    saveCommentAlarm(user.getNickname(), comment.getCommentId(), post.getUser());
-    alarmBySocketMessage(post.getUser(), user.getNickname(), newComment.getComment());
+    if (!user.getNickname().equals(post.getUser().getNickname())) {
+      saveCommentAlarm(user.getNickname(), comment.getCommentId(), post.getUser());
+      alarmBySocketMessage(post.getUser(), user.getNickname(), newComment.getComment());
+    }
 
     Map<String, Object> data = new HashMap<>();
     data.put("msg", "댓글이 등록 되었습니다");
@@ -53,7 +55,7 @@ public class CommentService {
   }
 
   private void saveCommentAlarm(String commentWriter, Long commentId, User user) {
-    String alarmContent = commentWriter + "님이 게시글에 댓글을 등록하였습니다.";
+    String alarmContent = commentWriter + "님이 게시글에 댓글을 등록하였습니다";
     AlarmType alarmType = AlarmType.COMMENT;
     Alarm alarm = new Alarm(alarmContent, alarmType, commentId, user);
     alarmRepository.save(alarm);
