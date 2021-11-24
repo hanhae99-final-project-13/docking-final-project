@@ -198,13 +198,13 @@ public class KakaoUserService {
 
 	  String userImgUrl = kakaoUserInfo.getUserImgUrl();
 
-	  TokenDto tokenDto = jwtTokenProvider.createToken(username, username);
-	  RefreshToken refreshToken = RefreshToken.builder()
-		  .key(username)
-		  .value(tokenDto.getRefreshToken())
-		  .build();
-
-	  refreshTokenRepository.save(refreshToken);
+//	  TokenDto tokenDto = jwtTokenProvider.createToken(username, username);
+//	  RefreshToken refreshToken = RefreshToken.builder()
+//		  .key(username)
+//		  .value(tokenDto.getRefreshToken())
+//		  .build();
+//
+//	  refreshTokenRepository.save(refreshToken);
 
 
 	  kakaoUser = new User(username, encodedPassword, nickname, email, kakaoId, userImgUrl);
@@ -225,6 +225,8 @@ public class KakaoUserService {
 	Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
 		userDetails.getAuthorities());
 	SecurityContextHolder.getContext().setAuthentication(authentication);
+	TokenDto tokenDto = jwtTokenProvider.createToken(kakaoUser.getUsername(), kakaoUser.getUsername());
+
 
 	Map<String, Object> data = new HashMap<>();
 	data.put("userId", kakaoUser.getUserId());
@@ -232,11 +234,18 @@ public class KakaoUserService {
 	data.put("email", kakaoUser.getEmail());
 	data.put("userImgUrl", kakaoUser.getUserImgUrl());
 	data.put("phone", kakaoUser.getPhoneNumber());
-	data.put("token", jwtTokenProvider.createToken(kakaoUser.getEmail(), kakaoUser.getEmail()));
+	data.put("token", tokenDto);
+
+	RefreshToken refreshToken = RefreshToken.builder()
+		.key(kakaoUser.getUsername())
+		.value(tokenDto.getRefreshToken())
+		.build();
+
+	refreshTokenRepository.save(refreshToken);
 
 	List<Map<String, Object>> eduList = new ArrayList<>();
 	Map<String, Object> edu = new HashMap<>();
-	Education education = new Education(kakaoUser);
+	Education education = educationRepository.findByUser(kakaoUser).orElse(null);
 	edu.put("필수지식", education.getBasic());
 	edu.put("심화지식", education.getAdvanced());
 	edu.put("심화지식2", education.getCore());
