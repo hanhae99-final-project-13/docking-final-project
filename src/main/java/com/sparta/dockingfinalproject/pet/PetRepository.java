@@ -8,48 +8,44 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PetRepository extends JpaRepository<Pet, Long> {
 
-  Page<Pet> findAllByCreatedAtBetweenOrderByCreatedAtDesc(LocalDateTime startDt,
+  Page<Pet> findAllByIsAdoptedAndCreatedAtBetweenOrderByCreatedAtDesc(IsAdopted isAdopted, LocalDateTime startDt,
       LocalDateTime endDt, Pageable pageable);
 
-  Page<Pet> findAllByCreatedAtBetweenAndAddressLikeOrderByCreatedAtDesc(LocalDateTime startDt,
+  Page<Pet> findAllByIsAdoptedAndCreatedAtBetweenAndAddressLikeOrderByCreatedAtDesc(IsAdopted isAdopted, LocalDateTime startDt,
       LocalDateTime endDt, String address, Pageable pageable);
 
-  Page<Pet> findAllByCreatedAtBetweenAndOwnerTypeContainingOrderByCreatedAtDesc(
-      LocalDateTime startDt, LocalDateTime endDt, String ownerType, Pageable pageable);
+  Page<Pet> findAllByIsAdoptedAndCreatedAtBetweenAndOwnerTypeContainingOrderByCreatedAtDesc(IsAdopted isAdopted, LocalDateTime startDt, LocalDateTime endDt, String ownerType, Pageable pageable);
 
-  Page<Pet> findAllByCreatedAtBetweenAndOwnerTypeContainingAndAddressLikeOrderByCreatedAtDesc(
-      LocalDateTime startDt, LocalDateTime endDt, String ownerType, String address,
+  Page<Pet> findAllByIsAdoptedAndCreatedAtBetweenAndOwnerTypeContainingAndAddressLikeOrderByCreatedAtDesc(IsAdopted isAdopted, LocalDateTime startDt, LocalDateTime endDt, String ownerType, String address,
       Pageable pageable);
 
-  Page<Pet> findAllByOrderByCreatedAtDesc(Pageable pageable);
+  Page<Pet> findAllByIsAdoptedOrderByCreatedAtDesc(IsAdopted isAdopted, Pageable pageable);
 
-  Page<Pet> findAllByAddressLikeOrderByCreatedAtDesc(String address, Pageable pageable);
+  Page<Pet> findAllByIsAdoptedAndAddressLikeOrderByCreatedAtDesc(IsAdopted isAdopted, String address, Pageable pageable);
 
-  Page<Pet> findAllByOwnerTypeContainingOrderByCreatedAtDesc(String ownerType, Pageable pageable);
+  Page<Pet> findAllByIsAdoptedAndOwnerTypeContainingOrderByCreatedAtDesc(IsAdopted isAdopted, String ownerType, Pageable pageable);
 
-  Page<Pet> findAllByOwnerTypeAndAddressLikeOrderByCreatedAtDesc(String ownerType, String address,
+  Page<Pet> findAllByIsAdoptedAndOwnerTypeAndAddressLikeOrderByCreatedAtDesc(IsAdopted isAdopted, String ownerType, String address,
       Pageable pageable);
 
-  Page<Pet> findAllByCreatedAtBetweenOrderByCreatedAtAsc(LocalDateTime startDt, LocalDateTime endDt,
+  Page<Pet> findAllByIsAdoptedAndCreatedAtBetweenOrderByCreatedAtAsc(IsAdopted isAdopted, LocalDateTime startDt, LocalDateTime endDt,
       Pageable pageable);
 
-  Page<Pet> findAllByCreatedAtBetweenAndAddressLikeOrderByCreatedAtAsc(LocalDateTime startDt,
+  Page<Pet> findAllByIsAdoptedAndCreatedAtBetweenAndAddressLikeOrderByCreatedAtAsc(IsAdopted isAdopted, LocalDateTime startDt,
       LocalDateTime endDt, String address, Pageable pageable);
 
-  Page<Pet> findAllByCreatedAtBetweenAndOwnerTypeContainingOrderByCreatedAtAsc(
-      LocalDateTime startDt, LocalDateTime endDt, String ownerType, Pageable pageable);
+  Page<Pet> findAllByIsAdoptedAndCreatedAtBetweenAndOwnerTypeContainingOrderByCreatedAtAsc(IsAdopted isAdopted, LocalDateTime startDt, LocalDateTime endDt, String ownerType, Pageable pageable);
 
-  Page<Pet> findAllByCreatedAtBetweenAndOwnerTypeContainingAndAddressLikeOrderByCreatedAtAsc(
-      LocalDateTime startDt, LocalDateTime endDt, String ownerType, String address,
+  Page<Pet> findAllByIsAdoptedAndCreatedAtBetweenAndOwnerTypeContainingAndAddressLikeOrderByCreatedAtAsc(IsAdopted isAdopted, LocalDateTime startDt, LocalDateTime endDt, String ownerType, String address,
       Pageable pageable);
 
-  Page<Pet> findAllByOrderByCreatedAtAsc(Pageable pageable);
+  Page<Pet> findAllByIsAdoptedOrderByCreatedAtAsc(IsAdopted isAdopted, Pageable pageable);
 
-  Page<Pet> findAllByAddressLikeOrderByCreatedAtAsc(String address, Pageable pageable);
+  Page<Pet> findAllByIsAdoptedAndAddressLikeOrderByCreatedAtAsc(IsAdopted isAdopted, String address, Pageable pageable);
 
-  Page<Pet> findAllByOwnerTypeContainingOrderByCreatedAtAsc(String ownerType, Pageable pageable);
+  Page<Pet> findAllByIsAdoptedAndOwnerTypeContainingOrderByCreatedAtAsc(IsAdopted isAdopted, String ownerType, Pageable pageable);
 
-  Page<Pet> findAllByOwnerTypeContainingAndAddressLikeOrderByCreatedAtAsc(String ownerType,
+  Page<Pet> findAllByIsAdoptedAndOwnerTypeContainingAndAddressLikeOrderByCreatedAtAsc(IsAdopted isAdopted, String ownerType,
       String address, Pageable pageable);
 
   List<Pet> findAllByIsAdoptedOrderByModifiedAtDesc(IsAdopted isAdopted);
