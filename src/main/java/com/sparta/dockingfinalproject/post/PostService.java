@@ -77,7 +77,7 @@ public class PostService {
 
   private int getAlarmCount(UserDetailsImpl userDetails) {
     if (userDetails != null) {
-      return alarmRepository.findAllByUserAndStatusTrueOrderByCreatedAtDesc(userDetails.getUser()).size();
+      return alarmRepository.findAllByUserAndCheckedTrueOrderByCreatedAtDesc(userDetails.getUser()).size();
     }
     return 0;
   }

@@ -3,6 +3,7 @@ package com.sparta.dockingfinalproject.user;
 
 import com.sparta.dockingfinalproject.alarm.AlarmRepository;
 import com.sparta.dockingfinalproject.alarm.model.Alarm;
+import com.sparta.dockingfinalproject.alarm.model.AlarmType;
 import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.education.Education;
 import com.sparta.dockingfinalproject.education.EducationRepository;
@@ -65,15 +66,17 @@ public class UserService {
 	User user = new User(requestDto, password);
 	userRepository.save(user);
 
-	Education education = new Education(user);
-	educationRepository.save(education);
+		Education education = new Education(user);
+		educationRepository.save(education);
 
-	Alarm alarm = new Alarm("회원가입을 축하합니다");
-	alarm.addUser(user);
-	alarmRepository.save(alarm);
+		String alarmContent = "회원가입을 축하합니다";
+		AlarmType alarmType = AlarmType.SIGN_UP;
+		Long contentId = null;
+		Alarm alarm = new Alarm(alarmContent, alarmType, contentId, user);
+		alarmRepository.save(alarm);
 
-	Map<String, Object> data = new HashMap<>();
-	data.put("msg", "회원가입 축하합니다!");
+		Map<String, Object> data = new HashMap<>();
+		data.put("msg", "회원가입 축하합니다!");
 
 	return SuccessResult.success(data);
   }
@@ -151,7 +154,7 @@ public class UserService {
   }
 
   private int getUserAlarmCount(User user) {
-	return alarmRepository.findAllByUserAndStatusTrueOrderByCreatedAtDesc(user).size();
+	return alarmRepository.findAllByUserAndCheckedTrueOrderByCreatedAtDesc(user).size();
   }
 
   @Transactional

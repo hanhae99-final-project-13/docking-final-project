@@ -2,6 +2,7 @@ package com.sparta.dockingfinalproject.fosterForm;
 
 import com.sparta.dockingfinalproject.alarm.AlarmRepository;
 import com.sparta.dockingfinalproject.alarm.model.Alarm;
+import com.sparta.dockingfinalproject.alarm.model.AlarmType;
 import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
@@ -40,43 +41,45 @@ public class FosterFormService {
   @Transactional
   public Map<String, Object> addFosterForm(Long postId, FosterFormRequestDto fosterFormRequestDto,
       UserDetailsImpl userDetails) {
-
     User user = bringUser(userDetails);
     Post findPost = bringPost(postId);
     validateTag(findPost);
     checkDuplicateRequest(user, findPost);
 
-    saveFosterAlarm(findPost.getUser(), user.getNickname());
-    alarmBySocketMessage(findPost.getUser(), user.getNickname());
-
     Acceptance acceptance = Acceptance.valueOf("waiting");
     FosterForm fosterForm = new FosterForm(findPost, fosterFormRequestDto, user, acceptance);
     fosterFormRepository.save(fosterForm);
+
+    saveFosterAlarm(user.getNickname(), fosterForm.getFosterFormId(), findPost.getUser());
+    alarmBySocketMessage(findPost.getUser(), user.getNickname());
 
     Map<String, Object> data = new HashMap<>();
     data.put("msg", "입양 신청이 완료 되었습니다");
     return SuccessResult.success(data);
   }
 
-  private void saveFosterAlarm(User user, String alarmNickname) {
-    Alarm alarm = new Alarm(alarmNickname + "님이 입양신청을 하였습니다.");
-    alarm.addUser(user);
+
+  private void saveFosterAlarm(String fosterNickname, Long fosterFormId, User user) {
+    String alarmContent = fosterNickname + "님이 입양신청을 하였습니다.";
+    AlarmType alarmType = AlarmType.FOSTER_FORM;
+    Alarm alarm = new Alarm(alarmContent, alarmType, fosterFormId, user);
     alarmRepository.save(alarm);
   }
 
+
   private void alarmBySocketMessage(User user, String alarmNickname) {
     List<Alarm> alarms = alarmRepository
-        .findAllByUserAndStatusTrueOrderByCreatedAtDesc(user);
+        .findAllByUserAndCheckedTrueOrderByCreatedAtDesc(user);
     Map<String, Object> result = new HashMap<>();
-    result.put("alarmCount", alarms.size()+1);
+    result.put("alarmCount", alarms.size() + 1);
     result.put("alarmNickname", alarmNickname);
     simpMessageSendingOperations.convertAndSend("/sub/" + user.getUserId(), result);
   }
 
+
   //입양 신청서 상세조회
   @Transactional
   public Map<String, Object> getFosterForm(Long fosterFormId, UserDetailsImpl userDetails) {
-
     User user = bringUser(userDetails);
     FosterForm findFosterForm = bringFosterForm(fosterFormId);
     checkFosterFormAccess(user, findFosterForm);
@@ -91,7 +94,6 @@ public class FosterFormService {
   //내가 보낸 입양신청서 목록조회
   @Transactional
   public Map<String, Object> getMyFosterForms(UserDetailsImpl userDetails) {
-
     User user = bringUser(userDetails);
 
     List<FosterForm> fosterForms = bringFosterForms(user);
@@ -114,7 +116,6 @@ public class FosterFormService {
   //내가 올린 포스트와 각 포스트에 들어온 입양신청 목록조회
   @Transactional
   public Map<String, Object> getMyPosts(UserDetailsImpl userDetails) {
-
     User user = bringUser(userDetails);
     List<Post> myPosts = postRepository.findAllByUser(user);
     List<MyPostsResponseDto> myPostsResponseDtos = new ArrayList<>();
@@ -153,10 +154,29 @@ public class FosterFormService {
 
     Acceptance acceptance = findFosterForm.getAcceptance();
     Acceptance newAcceptance = Acceptance.of(acceptanceRequestDto.getAcceptance());
+
+    saveAcceptanceAlarm(newAcceptance, user.getNickname(), findFosterForm.getFosterFormId(),
+        findFosterForm.getUser());
+    alarmBySocketMessage(postWriter, user.getNickname());
+
     Map<String, String> data = new HashMap<>();
     updateNewAcceptance(findFosterForm, data, acceptance, newAcceptance);
     modifyPetAdopted(findFosterForm);
     return SuccessResult.success(data);
+  }
+
+
+  private void saveAcceptanceAlarm(Acceptance newAcceptance, String postWriterNickname,
+      Long fosterFormId, User user) {
+    String alarmContent;
+    if (newAcceptance == Acceptance.accepted) {
+      alarmContent = postWriterNickname + "님이 입양신청을 승낙하였습니다.";
+    } else {
+      alarmContent = postWriterNickname + "님이 입양신청을 반려하였습니다.";
+    }
+    AlarmType alarmType = AlarmType.FOSTER_FORM;
+    Alarm alarm = new Alarm(alarmContent, alarmType, fosterFormId, user);
+    alarmRepository.save(alarm);
   }
 
 
@@ -173,6 +193,7 @@ public class FosterFormService {
       }
     }
   }
+  
 
   //Post 태그가 직접등록인지 체크
   private void validateTag(Post findPost) {
@@ -192,7 +213,7 @@ public class FosterFormService {
     }
   }
 
-  private void modifyPetAdopted(FosterForm fosterForm){
+  private void modifyPetAdopted(FosterForm fosterForm) {
     Post post = fosterForm.getPost();
     Pet pet = post.getPet();
     pet.updateStatus("adopted");

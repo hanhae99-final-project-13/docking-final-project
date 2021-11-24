@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import com.sparta.dockingfinalproject.alarm.dto.AlarmResponseDto;
 import com.sparta.dockingfinalproject.alarm.model.Alarm;
+import com.sparta.dockingfinalproject.alarm.model.AlarmType;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.User;
 import java.util.ArrayList;
@@ -39,8 +40,8 @@ class AlarmServiceTest {
     user = new User(1L, "user1", "aa1234", "홍길동", "sss@naver.com", "", "",  0L, "");
     userDetails = new UserDetailsImpl(user);
 
-    alarm1 = new Alarm(10L, "알람 test", true, user);
-    alarm2 = new Alarm(20L, "알람 test2", true, user);
+    alarm1 = new Alarm(10L, "", false, AlarmType.SIGN_UP, 501L, user);
+    alarm2 = new Alarm(20L, "", false, AlarmType.SIGN_UP, 502L, user);
   }
 
   @Test
@@ -51,7 +52,7 @@ class AlarmServiceTest {
     alarms.add(alarm2);
 
     when(alarmRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(alarms);
-    when(alarmRepository.findAllByUserAndStatusTrueOrderByCreatedAtDesc(user)).thenReturn(alarms);
+    when(alarmRepository.findAllByUserAndCheckedTrueOrderByCreatedAtDesc(user)).thenReturn(alarms);
 
     Map<String, Object> data = (Map<String, Object>) alarmService.getAlarms(user).get("data");
     List<AlarmResponseDto> findAlarms = (List<AlarmResponseDto>) data.get("data");
@@ -79,7 +80,7 @@ class AlarmServiceTest {
 
     Map<String, Object> alarm = (Map<String, Object>) alarmService.getAlarm(10L, user).get("data");
 
-    assertThat(alarmRepository.findById(10L).get().isStatus()).isFalse();
+    assertThat(alarmRepository.findById(10L).get().isChecked()).isFalse();
   }
 
   @Test

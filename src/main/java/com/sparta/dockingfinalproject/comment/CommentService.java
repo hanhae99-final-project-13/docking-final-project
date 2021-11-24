@@ -2,6 +2,7 @@ package com.sparta.dockingfinalproject.comment;
 
 import com.sparta.dockingfinalproject.alarm.model.Alarm;
 import com.sparta.dockingfinalproject.alarm.AlarmRepository;
+import com.sparta.dockingfinalproject.alarm.model.AlarmType;
 import com.sparta.dockingfinalproject.comment.dto.CommentEditRequestDto;
 import com.sparta.dockingfinalproject.comment.dto.CommentRequestDto;
 import com.sparta.dockingfinalproject.comment.dto.CommentResultDto;
@@ -42,7 +43,7 @@ public class CommentService {
     Comment newComment = commentRepository.save(comment);
     CommentResultDto commentResultDto = CommentResultDto.of(newComment);
 
-    saveCommentAlarm(post.getUser(), user.getNickname());
+    saveCommentAlarm(user.getNickname(), comment.getCommentId(), post.getUser());
     alarmBySocketMessage(post.getUser(), user.getNickname(), newComment.getComment());
 
     Map<String, Object> data = new HashMap<>();
@@ -51,15 +52,16 @@ public class CommentService {
     return SuccessResult.success(data);
   }
 
-  private void saveCommentAlarm(User user, String alarmNickname) {
-    Alarm alarm = new Alarm(alarmNickname + "님이 게시글에 댓글을 등록하였습니다.");
-    alarm.addUser(user);
+  private void saveCommentAlarm(String commentWriter, Long commentId, User user) {
+    String alarmContent = commentWriter + "님이 게시글에 댓글을 등록하였습니다.";
+    AlarmType alarmType = AlarmType.COMMENT;
+    Alarm alarm = new Alarm(alarmContent, alarmType, commentId, user);
     alarmRepository.save(alarm);
   }
 
   private void alarmBySocketMessage(User user, String alarmNickname, String comment) {
     List<Alarm> alarms = alarmRepository
-        .findAllByUserAndStatusTrueOrderByCreatedAtDesc(user);
+        .findAllByUserAndCheckedTrueOrderByCreatedAtDesc(user);
     Map<String, Object> result = new HashMap<>();
     result.put("alarmCount", alarms.size()+1);
     result.put("alarmNickname", alarmNickname);
