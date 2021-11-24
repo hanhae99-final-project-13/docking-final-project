@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
-
 @Service
 public class EducationService {
 
@@ -30,7 +29,6 @@ public class EducationService {
 	List<Map<String,Object>> eduList = new ArrayList<>();
 	data.put("eduList", eduList);
 	Map<String,Object> eduMap = new HashMap<>();
-
 
 	if (edu.equals("1")) {
 	  education.setBasic(true);
@@ -52,5 +50,6 @@ public class EducationService {
 	return SuccessResult.success(data);
 
   }
+
 
 }
