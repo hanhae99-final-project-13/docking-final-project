@@ -1,23 +1,35 @@
 package com.sparta.dockingfinalproject.user;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import com.sparta.dockingfinalproject.alarm.AlarmRepository;
+import com.sparta.dockingfinalproject.alarm.model.Alarm;
 import com.sparta.dockingfinalproject.education.Education;
 import com.sparta.dockingfinalproject.education.EducationRepository;
+import com.sparta.dockingfinalproject.exception.DockingException;
+import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
 import com.sparta.dockingfinalproject.security.jwt.TokenDto;
 import com.sparta.dockingfinalproject.token.RefreshToken;
 import com.sparta.dockingfinalproject.token.RefreshTokenRepository;
+import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
+import com.sparta.dockingfinalproject.user.dto.response.LoginCheckResponseDto;
+import com.sparta.dockingfinalproject.user.dto.response.LoginResponseDto;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Nested;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -59,8 +71,6 @@ class UserServiceTest {
   @DisplayName("로그인")
   public void login() {
 	UserRequestDto requestDto = new UserRequestDto("user1", "aa1234");
-	UserService userService = new UserService(userRepository, passwordEncoder, jwtTokenProvider,
-		educationRepository, alarmRepository, refreshTokenRepository);
 
 	refreshToken = RefreshToken.builder()
 		.key(requestDto.getUsername())
@@ -81,18 +91,45 @@ class UserServiceTest {
 	assertEquals(requestDto.getPassword(), user.getPassword());
 
   }
+  @Test
+  @DisplayName("로그인 실패 - 비밀번호가 틀릴경우")
+  public void login_pw(){
+	UserRequestDto requestDto = new UserRequestDto("user1","bb1234");
 
+	when(passwordEncoder.matches(requestDto.getPassword(), user.getPassword())).thenReturn(false);
+	when(userRepository.findByUsername(requestDto.getUsername())).thenReturn(Optional.of(user));
+
+	DockingException exception = assertThrows(DockingException.class,()->{
+	  userService.login(requestDto);
+	});
+
+	assertEquals(exception.getErrorCode(), ErrorCode.PASSWORD_NOT_FOUND);
+  }
+
+  @Test
+  @DisplayName("로그인실패 - 아이디가 틀린경우")
+  public void login_username(){
+	UserRequestDto requestDto = new UserRequestDto("user2", "aa1234");
+	when(userRepository.findByUsername(requestDto.getUsername()))
+		.thenThrow(new DockingException(ErrorCode.USERNAME_NOT_FOUND));
+
+	DockingException exception = assertThrows(DockingException.class, ()->{
+	  userService.login(requestDto);
+	});
+	assertEquals(exception.getErrorCode(),ErrorCode.USERNAME_NOT_FOUND);
+
+  }
 
   @Test
   @DisplayName("회원 정보 수정")
-  public void updateUser(){
-	UpdateRequestDto requestDto = new UpdateRequestDto("지은짱","imgurl2");
+  public void updateUser() {
+	UpdateRequestDto requestDto = new UpdateRequestDto("지은짱", "imgurl2");
 	when(userRepository.findById(userDetails.getUser().getUserId())).thenReturn(Optional.of(user));
 
-	userService.updateUser(userDetails,requestDto);
+	userService.updateUser(userDetails, requestDto);
 
-	assertEquals(userDetails.getUser().getNickname(),"지은짱");
-	assertEquals(userDetails.getUser().getUserImgUrl(),"imgurl2");
+	assertEquals(userDetails.getUser().getNickname(), "지은짱");
+	assertEquals(userDetails.getUser().getUserImgUrl(), "imgurl2");
   }
 
 }
