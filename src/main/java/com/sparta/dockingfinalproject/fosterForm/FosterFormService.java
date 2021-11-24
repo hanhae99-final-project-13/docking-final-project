@@ -12,6 +12,7 @@ import com.sparta.dockingfinalproject.fosterForm.dto.FosterFormRequestDto;
 import com.sparta.dockingfinalproject.fosterForm.dto.FosterFormResultDto;
 import com.sparta.dockingfinalproject.fosterForm.dto.MyPostsResponseDto;
 import com.sparta.dockingfinalproject.fosterForm.dto.MyRequestsDto;
+import com.sparta.dockingfinalproject.pet.IsAdopted;
 import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.post.Post;
 import com.sparta.dockingfinalproject.post.PostRepository;
@@ -27,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
+
 @RequiredArgsConstructor
 @Service
 public class FosterFormService {
@@ -37,7 +39,6 @@ public class FosterFormService {
   private final SimpMessageSendingOperations simpMessageSendingOperations;
 
 
-  //입양신청서 등록
   @Transactional
   public Map<String, Object> addFosterForm(Long postId, FosterFormRequestDto fosterFormRequestDto,
       UserDetailsImpl userDetails) {
@@ -45,6 +46,7 @@ public class FosterFormService {
     Post findPost = bringPost(postId);
     validateTag(findPost);
     checkDuplicateRequest(user, findPost);
+    checkIsAdopted(findPost);
 
     Acceptance acceptance = Acceptance.valueOf("waiting");
     FosterForm fosterForm = new FosterForm(findPost, fosterFormRequestDto, user, acceptance);
@@ -58,6 +60,30 @@ public class FosterFormService {
     return SuccessResult.success(data);
   }
 
+  private void validateTag(Post findPost) {
+    if (findPost.getPet().getTag() == null || !findPost.getPet().getTag().equals("직접등록")) {
+      throw new DockingException(ErrorCode.NO_AVAILABILITY);
+    }
+  }
+
+  private void checkDuplicateRequest(User user, Post findPost) {
+    if (user.validateUser(findPost.getUser().getUserId())) {
+      throw new DockingException(ErrorCode.REQUEST_DUPLICATE);
+    } else {
+      List<FosterForm> fosterForms = findPost.getFormList();
+      for (FosterForm fosterform : fosterForms) {
+        if (user.validateUser(bringFosterFormWriter(fosterform).getUserId())) {
+          throw new DockingException(ErrorCode.REQUEST_DUPLICATE);
+        }
+      }
+    }
+  }
+
+  private void checkIsAdopted(Post findPost) {
+    if (findPost.getPet().getIsAdopted() != IsAdopted.ABANDONED) {
+      throw new DockingException(ErrorCode.NO_AVAILABILITY);
+    }
+  }
 
   private void saveFosterAlarm(String fosterNickname, Long fosterFormId, User user) {
     String alarmContent = fosterNickname + "님이 입양신청을 하였습니다.";
@@ -67,17 +93,6 @@ public class FosterFormService {
   }
 
 
-  private void alarmBySocketMessage(User user, String alarmNickname) {
-    List<Alarm> alarms = alarmRepository
-        .findAllByUserAndCheckedTrueOrderByCreatedAtDesc(user);
-    Map<String, Object> result = new HashMap<>();
-    result.put("alarmCount", alarms.size() + 1);
-    result.put("alarmNickname", alarmNickname);
-    simpMessageSendingOperations.convertAndSend("/sub/" + user.getUserId(), result);
-  }
-
-
-  //입양 신청서 상세조회
   @Transactional
   public Map<String, Object> getFosterForm(Long fosterFormId, UserDetailsImpl userDetails) {
     User user = bringUser(userDetails);
@@ -90,8 +105,15 @@ public class FosterFormService {
     return SuccessResult.success(data);
   }
 
+  private void checkFosterFormAccess(User user, FosterForm findFosterForm) {
+    Long postWriterId = bringPostWriter(findFosterForm).getUserId();
+    Long fosterFormWriterId = bringFosterFormWriter(findFosterForm).getUserId();
+    if (!user.validateUser(postWriterId) && !user.validateUser(fosterFormWriterId)) {
+      throw new DockingException(ErrorCode.NO_AUTHORIZATION);
+    }
+  }
 
-  //내가 보낸 입양신청서 목록조회
+
   @Transactional
   public Map<String, Object> getMyFosterForms(UserDetailsImpl userDetails) {
     User user = bringUser(userDetails);
@@ -112,8 +134,14 @@ public class FosterFormService {
     return SuccessResult.success(data);
   }
 
+  private List<FosterForm> bringFosterForms(User user) {
+    List<FosterForm> fosterForms = fosterFormRepository.findAllByUser(user);
+    if (fosterForms.size() == 0) {
+      throw new DockingException(ErrorCode.FOSTERFORM_NOT_FOUND);
+    }
+    return fosterForms;
+  }
 
-  //내가 올린 포스트와 각 포스트에 들어온 입양신청 목록조회
   @Transactional
   public Map<String, Object> getMyPosts(UserDetailsImpl userDetails) {
     User user = bringUser(userDetails);
@@ -141,7 +169,6 @@ public class FosterFormService {
   }
 
 
-  //입양신청서 승낙, 반려
   @Transactional
   public Map<String, Object> acceptForms(Long fosterFormId,
       AcceptanceRequestDto acceptanceRequestDto,
@@ -165,6 +192,18 @@ public class FosterFormService {
     return SuccessResult.success(data);
   }
 
+  private void postWriterAuthority(User user, User postWriter) {
+    if (!user.validateUser(postWriter.getUserId())) {
+      throw new DockingException(ErrorCode.NO_AUTHORIZATION);
+    }
+  }
+
+  private void modifyPetAdopted(FosterForm fosterForm) {
+    Post post = fosterForm.getPost();
+    Pet pet = post.getPet();
+    pet.updateStatus("adopted");
+  }
+
 
   private void saveAcceptanceAlarm(Acceptance newAcceptance, String postWriterNickname,
       Long fosterFormId, User user) {
@@ -179,30 +218,6 @@ public class FosterFormService {
     alarmRepository.save(alarm);
   }
 
-
-  //중복 입양신청 체크
-  private void checkDuplicateRequest(User user, Post findPost) {
-    if (user.validateUser(findPost.getUser().getUserId())) {
-      throw new DockingException(ErrorCode.REQUEST_DUPLICATE);
-    } else {
-      List<FosterForm> fosterForms = findPost.getFormList();
-      for (FosterForm fosterform : fosterForms) {
-        if (user.validateUser(bringFosterFormWriter(fosterform).getUserId())) {
-          throw new DockingException(ErrorCode.REQUEST_DUPLICATE);
-        }
-      }
-    }
-  }
-  
-
-  //Post 태그가 직접등록인지 체크
-  private void validateTag(Post findPost) {
-    if (findPost.getPet().getTag() == null || !findPost.getPet().getTag().equals("직접등록")) {
-      throw new DockingException(ErrorCode.NO_AVAILABILITY);
-    }
-  }
-
-  //Acceptance 변경
   private void updateNewAcceptance(FosterForm findFosterForm, Map<String, String> data,
       Acceptance acceptance, Acceptance newAcceptance) {
     if (newAcceptance.equals(acceptance)) {
@@ -213,43 +228,7 @@ public class FosterFormService {
     }
   }
 
-  private void modifyPetAdopted(FosterForm fosterForm) {
-    Post post = fosterForm.getPost();
-    Pet pet = post.getPet();
-    pet.updateStatus("adopted");
-  }
 
-  //FosterForm writer 가져오기
-  private User bringFosterFormWriter(FosterForm findFosterForm) {
-    return findFosterForm.getUser();
-  }
-
-  //Post writer 가져오기
-  private User bringPostWriter(FosterForm findFosterForm) {
-    Long postId = findFosterForm.getPost().getPostId();
-    Post findPost = postRepository.findById(postId).orElseThrow(
-        () -> new DockingException(ErrorCode.POST_NOT_FOUND)
-    );
-    return findPost.getUser();
-  }
-
-  //Post writer 권한체크
-  private void postWriterAuthority(User user, User postWriter) {
-    if (!user.validateUser(postWriter.getUserId())) {
-      throw new DockingException(ErrorCode.NO_AUTHORIZATION);
-    }
-  }
-
-  //입양신청서 조회 권한 체크
-  private void checkFosterFormAccess(User user, FosterForm findFosterForm) {
-    Long postWriterId = bringPostWriter(findFosterForm).getUserId();
-    Long fosterFormWriterId = bringFosterFormWriter(findFosterForm).getUserId();
-    if (!user.validateUser(postWriterId) && !user.validateUser(fosterFormWriterId)) {
-      throw new DockingException(ErrorCode.NO_AUTHORIZATION);
-    }
-  }
-
-  //로그인 체크 & User 가져오기
   private User bringUser(UserDetailsImpl userDetails) {
     if (userDetails == null) {
       throw new DockingException(ErrorCode.USER_NOT_FOUND);
@@ -258,28 +237,40 @@ public class FosterFormService {
     }
   }
 
-  //해당 Post 가져오기
+  private User bringPostWriter(FosterForm findFosterForm) {
+    Long postId = findFosterForm.getPost().getPostId();
+    Post findPost = postRepository.findById(postId).orElseThrow(
+        () -> new DockingException(ErrorCode.POST_NOT_FOUND)
+    );
+    return findPost.getUser();
+  }
+
+  private User bringFosterFormWriter(FosterForm findFosterForm) {
+    return findFosterForm.getUser();
+  }
+
   private Post bringPost(Long postId) {
     return postRepository.findById(postId).orElseThrow(
         () -> new DockingException(ErrorCode.POST_NOT_FOUND)
     );
   }
 
-  //해당 FosterForm 가져오기
   private FosterForm bringFosterForm(Long fosterFormId) {
     return fosterFormRepository.findById(fosterFormId).orElseThrow(
         () -> new DockingException(ErrorCode.FOSTERFORM_NOT_FOUND)
     );
   }
 
-  //내가 작성한 입양신청서 목록 가져오기
-  private List<FosterForm> bringFosterForms(User user) {
-    List<FosterForm> fosterForms = fosterFormRepository.findAllByUser(user);
-    if (fosterForms.size() == 0) {
-      throw new DockingException(ErrorCode.FOSTERFORM_NOT_FOUND);
-    }
-    return fosterForms;
+  private void alarmBySocketMessage(User user, String alarmNickname) {
+    List<Alarm> alarms = alarmRepository
+        .findAllByUserAndCheckedTrueOrderByCreatedAtDesc(user);
+    Map<String, Object> result = new HashMap<>();
+    result.put("alarmCount", alarms.size() + 1);
+    result.put("alarmNickname", alarmNickname);
+    simpMessageSendingOperations.convertAndSend("/sub/" + user.getUserId(), result);
   }
 
 }
+
+
 
