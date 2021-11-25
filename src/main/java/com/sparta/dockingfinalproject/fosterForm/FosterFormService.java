@@ -121,7 +121,8 @@ public class FosterFormService {
     User user = bringUser(userDetails);
     FosterForm findFosterForm = bringFosterForm(fosterFormId);
     checkFosterFormAccess(user, findFosterForm);
-    Map<String, Object> eduStatus = bringEduStatus(user);
+    User fosterFormWriter = bringFosterFormWriter(findFosterForm);
+    Map<String, Object> eduStatus = bringEduStatus(fosterFormWriter);
 
     FosterFormResultDto fosterFormResultDto = FosterFormResultDto.of(findFosterForm, eduStatus);
     Map<String, Object> data = new HashMap<>();
