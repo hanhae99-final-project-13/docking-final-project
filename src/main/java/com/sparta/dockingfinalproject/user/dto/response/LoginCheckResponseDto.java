@@ -17,10 +17,11 @@ public class LoginCheckResponseDto {
   private String phone;
   private List<Map<String, Object>> eduList;
   private int alarmCount;
+  private List<Long> requestedPostList;
 
 
   public static LoginCheckResponseDto of(UserDetailsImpl userDetails,
-	  List<Map<String, Object>> eduList, int alarmCount) {
+	  List<Map<String, Object>> eduList, int alarmCount, List<Long>requestedPostList) {
 
 	return LoginCheckResponseDto.builder()
 		.userId(userDetails.getUser().getUserId())
@@ -30,6 +31,7 @@ public class LoginCheckResponseDto {
 		.phone(userDetails.getUser().getPhoneNumber())
 		.eduList(eduList)
 		.alarmCount(alarmCount)
+		.requestedPostList(requestedPostList)
 		.build();
   }
 

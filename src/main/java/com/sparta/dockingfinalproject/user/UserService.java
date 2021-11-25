@@ -9,6 +9,8 @@ import com.sparta.dockingfinalproject.education.Education;
 import com.sparta.dockingfinalproject.education.EducationRepository;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
+import com.sparta.dockingfinalproject.fosterForm.FosterForm;
+import com.sparta.dockingfinalproject.fosterForm.FosterFormRepository;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.security.jwt.JwtReturn;
 import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
@@ -40,12 +42,13 @@ public class UserService {
   private final EducationRepository educationRepository;
   private final AlarmRepository alarmRepository;
   private final RefreshTokenRepository refreshTokenRepository;
+  private final FosterFormRepository fosterFormRepository;
 
 
   public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
 	  JwtTokenProvider jwtTokenProvider,
 	  EducationRepository educationRepository, AlarmRepository alarmRepository,
-	  RefreshTokenRepository refreshTokenRepository) {
+	  RefreshTokenRepository refreshTokenRepository, FosterFormRepository fosterFormRepository) {
 
 	this.userRepository = userRepository;
 	this.passwordEncoder = passwordEncoder;
@@ -53,6 +56,7 @@ public class UserService {
 	this.educationRepository = educationRepository;
 	this.alarmRepository = alarmRepository;
 	this.refreshTokenRepository = refreshTokenRepository;
+	this.fosterFormRepository = fosterFormRepository;
   }
 
   //회원 등록
@@ -144,13 +148,26 @@ public class UserService {
 	  User user = userDetails.getUser();
 	  int alarmCount = getUserAlarmCount(user);
 	  List<Map<String, Object>> eduList = getEduList(user);
+	  List<Long> requestedPostList = getRequestedPostList(user);
 	  LoginCheckResponseDto loginCheckResponseDto = LoginCheckResponseDto.of(
-		  userDetails, eduList, alarmCount);
+		  userDetails, eduList, alarmCount, requestedPostList);
+
+
 	  return SuccessResult.success(loginCheckResponseDto);
 	} else {
 	  throw new DockingException(ErrorCode.USER_NOT_FOUND);
 	}
 
+  }
+
+  private List<Long> getRequestedPostList(User user) {
+	List<FosterForm> fosterFormList = fosterFormRepository.findAllByUser(user);
+	List<Long> requestedPostList = new ArrayList();
+	for (FosterForm form : fosterFormList) {
+	  Long requestedPostId = form.getPost().getPostId();
+	  requestedPostList.add(requestedPostId);
+	}
+	return requestedPostList;
   }
 
   private int getUserAlarmCount(User user) {
