@@ -62,7 +62,19 @@ public class FosterFormRequestDto {
   @NotBlank(message = ErrorMessage.BARK_REQUIRED)
   private String bark;
 
+  @NotBlank(message = ErrorMessage.LEAVE_HOME_REQUIRED)
+  private String leaveHome;
+
+  @NotBlank(message = ErrorMessage.MEDICAL_BUDGET_REQUIRED)
+  private String medicalBudget;
+
+  @NotBlank(message = ErrorMessage.MONTHLY_BUDGET_REQUIRED)
+  private String monthlyBudget;
+
   @NotBlank(message = ErrorMessage.ROOM_URL_REQUIRED)
   private String roomUrl;
+
+  @NotBlank(message = ErrorMessage.SIGN_URL_REQUIRED)
+  private String signUrl;
 
 }

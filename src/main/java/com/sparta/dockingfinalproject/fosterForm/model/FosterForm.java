@@ -71,7 +71,19 @@ public class FosterForm extends Timestamped {
   private String bark;
 
   @Column(nullable = false)
+  private String leaveHome;
+
+  @Column(nullable = false)
+  private String medicalBudget;
+
+  @Column(nullable = false)
+  private String monthlyBudget;
+
+  @Column(nullable = false)
   private String roomUrl;
+
+  @Column(nullable = false)
+  private String signUrl;
 
   @Enumerated(value = EnumType.STRING)
   @Column(nullable = false)
@@ -85,7 +97,8 @@ public class FosterForm extends Timestamped {
   @JoinColumn(name = "POST_ID", nullable = false)
   private Post post;
 
-  public FosterForm(Post post, FosterFormRequestDto fosterFormRequestDto, User user, Acceptance acceptance) {
+  public FosterForm(Post post, FosterFormRequestDto fosterFormRequestDto, User user,
+      Acceptance acceptance) {
     this.name = fosterFormRequestDto.getName();
     this.fosterAge = fosterFormRequestDto.getFosterAge();
     this.gender = Sex.of(fosterFormRequestDto.getGender());
@@ -100,13 +113,17 @@ public class FosterForm extends Timestamped {
     this.timeTogether = fosterFormRequestDto.getTimeTogether();
     this.anxiety = fosterFormRequestDto.getAnxiety();
     this.bark = fosterFormRequestDto.getBark();
+    this.leaveHome = fosterFormRequestDto.getLeaveHome();
+    this.medicalBudget = fosterFormRequestDto.getMedicalBudget();
+    this.monthlyBudget = fosterFormRequestDto.getMonthlyBudget();
     this.roomUrl = fosterFormRequestDto.getRoomUrl();
+    this.signUrl = fosterFormRequestDto.getSignUrl();
     this.acceptance = acceptance;
     this.user = user;
     this.post = post;
   }
 
-  public void updateAcceptance(Acceptance acceptance){
+  public void updateAcceptance(Acceptance acceptance) {
     this.acceptance = acceptance;
   }
 

@@ -4,6 +4,7 @@ import com.sparta.dockingfinalproject.fosterForm.model.Acceptance;
 import com.sparta.dockingfinalproject.fosterForm.model.FosterForm;
 import com.sparta.dockingfinalproject.pet.Sex;
 import java.util.Map;
+import javax.persistence.Column;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -26,7 +27,11 @@ public class FosterFormResultDto {
   private String timeTogether;
   private String anxiety;
   private String bark;
+  private String leaveHome;
+  private String medicalBudget;
+  private String monthlyBudget;
   private String roomUrl;
+  private String signUrl;
   private Acceptance acceptance;
   private Long postId;
   private Map<String, Object> eduStatus;
@@ -48,7 +53,11 @@ public class FosterFormResultDto {
         .timeTogether(fosterForm.getTimeTogether())
         .anxiety(fosterForm.getAnxiety())
         .bark(fosterForm.getBark())
+        .leaveHome(fosterForm.getLeaveHome())
+        .medicalBudget(fosterForm.getMedicalBudget())
+        .monthlyBudget(fosterForm.getMonthlyBudget())
         .roomUrl(fosterForm.getRoomUrl())
+        .signUrl(fosterForm.getSignUrl())
         .acceptance(fosterForm.getAcceptance())
         .postId(fosterForm.getPost().getPostId())
         .eduStatus(eduStatus)
