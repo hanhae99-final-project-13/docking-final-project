@@ -1,8 +1,8 @@
 package com.sparta.dockingfinalproject.fosterForm.dto;
 
 
-import com.sparta.dockingfinalproject.fosterForm.Acceptance;
-import com.sparta.dockingfinalproject.fosterForm.FosterForm;
+import com.sparta.dockingfinalproject.fosterForm.model.Acceptance;
+import com.sparta.dockingfinalproject.fosterForm.model.FosterForm;
 import com.sparta.dockingfinalproject.post.dto.PostPreviewDto;
 import java.time.LocalDateTime;
 import lombok.Builder;

@@ -1,5 +1,6 @@
-package com.sparta.dockingfinalproject.fosterForm;
+package com.sparta.dockingfinalproject.fosterForm.model;
 
+import com.sparta.dockingfinalproject.fosterForm.FosterFormRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;

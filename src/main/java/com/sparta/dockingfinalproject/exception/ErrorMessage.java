@@ -21,5 +21,9 @@ public class ErrorMessage {
   public final static String BARK_REQUIRED = "짖음대처는 필수 입력 값입니다.";
   public final static String ROOM_URL_REQUIRED = "공간사진은 필수 입력 값입니다.";
   public final static String ACCEPTANCE_REQUIRED = "'accepted' 혹은 'rejected'로 승낙여부를 입력해주세요.";
+  public final static String LEAVE_HOME_REQUIRED = "외출대처는 필수 입력 값입니다.";
+  public final static String MEDICAL_BUDGET_REQUIRED = "백신예산은 필수 입력 값입니다.";
+  public final static String MONTHLY_BUDGET_REQUIRED = "한달예산은 필수 입력 값입니다.";
+  public final static String SIGN_URL_REQUIRED = "동의서명은 필수 입력 값입니다.";
 
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sparta.dockingfinalproject.comment.Comment;
 import com.sparta.dockingfinalproject.common.Timestamped;
-import com.sparta.dockingfinalproject.fosterForm.FosterForm;
+import com.sparta.dockingfinalproject.fosterForm.model.FosterForm;
 import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.user.User;
 import com.sparta.dockingfinalproject.wish.Wish;
