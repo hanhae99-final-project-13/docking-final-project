@@ -15,18 +15,20 @@ public class AlarmResponseDto {
   private boolean checked;
   private AlarmType alarmType;
   private Long contentId;
-  private String contentDetail;
+  private Long postId;
+  private String comment;
   private LocalDateTime createdAt;
 
 
-  public static AlarmResponseDto of(Alarm alarm, String contentDetail) {
+  public static AlarmResponseDto of(Alarm alarm, Long postId, String comment) {
     return AlarmResponseDto.builder()
         .alarmId(alarm.getAlarmId())
         .alarmContent(alarm.getAlarmContent())
         .checked(alarm.isChecked())
         .alarmType(alarm.getAlarmType())
         .contentId(alarm.getContentId())
-        .contentDetail(contentDetail)
+        .postId(postId)
+        .comment(comment)
         .createdAt(alarm.getCreatedAt())
         .build();
   }

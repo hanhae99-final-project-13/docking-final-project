@@ -83,22 +83,34 @@ public class AlarmService {
 
   private AlarmResponseDto getAlarmResponseDto(Alarm alarm) {
     AlarmType alarmType = alarm.getAlarmType();
-    String contentDetail = validAlarmType(alarm, alarmType);
 
-    return AlarmResponseDto.of(alarm, contentDetail);
-  }
-
-  private String validAlarmType(Alarm alarm, AlarmType alarmType) {
-    String contentDetail;
+    String commentContent = null;
+    Long postId = null;
     if (alarmType == AlarmType.COMMENT) {
-      Long commentId = alarm.getContentId();
-      Comment comment = commentRepository.findById(commentId).orElseThrow(
-          () -> new DockingException(ErrorCode.COMMENT_NOT_FOUND));
-      Long postId = comment.getPost().getPostId();
-      contentDetail = "[postId:" + postId + "] [comment:" + comment.getComment() + "]";
-    } else {
-      contentDetail = null;
+      Comment comment = getComment(alarm.getContentId());
+      commentContent = comment.getComment();
+      postId = comment.getPost().getPostId();
     }
-    return contentDetail;
+
+    return AlarmResponseDto.of(alarm, postId, commentContent);
   }
+
+  private Comment getComment(Long commentId) {
+    return commentRepository.findById(commentId).orElseThrow(
+        () -> new DockingException(ErrorCode.COMMENT_NOT_FOUND));
+  }
+
+//  private String validAlarmType(Alarm alarm, AlarmType alarmType) {
+//    String contentDetail;
+//    if (alarmType == AlarmType.COMMENT) {
+//      Long commentId = alarm.getContentId();
+//      Comment comment = commentRepository.findById(commentId).orElseThrow(
+//          () -> new DockingException(ErrorCode.COMMENT_NOT_FOUND));
+//      Long postId = comment.getPost().getPostId();
+//      contentDetail = "[postId:" + postId + "] [comment:" + comment.getComment() + "]";
+//    } else {
+//      contentDetail = null;
+//    }
+//    return contentDetail;
+//  }
 }
