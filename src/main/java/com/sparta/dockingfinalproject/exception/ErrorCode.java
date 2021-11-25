@@ -47,7 +47,9 @@ public enum ErrorCode {
   FOSTERFORM_NOT_FOUND(BAD_REQUEST, "해당 입양신청서를 찾을 수 없습니다."),
   ALARM_NOT_FOUND(BAD_REQUEST, "해당 알람 내용을 찾을 수 없습니다."),
   PET_NOT_FOUND(BAD_REQUEST, "해당 유기견을 찾을 수 없습니다."),
+
   EDUCATION_NOT_FOUND(BAD_REQUEST, "이수된 교육정보가 없습니다."),
+  BASIC_EDUCATION_REQUIRED(BAD_REQUEST, "필수지식 이수를 완료해주세요."),
 
   CLASSNUMBER_NOT_FOUND(BAD_REQUEST, "해당 페이지에 대한 정보가 없습니다.");
 

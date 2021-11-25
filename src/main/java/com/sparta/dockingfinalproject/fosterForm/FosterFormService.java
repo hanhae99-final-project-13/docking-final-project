@@ -60,6 +60,7 @@ public class FosterFormService {
     validateTag(findPost);
     checkDuplicateRequest(user, findPost);
     checkIsAdopted(findPost);
+    checkEduStatus(user);
 
     Acceptance acceptance = Acceptance.valueOf("waiting");
     FosterForm fosterForm = new FosterForm(findPost, fosterFormRequestDto, user, acceptance);
@@ -95,6 +96,15 @@ public class FosterFormService {
   private void checkIsAdopted(Post findPost) {
     if (findPost.getPet().getIsAdopted() != IsAdopted.ABANDONED) {
       throw new DockingException(ErrorCode.NO_AVAILABILITY);
+    }
+  }
+
+  private void checkEduStatus(User user) {
+    Education education = educationRepository.findByUser(user).orElseThrow(
+        () -> new DockingException(ErrorCode.EDUCATION_NOT_FOUND)
+    );
+    if (!education.getBasic()) {
+      throw new DockingException(ErrorCode.BASIC_EDUCATION_REQUIRED);
     }
   }
 
