@@ -17,7 +17,6 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 public class FosterFormRequestDto {
 
-//  @Size(min = 2, max = 8, message = ErrorMessage.CHECK_AGE_LENGTH)
   @NotBlank(message = ErrorMessage.NAME_REQUIRED)
   private String name;
 

@@ -1,4 +1,4 @@
-package com.sparta.dockingfinalproject.fosterForm;
+package com.sparta.dockingfinalproject.fosterForm.model;
 
 import com.sparta.dockingfinalproject.common.Timestamped;
 import com.sparta.dockingfinalproject.fosterForm.dto.FosterFormRequestDto;

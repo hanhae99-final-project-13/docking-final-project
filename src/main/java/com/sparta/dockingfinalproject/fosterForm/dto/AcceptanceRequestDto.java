@@ -2,7 +2,7 @@ package com.sparta.dockingfinalproject.fosterForm.dto;
 
 import com.sparta.dockingfinalproject.common.Enum;
 import com.sparta.dockingfinalproject.exception.ErrorMessage;
-import com.sparta.dockingfinalproject.fosterForm.Acceptance;
+import com.sparta.dockingfinalproject.fosterForm.model.Acceptance;
 import lombok.Getter;
 
 @Getter

@@ -1,8 +1,9 @@
 package com.sparta.dockingfinalproject.fosterForm.dto;
 
-import com.sparta.dockingfinalproject.fosterForm.Acceptance;
-import com.sparta.dockingfinalproject.fosterForm.FosterForm;
+import com.sparta.dockingfinalproject.fosterForm.model.Acceptance;
+import com.sparta.dockingfinalproject.fosterForm.model.FosterForm;
 import com.sparta.dockingfinalproject.pet.Sex;
+import java.util.Map;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -28,8 +29,9 @@ public class FosterFormResultDto {
   private String roomUrl;
   private Acceptance acceptance;
   private Long postId;
+  private Map<String, Object> eduStatus;
 
-  public static FosterFormResultDto of(FosterForm fosterForm) {
+  public static FosterFormResultDto of(FosterForm fosterForm, Map<String, Object> eduStatus) {
     return FosterFormResultDto.builder()
         .fosterFormId(fosterForm.getFosterFormId())
         .name(fosterForm.getName())
@@ -49,6 +51,7 @@ public class FosterFormResultDto {
         .roomUrl(fosterForm.getRoomUrl())
         .acceptance(fosterForm.getAcceptance())
         .postId(fosterForm.getPost().getPostId())
+        .eduStatus(eduStatus)
         .build();
   }
 

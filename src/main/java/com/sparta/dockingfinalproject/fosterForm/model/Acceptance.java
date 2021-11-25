@@ -1,4 +1,4 @@
-package com.sparta.dockingfinalproject.fosterForm;
+package com.sparta.dockingfinalproject.fosterForm.model;
 
 public enum Acceptance {
   waiting("waiting"),

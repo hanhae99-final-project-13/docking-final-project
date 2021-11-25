@@ -4,6 +4,8 @@ import com.sparta.dockingfinalproject.alarm.AlarmRepository;
 import com.sparta.dockingfinalproject.alarm.model.Alarm;
 import com.sparta.dockingfinalproject.alarm.model.AlarmType;
 import com.sparta.dockingfinalproject.common.SuccessResult;
+import com.sparta.dockingfinalproject.education.Education;
+import com.sparta.dockingfinalproject.education.EducationRepository;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.fosterForm.dto.AcceptanceRequestDto;
@@ -12,6 +14,8 @@ import com.sparta.dockingfinalproject.fosterForm.dto.FosterFormRequestDto;
 import com.sparta.dockingfinalproject.fosterForm.dto.FosterFormResultDto;
 import com.sparta.dockingfinalproject.fosterForm.dto.MyPostsResponseDto;
 import com.sparta.dockingfinalproject.fosterForm.dto.MyRequestsDto;
+import com.sparta.dockingfinalproject.fosterForm.model.Acceptance;
+import com.sparta.dockingfinalproject.fosterForm.model.FosterForm;
 import com.sparta.dockingfinalproject.pet.IsAdopted;
 import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.post.Post;
@@ -21,15 +25,14 @@ import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.User;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 
-@RequiredArgsConstructor
 @Service
 public class FosterFormService {
 
@@ -37,7 +40,17 @@ public class FosterFormService {
   private final PostRepository postRepository;
   private final AlarmRepository alarmRepository;
   private final SimpMessageSendingOperations simpMessageSendingOperations;
+  private final EducationRepository educationRepository;
 
+  public FosterFormService(FosterFormRepository fosterFormRepository, PostRepository postRepository,
+      AlarmRepository alarmRepository, SimpMessageSendingOperations simpMessageSendingOperations,
+      EducationRepository educationRepository) {
+    this.fosterFormRepository = fosterFormRepository;
+    this.postRepository = postRepository;
+    this.alarmRepository = alarmRepository;
+    this.simpMessageSendingOperations = simpMessageSendingOperations;
+    this.educationRepository = educationRepository;
+  }
 
   @Transactional
   public Map<String, Object> addFosterForm(Long postId, FosterFormRequestDto fosterFormRequestDto,
@@ -98,8 +111,9 @@ public class FosterFormService {
     User user = bringUser(userDetails);
     FosterForm findFosterForm = bringFosterForm(fosterFormId);
     checkFosterFormAccess(user, findFosterForm);
+    Map<String, Object> eduStatus = bringEduStatus(user);
 
-    FosterFormResultDto fosterFormResultDto = FosterFormResultDto.of(findFosterForm);
+    FosterFormResultDto fosterFormResultDto = FosterFormResultDto.of(findFosterForm, eduStatus);
     Map<String, Object> data = new HashMap<>();
     data.put("fosterForm", fosterFormResultDto);
     return SuccessResult.success(data);
@@ -142,6 +156,7 @@ public class FosterFormService {
     return fosterForms;
   }
 
+
   @Transactional
   public Map<String, Object> getMyPosts(UserDetailsImpl userDetails) {
     User user = bringUser(userDetails);
@@ -154,7 +169,9 @@ public class FosterFormService {
       List<FosterForm> fosterForms = post.getFormList();
 
       for (FosterForm fosterForm : fosterForms) {
-        FosterFormPreviewDto fosterFormPreviewDto = FosterFormPreviewDto.of(fosterForm);
+        User fosterFormWriter = bringFosterFormWriter(fosterForm);
+        Map<String, Object> eduStatus = bringEduStatus(fosterFormWriter);
+        FosterFormPreviewDto fosterFormPreviewDto = FosterFormPreviewDto.of(fosterForm, eduStatus);
         fosterFormPreviewDtos.add(fosterFormPreviewDto);
       }
 
@@ -198,13 +215,6 @@ public class FosterFormService {
     }
   }
 
-  private void modifyPetAdopted(FosterForm fosterForm) {
-    Post post = fosterForm.getPost();
-    Pet pet = post.getPet();
-    pet.updateStatus("adopted");
-  }
-
-
   private void saveAcceptanceAlarm(Acceptance newAcceptance, String postWriterNickname,
       Long fosterFormId, User user) {
     String alarmContent;
@@ -228,6 +238,12 @@ public class FosterFormService {
     }
   }
 
+  private void modifyPetAdopted(FosterForm fosterForm) {
+    Post post = fosterForm.getPost();
+    Pet pet = post.getPet();
+    pet.updateStatus("adopted");
+  }
+
 
   private User bringUser(UserDetailsImpl userDetails) {
     if (userDetails == null) {
@@ -247,6 +263,19 @@ public class FosterFormService {
 
   private User bringFosterFormWriter(FosterForm findFosterForm) {
     return findFosterForm.getUser();
+  }
+
+  private Map<String, Object> bringEduStatus(User user) {
+    Education education = educationRepository.findByUser(user).orElseThrow(
+        () -> new DockingException(ErrorCode.EDUCATION_NOT_FOUND)
+    );
+
+    Map<String, Object> eduStatus = new LinkedHashMap<>();
+    eduStatus.put("필수지식", education.getBasic());
+    eduStatus.put("심화지식", education.getAdvanced());
+    eduStatus.put("심화지식2", education.getCore());
+
+    return eduStatus;
   }
 
   private Post bringPost(Long postId) {
