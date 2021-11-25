@@ -166,7 +166,7 @@ class PostServiceTest {
     Page<Pet> pages = new PageImpl<>(pets);
     Pageable pageable = PageRequest.of(0, 6);
 
-    when(petRepository.findAllByIsAdoptedOrderByCreatedAtDesc(IsAdopted.ABANDONED, pageable)).thenReturn(pages);
+    when(petRepository.findAllByOrderByCreatedAtDesc(pageable)).thenReturn(pages);
     when(postRepository.findAllByPet(pet)).thenReturn(Optional.of(post));
     when(postRepository.findAllByPet(pet1)).thenReturn(Optional.of(post1));
     when(postRepository.findAllByPet(pet2)).thenReturn(Optional.of(post2));
