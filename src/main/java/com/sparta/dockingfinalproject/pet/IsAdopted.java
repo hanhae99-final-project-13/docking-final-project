@@ -2,7 +2,8 @@ package com.sparta.dockingfinalproject.pet;
 
 public enum IsAdopted {
   ABANDONED("abandoned"),
-  ADOPTED("adopted");
+  ADOPTED("adopted"),
+  EXPIRED("expired");
 
   private final String isAdopted;
 
