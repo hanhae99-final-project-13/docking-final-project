@@ -62,7 +62,7 @@ public class PostService {
 
   private List<Post> getPagePostSix() {
     Pageable pageable = PageRequest.of(0, 6);
-    Page<Pet> pets = petRepository.findAllByIsAdoptedOrderByCreatedAtDesc(IsAdopted.ABANDONED, pageable);
+    Page<Pet> pets = petRepository.findAllByOrderByCreatedAtDesc(pageable);
     List<Post> posts = new ArrayList<>();
     for (Pet pet : pets.getContent()) {
       Post post = postRepository.findAllByPet(pet).orElseThrow(
@@ -118,7 +118,7 @@ public class PostService {
   private ArrayList<CommentResultDto> getCommentList(Post findPost) {
     ArrayList<CommentResultDto> commentDtoList = new ArrayList<>();
 
-    List<CommentResponseDto> commentResponseDto = commentRepository.findAllByPost(findPost);
+    List<CommentResponseDto> commentResponseDto = commentRepository.findAllByPostOrderByCreatedAtDesc(findPost);
     for (CommentResponseDto crd : commentResponseDto) {
       CommentResultDto commentResultDto = getCommentResult(crd);
       commentDtoList.add(commentResultDto);
@@ -246,23 +246,23 @@ public class PostService {
         LocalDateTime end = LocalDateTime.of(Integer.parseInt(ends[0]), Integer.parseInt(ends[1]), Integer.parseInt(ends[2]), 23, 59);
         if (ownerType == null) {
           if (city == null) {
-            pets = petRepository.findAllByIsAdoptedAndCreatedAtBetweenOrderByCreatedAtDesc(IsAdopted.ABANDONED, start, end, pageable);
+            pets = petRepository.findAllByCreatedAtBetweenOrderByCreatedAtDesc(start, end, pageable);
           }
 
           if (city != null) {
             String address = city + " " + district;
-            pets = petRepository.findAllByIsAdoptedAndCreatedAtBetweenAndAddressLikeOrderByCreatedAtDesc(IsAdopted.ABANDONED, start, end, address, pageable);
+            pets = petRepository.findAllByCreatedAtBetweenAndAddressLikeOrderByCreatedAtDesc(start, end, address, pageable);
           }
         }
 
         if (ownerType != null) {
           if (city == null) {
-            pets = petRepository.findAllByIsAdoptedAndCreatedAtBetweenAndOwnerTypeContainingOrderByCreatedAtDesc(IsAdopted.ABANDONED, start, end, ownerType, pageable);
+            pets = petRepository.findAllByCreatedAtBetweenAndOwnerTypeContainingOrderByCreatedAtDesc(start, end, ownerType, pageable);
           }
 
           if (city != null) {
             String address = city + " " + district;
-            pets = petRepository.findAllByIsAdoptedAndCreatedAtBetweenAndOwnerTypeContainingAndAddressLikeOrderByCreatedAtDesc(IsAdopted.ABANDONED, start, end, ownerType, address, pageable);
+            pets = petRepository.findAllByCreatedAtBetweenAndOwnerTypeContainingAndAddressLikeOrderByCreatedAtDesc(start, end, ownerType, address, pageable);
           }
         }
       }
@@ -270,23 +270,23 @@ public class PostService {
       if (startDt == null) {
         if (ownerType == null) {
           if (city == null) {
-            pets = petRepository.findAllByIsAdoptedOrderByCreatedAtDesc(IsAdopted.ABANDONED, pageable);
+            pets = petRepository.findAllByOrderByCreatedAtDesc(pageable);
           }
 
           if (city != null) {
             String address = city + " " + district;
-            pets = petRepository.findAllByIsAdoptedAndAddressLikeOrderByCreatedAtDesc(IsAdopted.ABANDONED, address, pageable);
+            pets = petRepository.findAllByAddressLikeOrderByCreatedAtDesc(address, pageable);
           }
         }
 
         if (ownerType != null) {
           if (city == null) {
-            pets = petRepository.findAllByIsAdoptedAndOwnerTypeContainingOrderByCreatedAtDesc(IsAdopted.ABANDONED, ownerType, pageable);
+            pets = petRepository.findAllByOwnerTypeContainingOrderByCreatedAtDesc(ownerType, pageable);
           }
 
           if (city != null) {
             String address = city + " " + district;
-            pets = petRepository.findAllByIsAdoptedAndOwnerTypeAndAddressLikeOrderByCreatedAtDesc(IsAdopted.ABANDONED, ownerType, address, pageable);
+            pets = petRepository.findAllByOwnerTypeAndAddressLikeOrderByCreatedAtDesc(ownerType, address, pageable);
           }
         }
       }
@@ -301,23 +301,23 @@ public class PostService {
 
         if (ownerType == null) {
           if (city == null) {
-            pets = petRepository.findAllByIsAdoptedAndCreatedAtBetweenOrderByCreatedAtAsc(IsAdopted.ABANDONED, start, end, pageable);
+            pets = petRepository.findAllByCreatedAtBetweenOrderByCreatedAtAsc(start, end, pageable);
           }
 
           if (city != null) {
             String address = city + " " + district;
-            pets = petRepository.findAllByIsAdoptedAndCreatedAtBetweenAndAddressLikeOrderByCreatedAtAsc(IsAdopted.ABANDONED, start, end, address, pageable);
+            pets = petRepository.findAllByCreatedAtBetweenAndAddressLikeOrderByCreatedAtAsc(start, end, address, pageable);
           }
         }
 
         if (ownerType != null) {
           if (city == null) {
-            pets = petRepository.findAllByIsAdoptedAndCreatedAtBetweenAndOwnerTypeContainingOrderByCreatedAtAsc(IsAdopted.ABANDONED, start, end, ownerType, pageable);
+            pets = petRepository.findAllByCreatedAtBetweenAndOwnerTypeContainingOrderByCreatedAtAsc(start, end, ownerType, pageable);
           }
 
           if (city != null) {
             String address = city + " " + district;
-            pets = petRepository.findAllByIsAdoptedAndCreatedAtBetweenAndOwnerTypeContainingAndAddressLikeOrderByCreatedAtAsc(IsAdopted.ABANDONED, start, end, ownerType, address, pageable);
+            pets = petRepository.findAllByCreatedAtBetweenAndOwnerTypeContainingAndAddressLikeOrderByCreatedAtAsc(start, end, ownerType, address, pageable);
           }
         }
       }
@@ -325,23 +325,23 @@ public class PostService {
       if (startDt == null) {
         if (ownerType == null) {
           if (city == null) {
-            pets = petRepository.findAllByIsAdoptedOrderByCreatedAtAsc(IsAdopted.ABANDONED, pageable);
+            pets = petRepository.findAllByOrderByCreatedAtAsc(pageable);
           }
 
           if (city != null) {
             String address = city + " " + district;
-            pets = petRepository.findAllByIsAdoptedAndAddressLikeOrderByCreatedAtAsc(IsAdopted.ABANDONED, address, pageable);
+            pets = petRepository.findAllByAddressLikeOrderByCreatedAtAsc(address, pageable);
           }
         }
 
         if (ownerType != null) {
           if (city == null) {
-            pets = petRepository.findAllByIsAdoptedAndOwnerTypeContainingOrderByCreatedAtAsc(IsAdopted.ABANDONED, ownerType, pageable);
+            pets = petRepository.findAllByOwnerTypeContainingOrderByCreatedAtAsc(ownerType, pageable);
           }
 
           if (city != null) {
             String address = city + " " + district;
-            pets = petRepository.findAllByIsAdoptedAndOwnerTypeContainingAndAddressLikeOrderByCreatedAtAsc(IsAdopted.ABANDONED, ownerType, address, pageable);
+            pets = petRepository.findAllByOwnerTypeContainingAndAddressLikeOrderByCreatedAtAsc(ownerType, address, pageable);
           }
         }
       }
