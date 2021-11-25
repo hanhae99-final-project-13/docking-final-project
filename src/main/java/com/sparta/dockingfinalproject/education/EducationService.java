@@ -15,7 +15,6 @@ public class EducationService {
 
 
   private final EducationRepository educationRepository;
-
   public EducationService(EducationRepository educationRepository) {
 	this.educationRepository = educationRepository;
   }
