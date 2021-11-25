@@ -51,7 +51,8 @@ public class PublicApiInitializer {
   public void initializeDB() throws IOException, ParserConfigurationException, SAXException {
     URL url = connectApi();
     NodeList nodeList = getNodeList(url);
-    saveItemValue(nodeList);
+    List<Pet> pets = getItemValueList(nodeList);
+    savePetAndPost(pets);
   }
 
   public URL connectApi() throws IOException {
@@ -88,7 +89,7 @@ public class PublicApiInitializer {
     StringBuilder stringBuilder = new StringBuilder();
     String line;
     while ((line = bufferedReader.readLine()) != null) {
-      stringBuilder.append(line);
+       stringBuilder.append(line);
     }
     bufferedReader.close();
     conn.disconnect();
@@ -98,7 +99,6 @@ public class PublicApiInitializer {
 
   public NodeList getNodeList(URL url)
       throws ParserConfigurationException, SAXException, IOException {
-
     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
@@ -115,39 +115,10 @@ public class PublicApiInitializer {
     return nodeList;
   }
 
-  public List<Pet> getProcessState(NodeList nodeList) {
-
+  public List<Pet> getItemValueList(NodeList nodeList) {
     ArrayList<Pet> apiPetList = new ArrayList<>();
     String isAdopted = null;
-    Pet pet = new Pet();
-
-    for (int i = 0; i < nodeList.getLength(); i++) {
-      Node nNode = nodeList.item(i);
-      Element eElement = (Element) nNode;
-
-      String petNo = getProcessState("desertionNo", eElement);
-
-      String processState = getProcessState("processState", eElement);
-      if (processState == null) {
-        continue;
-      }
-      if (processState.contains("종료")) {
-        isAdopted = "adopted";
-      } else {
-        isAdopted = "abandoned";
-      }
-      pet = pet.updateStatus(isAdopted);
-      apiPetList.add(pet);
-    }
-
-    return apiPetList;
-  }
-
-  private List<Pet> saveItemValue(NodeList nodeList) {
-
-    ArrayList<Pet> apiPetList = new ArrayList<>();
-    String isAdopted = null;
-    Pet pet = new Pet();
+    Pet pet;
 
     adminSignup();
     username = userRequestDto.getUsername();
@@ -158,36 +129,38 @@ public class PublicApiInitializer {
       Node nNode = nodeList.item(i);
       Element eElement = (Element) nNode;
 
-      String petNo = getProcessState("desertionNo", eElement);
-      String breed = getProcessState("kindCd", eElement).replaceAll("\\[개\\]\\p{Z}", "");
+      String petNo = getItemValue("desertionNo", eElement);
+      String breed = getItemValue("kindCd", eElement).replaceAll("\\[개]\\p{Z}", "");
 
-      String sex = getProcessState("sexCd", eElement);
+      String sex = getItemValue("sexCd", eElement);
       if (!sex.equalsIgnoreCase("f") && !sex.equalsIgnoreCase("m")) {
         continue;
       }
 
-      String age = getProcessState("age", eElement);
-      String weight = getProcessState("weight", eElement);
-      String lostLocation = getProcessState("happenPlace", eElement);
-      String ownerType = getProcessState("careNm", eElement);
+      String age = getItemValue("age", eElement);
+      String weight = getItemValue("weight", eElement);
+      String lostLocation = getItemValue("happenPlace", eElement);
+      String ownerType = getItemValue("careNm", eElement);
 
-      String careAddr = getProcessState("careAddr", eElement);
+      String careAddr = getItemValue("careAddr", eElement);
       String careAddr1 = careAddr.split("\\s")[0];
       String careAddr2 = careAddr.split("\\s")[1].split("\\s")[0];
       String address = careAddr1 + " " + careAddr2;
 
-      String phone = getProcessState("careTel", eElement);
-      String img = getProcessState("popfile", eElement);
-      String extra = getProcessState("specialMark", eElement);
+      String phone = getItemValue("careTel", eElement);
+      String tag = "가져온 정보";
+      String img = getItemValue("popfile", eElement);
+      String extra = getItemValue("specialMark", eElement);
 
-      String processState = getProcessState("processState", eElement);
+      String processState = getItemValue("processState", eElement);
       if (processState == null) {
         continue;
-      }
-      if (processState.contains("종료")) {
-        isAdopted = "adopted";
-      } else {
+      } else if (processState.contains("보호중")) {
         isAdopted = "abandoned";
+      } else if (processState.contains("입양") && processState.contains("종료")) {
+        isAdopted = "adopted";
+      } else if (processState.contains("종료")) {
+        isAdopted = "expired";
       }
 
       pet = Pet.builder()
@@ -199,6 +172,7 @@ public class PublicApiInitializer {
           .ownerType(ownerType)
           .address(address)
           .phone(phone)
+          .tag(tag)
           .img(img)
           .extra(extra)
           .isAdopted(isAdopted)
@@ -206,20 +180,14 @@ public class PublicApiInitializer {
           .build();
 
       apiPetList.add(pet);
-      petRepository.save(pet);
-
-      Post post = new Post(pet, user);
-      postRepository.save(post);
     }
-
     return apiPetList;
   }
 
-  private static String getProcessState(String tag, Element eElement) {
-    NodeList childNodeList = null;
+  private static String getItemValue(String tag, Element eElement) {
     Node childNodeValue = null;
     try {
-      childNodeList = eElement.getElementsByTagName(tag).item(0).getChildNodes();
+      NodeList childNodeList = eElement.getElementsByTagName(tag).item(0).getChildNodes();
       childNodeValue = (Node) childNodeList.item(0);
     } catch (Exception e) {
       e.printStackTrace();
@@ -230,18 +198,27 @@ public class PublicApiInitializer {
     return childNodeValue.getNodeValue();
   }
 
+  private void savePetAndPost(List<Pet> pets) {
+    for (Pet pet : pets) {
+      petRepository.save(pet);
+
+      Post post = new Post(pet, user);
+      postRepository.save(post);
+    }
+  }
+
   public static String today() {
     SimpleDateFormat dtf = new SimpleDateFormat("yyyyMMdd");
     Calendar calendar = Calendar.getInstance();
 
-    java.util.Date datesssObj = calendar.getTime();
-    String formattedDate = dtf.format(datesssObj);
+    java.util.Date dateObj = calendar.getTime();
+    String formattedDate = dtf.format(dateObj);
     System.out.println(formattedDate);
 
     return formattedDate;
   }
 
-  private void adminSignup() {
+  public void adminSignup() {
     SignupRequestDto signupRequestDto = new SignupRequestDto();
     signupRequestDto.setUsername("administrator");
     signupRequestDto.setPassword("docking1023");
@@ -267,18 +244,18 @@ public class PublicApiInitializer {
       Node nNode = nList.item(i);
       Element eElement = (Element) nNode;
 
-      map.put("petNo", getProcessState("desertionNo", eElement));
-      map.put("breed", getProcessState("kindCd", eElement));
-      map.put("sex", getProcessState("sexCd", eElement));
-      map.put("age", getProcessState("age", eElement));
-      map.put("weight", getProcessState("weight", eElement));
-      map.put("lostLocation", getProcessState("happenPlace", eElement));
-      map.put("ownerType", getProcessState("careNm", eElement));
-      map.put("address", getProcessState("careAddr", eElement));
-      map.put("phone", getProcessState("careTel", eElement));
-      map.put("img", getProcessState("popfile", eElement));
-      map.put("extra", getProcessState("specialMark", eElement));
-      map.put("isAdopted", getProcessState("processState", eElement));
+      map.put("petNo", getItemValue("desertionNo", eElement));
+      map.put("breed", getItemValue("kindCd", eElement));
+      map.put("sex", getItemValue("sexCd", eElement));
+      map.put("age", getItemValue("age", eElement));
+      map.put("weight", getItemValue("weight", eElement));
+      map.put("lostLocation", getItemValue("happenPlace", eElement));
+      map.put("ownerType", getItemValue("careNm", eElement));
+      map.put("address", getItemValue("careAddr", eElement));
+      map.put("phone", getItemValue("careTel", eElement));
+      map.put("img", getItemValue("popfile", eElement));
+      map.put("extra", getItemValue("specialMark", eElement));
+      map.put("isAdopted", getItemValue("processState", eElement));
 
       list.add(map);
 
