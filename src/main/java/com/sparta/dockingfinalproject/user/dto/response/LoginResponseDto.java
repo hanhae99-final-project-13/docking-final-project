@@ -20,9 +20,10 @@ public class LoginResponseDto {
   private int alarmCount;
   private List<String> alarmContents;
   private TokenDto token;
+  private List<Long> requestedPostList;
 
 
-  public static LoginResponseDto of(User user, TokenDto token, List<Map<String, Object>> eduList, List<String> alarmContents) {
+  public static LoginResponseDto of(User user, TokenDto token, List<Map<String, Object>> eduList, List<String> alarmContents, List<Long> requestedPostList) {
     return LoginResponseDto.builder()
         .userId(user.getUserId())
         .nickname(user.getNickname())
@@ -33,6 +34,7 @@ public class LoginResponseDto {
         .alarmCount(alarmContents.size())
         .alarmContents(alarmContents)
         .token(token)
+        .requestedPostList(requestedPostList)
         .build();
   }
 }

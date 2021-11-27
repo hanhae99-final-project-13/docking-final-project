@@ -105,6 +105,7 @@ public class CommentService {
     Map<String, Object> data = new HashMap<>();
     if (userId.equals(writerId)) {
       commentRepository.deleteById(commentId);
+      alarmRepository.deleteByAlarmTypeAndContentId(AlarmType.COMMENT, commentId);
       data.put("msg", "삭제 완료");
     } else {
       throw new DockingException(ErrorCode.NO_AUTHORIZATION);
