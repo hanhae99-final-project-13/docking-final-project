@@ -13,6 +13,7 @@ import com.sparta.dockingfinalproject.pet.PetRepository;
 import com.sparta.dockingfinalproject.pet.dto.PetRequestDto;
 import com.sparta.dockingfinalproject.post.dto.PostDetailResponseDto;
 import com.sparta.dockingfinalproject.post.dto.PostPreviewDto;
+import com.sparta.dockingfinalproject.post.dto.PostSearchRequestDto;
 import com.sparta.dockingfinalproject.post.dto.PostSearchResponseDto;
 import com.sparta.dockingfinalproject.post.dto.StatusDto;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
@@ -236,150 +237,12 @@ public class PostService {
     );
   }
 
-  public Map<String, Object> getPostsTermsSearch(Pageable pageable, String startDt, String endDt, String ownerType, String city, String district, String sort) {
-    Page<Pet> pets = null;
-    if (sort.equalsIgnoreCase("new")) {
-      if (startDt != null) {
-        String[] starts = startDt.split("-");
-        String[] ends = endDt.split("-");
-        LocalDateTime start = LocalDateTime.of(Integer.parseInt(starts[0]), Integer.parseInt(starts[1]), Integer.parseInt(starts[2]), 0, 0);
-        LocalDateTime end = LocalDateTime.of(Integer.parseInt(ends[0]), Integer.parseInt(ends[1]), Integer.parseInt(ends[2]), 23, 59);
-        if (ownerType == null) {
-          if (city == null) {
-            pets = petRepository.findAllByCreatedAtBetweenOrderByCreatedAtDesc(start, end, pageable);
-          }
-
-          if (city != null) {
-            String address = city + " " + district;
-            pets = petRepository.findAllByCreatedAtBetweenAndAddressLikeOrderByCreatedAtDesc(start, end, address, pageable);
-          }
-        }
-
-        if (ownerType != null) {
-          if (city == null) {
-            pets = petRepository.findAllByCreatedAtBetweenAndOwnerTypeContainingOrderByCreatedAtDesc(start, end, ownerType, pageable);
-          }
-
-          if (city != null) {
-            String address = city + " " + district;
-            pets = petRepository.findAllByCreatedAtBetweenAndOwnerTypeContainingAndAddressLikeOrderByCreatedAtDesc(start, end, ownerType, address, pageable);
-          }
-        }
-      }
-
-      if (startDt == null) {
-        if (ownerType == null) {
-          if (city == null) {
-            pets = petRepository.findAllByOrderByCreatedAtDesc(pageable);
-          }
-
-          if (city != null) {
-            String address = city + " " + district;
-            pets = petRepository.findAllByAddressLikeOrderByCreatedAtDesc(address, pageable);
-          }
-        }
-
-        if (ownerType != null) {
-          if (city == null) {
-            pets = petRepository.findAllByOwnerTypeContainingOrderByCreatedAtDesc(ownerType, pageable);
-          }
-
-          if (city != null) {
-            String address = city + " " + district;
-            pets = petRepository.findAllByOwnerTypeAndAddressLikeOrderByCreatedAtDesc(ownerType, address, pageable);
-          }
-        }
-      }
-    }
-
-    if (sort.equalsIgnoreCase("old")) {
-      if (startDt != null) {
-        String[] starts = startDt.split("-");
-        String[] ends = endDt.split("-");
-        LocalDateTime start = LocalDateTime.of(Integer.parseInt(starts[0]), Integer.parseInt(starts[1]), Integer.parseInt(starts[2]), 0, 0);
-        LocalDateTime end = LocalDateTime.of(Integer.parseInt(ends[0]), Integer.parseInt(ends[1]), Integer.parseInt(ends[2]), 23, 59);
-
-        if (ownerType == null) {
-          if (city == null) {
-            pets = petRepository.findAllByCreatedAtBetweenOrderByCreatedAtAsc(start, end, pageable);
-          }
-
-          if (city != null) {
-            String address = city + " " + district;
-            pets = petRepository.findAllByCreatedAtBetweenAndAddressLikeOrderByCreatedAtAsc(start, end, address, pageable);
-          }
-        }
-
-        if (ownerType != null) {
-          if (city == null) {
-            pets = petRepository.findAllByCreatedAtBetweenAndOwnerTypeContainingOrderByCreatedAtAsc(start, end, ownerType, pageable);
-          }
-
-          if (city != null) {
-            String address = city + " " + district;
-            pets = petRepository.findAllByCreatedAtBetweenAndOwnerTypeContainingAndAddressLikeOrderByCreatedAtAsc(start, end, ownerType, address, pageable);
-          }
-        }
-      }
-
-      if (startDt == null) {
-        if (ownerType == null) {
-          if (city == null) {
-            pets = petRepository.findAllByOrderByCreatedAtAsc(pageable);
-          }
-
-          if (city != null) {
-            String address = city + " " + district;
-            pets = petRepository.findAllByAddressLikeOrderByCreatedAtAsc(address, pageable);
-          }
-        }
-
-        if (ownerType != null) {
-          if (city == null) {
-            pets = petRepository.findAllByOwnerTypeContainingOrderByCreatedAtAsc(ownerType, pageable);
-          }
-
-          if (city != null) {
-            String address = city + " " + district;
-            pets = petRepository.findAllByOwnerTypeContainingAndAddressLikeOrderByCreatedAtAsc(ownerType, address, pageable);
-          }
-        }
-      }
-    }
-
-    List<PostSearchResponseDto> postList = new ArrayList<>();
-    for (Pet pet : pets.getContent()) {
-      Post post = postRepository.findAllByPet(pet).orElseThrow(
-          () -> new DockingException(ErrorCode.PET_NOT_FOUND)
-      );
-
-      List<String> imgs = new ArrayList<>();
-      String[] str = pet.getImg().split(" ## ");
-      for (String x : str) {
-        imgs.add(x);
-      }
-      PostSearchResponseDto postSearchResponseDto = PostSearchResponseDto.builder()
-          .userId(post.getUser().getUserId())
-          .nickname(post.getUser().getNickname())
-          .postId(post.getPostId())
-          .createdAt(pet.getCreatedAt())
-          .modifiedAt(pet.getModifiedAt())
-          .breed(pet.getBreed())
-          .sex(pet.getSex())
-          .age(pet.getAge())
-          .ownerType(pet.getOwnerType())
-          .address(pet.getAddress())
-          .img(imgs)
-          .isAdopted(pet.getIsAdopted())
-          .build();
-
-      postList.add(postSearchResponseDto);
-    }
-
+  public Map<String, Object> getPostsTermsSearch(Pageable pageable1, PostSearchRequestDto postSearchRequestDto) {
+    Page<PostSearchResponseDto> pagePost = postRepository.searchPagePost(pageable1, postSearchRequestDto);
     Map<String, Object> data = new HashMap<>();
-    data.put("postList", postList);
-    data.put("last", pets.isLast());
-    data.put("totalPages", pets.getTotalPages());
+    data.put("postList", pagePost.getContent());
+    data.put("last", pagePost.isLast());
+    data.put("totalPages", pagePost.getTotalPages());
     return SuccessResult.success(data);
   }
 }

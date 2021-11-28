@@ -1,6 +1,7 @@
 package com.sparta.dockingfinalproject.post;
 
 import com.sparta.dockingfinalproject.pet.dto.PetRequestDto;
+import com.sparta.dockingfinalproject.post.dto.PostSearchRequestDto;
 import com.sparta.dockingfinalproject.post.dto.StatusDto;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import java.util.Map;
@@ -66,14 +67,8 @@ public class PostController {
       @RequestParam(required = false) String city, @RequestParam(required = false) String district,
       @RequestParam(required = false) String sort) {
 
+    PostSearchRequestDto postSearchRequestDto = new PostSearchRequestDto(startDt, endDt, ownerType, city, district, sort);
     Pageable pageable1 = PageRequest.of(page, 8);
-    return postService.getPostsTermsSearch(pageable1, getTrimData(startDt), getTrimData(endDt), getTrimData(ownerType), getTrimData(city), getTrimData(district), getTrimData(sort));
-  }
-
-  private String getTrimData(String data) {
-    if (data != null && !data.isEmpty()) {
-      return data.trim();
-    }
-    return data;
+    return postService.getPostsTermsSearch(pageable1, postSearchRequestDto);
   }
 }
