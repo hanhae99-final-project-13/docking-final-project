@@ -24,11 +24,13 @@ import com.sparta.dockingfinalproject.user.dto.UserInquriryRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
 import com.sparta.dockingfinalproject.user.dto.response.LoginCheckResponseDto;
 import com.sparta.dockingfinalproject.user.dto.response.LoginResponseDto;
+import com.sparta.dockingfinalproject.user.phoneMessage.PhoneService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import javax.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,12 +45,13 @@ public class UserService {
   private final AlarmRepository alarmRepository;
   private final RefreshTokenRepository refreshTokenRepository;
   private final FosterFormRepository fosterFormRepository;
+  private final PhoneService phoneService;
 
 
   public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
       JwtTokenProvider jwtTokenProvider,
       EducationRepository educationRepository, AlarmRepository alarmRepository,
-      RefreshTokenRepository refreshTokenRepository, FosterFormRepository fosterFormRepository) {
+      RefreshTokenRepository refreshTokenRepository, FosterFormRepository fosterFormRepository, PhoneService phoneService) {
 
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
@@ -57,6 +60,7 @@ public class UserService {
     this.alarmRepository = alarmRepository;
     this.refreshTokenRepository = refreshTokenRepository;
     this.fosterFormRepository = fosterFormRepository;
+    this.phoneService = phoneService;
   }
 
   //회원 등록
@@ -105,6 +109,7 @@ public class UserService {
 
     List<Map<String, Object>> eduList = getEduList(user);
     List<String> alarmContents = findUserAlarms(user);
+
     List<Long> requestedPostList = getRequestedPostList(user);
 
     LoginResponseDto loginResponseDto = LoginResponseDto.of(
@@ -267,11 +272,16 @@ public class UserService {
     String password = requestDto.getPassword();
     String pwcheck = requestDto.getPwcheck();
     String nickname = requestDto.getNickname();
+    String email = requestDto.getEmail();
+    Integer randomNumber = requestDto.getRandomNumber();
+
 
     usernameEmptyCheck(username);
     nicknameEmptyCheck(nickname);
     passwordEmptyCheck(password);
     passwordEmptyCheck(pwcheck);
+    isEamil(email);
+
 
     Optional<User> findUser = userRepository.findByUsername(username);
     if (findUser.isPresent()) {
@@ -291,6 +301,25 @@ public class UserService {
     if (!password.equals(pwcheck)) {
       throw new DockingException(ErrorCode.PASSWORD_MISS_MATCH);
     }
+
+
+    if(isEamil(email)==false) {
+      throw new DockingException(ErrorCode.EMAIL_NO_AVAILABILITY);
+    }
+
+    if(isPassword(password)==false) {
+      throw new DockingException(ErrorCode.PASSWORD_NOT_AVALABILITY);
+    }
+
+  }
+
+
+  public boolean isEamil(String email){
+    return Pattern.matches("^[a-z0-9A-Z._-]*@[a-z0-9A-Z]*.[a-zA-Z.]*$", email);
+  }
+
+  public boolean isPassword(String password) {
+    return Pattern.matches("^(?=.*[0-9])(?=.*[a-z]).{8,20}$", password);
   }
 
   private void validateLogin(UserRequestDto requestDto, User user) {
