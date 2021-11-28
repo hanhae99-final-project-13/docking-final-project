@@ -24,7 +24,6 @@ import com.sparta.dockingfinalproject.user.dto.UserInquriryRequestDto;
 import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
 import com.sparta.dockingfinalproject.user.dto.response.LoginCheckResponseDto;
 import com.sparta.dockingfinalproject.user.dto.response.LoginResponseDto;
-import com.sparta.dockingfinalproject.user.phoneMessage.PhoneService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,330 +44,308 @@ public class UserService {
   private final AlarmRepository alarmRepository;
   private final RefreshTokenRepository refreshTokenRepository;
   private final FosterFormRepository fosterFormRepository;
-  private final PhoneService phoneService;
 
 
   public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-      JwtTokenProvider jwtTokenProvider,
-      EducationRepository educationRepository, AlarmRepository alarmRepository,
-      RefreshTokenRepository refreshTokenRepository, FosterFormRepository fosterFormRepository, PhoneService phoneService) {
+	  JwtTokenProvider jwtTokenProvider,
+	  EducationRepository educationRepository, AlarmRepository alarmRepository,
+	  RefreshTokenRepository refreshTokenRepository, FosterFormRepository fosterFormRepository) {
 
-    this.userRepository = userRepository;
-    this.passwordEncoder = passwordEncoder;
-    this.jwtTokenProvider = jwtTokenProvider;
-    this.educationRepository = educationRepository;
-    this.alarmRepository = alarmRepository;
-    this.refreshTokenRepository = refreshTokenRepository;
-    this.fosterFormRepository = fosterFormRepository;
-    this.phoneService = phoneService;
+	this.userRepository = userRepository;
+	this.passwordEncoder = passwordEncoder;
+	this.jwtTokenProvider = jwtTokenProvider;
+	this.educationRepository = educationRepository;
+	this.alarmRepository = alarmRepository;
+	this.refreshTokenRepository = refreshTokenRepository;
+	this.fosterFormRepository = fosterFormRepository;
   }
 
-  //회원 등록
   public Map<String, Object> registerUser(SignupRequestDto requestDto) {
-    validateUser(requestDto);
+	validateUser(requestDto);
 
-    //패스워드 인코딩
-    String password = requestDto.getPassword();
-    password = passwordEncoder.encode(password);
+	String password = requestDto.getPassword();
+	password = passwordEncoder.encode(password);
 
-    User user = new User(requestDto, password);
-    userRepository.save(user);
+	User user = new User(requestDto, password);
+	userRepository.save(user);
 
-    Education education = new Education(user);
-    educationRepository.save(education);
+	Education education = new Education(user);
+	educationRepository.save(education);
 
-    String alarmContent = "회원가입을 축하합니다";
-    AlarmType alarmType = AlarmType.SIGN_UP;
-    Long contentId = null;
-    Alarm alarm = new Alarm(alarmContent, alarmType, contentId, user);
-    alarmRepository.save(alarm);
+	String alarmContent = "회원가입을 축하합니다";
+	AlarmType alarmType = AlarmType.SIGN_UP;
+	Long contentId = null;
+	Alarm alarm = new Alarm(alarmContent, alarmType, contentId, user);
+	alarmRepository.save(alarm);
 
-    Map<String, Object> data = new HashMap<>();
-    data.put("msg", "회원가입 축하합니다!");
+	Map<String, Object> data = new HashMap<>();
+	data.put("msg", "회원가입 축하합니다!");
 
-    return SuccessResult.success(data);
+	return SuccessResult.success(data);
   }
 
 
-  //로그인
   @Transactional
   public Map<String, Object> login(UserRequestDto requestDto) {
-    usernameEmptyCheck(requestDto.getUsername());
 
-    passwordEmptyCheck(requestDto.getPassword());
+	User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
+		() -> new DockingException(ErrorCode.USERNAME_NOT_FOUND)
+	);
+	validateLogin(requestDto, user);
 
-    User user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(
-        () -> new DockingException(ErrorCode.USERNAME_NOT_FOUND)
-    );
-    validateLogin(requestDto, user);
+	TokenDto tokenDto = jwtTokenProvider.createToken(requestDto.getUsername(),
+		requestDto.getUsername());
 
-    TokenDto tokenDto = jwtTokenProvider.createToken(requestDto.getUsername(),
-        requestDto.getUsername());
+	saveRefreshToken(requestDto, tokenDto);
 
-    saveRefreshToken(requestDto, tokenDto);
+	List<Map<String, Object>> eduList = getEduList(user);
+	List<String> alarmContents = findUserAlarms(user);
+	List<Long> requestedPostList = getRequestedPostList(user);
 
-    List<Map<String, Object>> eduList = getEduList(user);
-    List<String> alarmContents = findUserAlarms(user);
+	LoginResponseDto loginResponseDto = LoginResponseDto.of(
+		user, jwtTokenProvider.createToken(requestDto.getUsername(), requestDto.getUsername()),
+		eduList, alarmContents, requestedPostList);
 
-    List<Long> requestedPostList = getRequestedPostList(user);
-
-    LoginResponseDto loginResponseDto = LoginResponseDto.of(
-        user, jwtTokenProvider.createToken(requestDto.getUsername(), requestDto.getUsername()),
-        eduList, alarmContents, requestedPostList);
-
-    return SuccessResult.success(loginResponseDto);
+	return SuccessResult.success(loginResponseDto);
   }
 
 
-  private List<String> findUserAlarms(User user) {
-    List<Alarm> allAlarms = alarmRepository
-        .findAllByUserOrderByCreatedAtDesc(user);
 
-    List<String> alarmContents = new ArrayList<>();
-    for (Alarm alarm : allAlarms) {
-      alarmContents.add(alarm.getAlarmContent());
-    }
-
-    return alarmContents;
-  }
-
-  //회원정보 수정
   @Transactional
   public Map<String, Object> updateUser(UserDetailsImpl userDetails, UpdateRequestDto requestDto) {
 
-    User findUser = userRepository.findById(userDetails.getUser().getUserId()).orElseThrow(
-        () -> new DockingException(ErrorCode.USER_NOT_FOUND)
-    );
-    findUser.update(requestDto);
+	User findUser = userRepository.findById(userDetails.getUser().getUserId()).orElseThrow(
+		() -> new DockingException(ErrorCode.USER_NOT_FOUND)
+	);
+	findUser.update(requestDto);
 
-    Map<String, String> data = new HashMap<>();
-    data.put("msg", "사용자 정보가 수정 되었습니다");
-    return SuccessResult.success(data);
+	Map<String, String> data = new HashMap<>();
+	data.put("msg", "사용자 정보가 수정 되었습니다");
+	return SuccessResult.success(data);
   }
 
 
-  //로그인 체크
   public Map<String, Object> loginCheck(UserDetailsImpl userDetails) {
 
-    if (userDetails != null) {
-      User user = userDetails.getUser();
-      int alarmCount = getUserAlarmCount(user);
-      List<Map<String, Object>> eduList = getEduList(user);
-      List<Long> requestedPostList = getRequestedPostList(user);
-      LoginCheckResponseDto loginCheckResponseDto = LoginCheckResponseDto.of(
-          userDetails, eduList, alarmCount, requestedPostList);
+	if (userDetails != null) {
+	  User user = userDetails.getUser();
+	  int alarmCount = getUserAlarmCount(user);
+	  List<Map<String, Object>> eduList = getEduList(user);
+	  List<Long> requestedPostList = getRequestedPostList(user);
+	  LoginCheckResponseDto loginCheckResponseDto = LoginCheckResponseDto.of(
+		  userDetails, eduList, alarmCount, requestedPostList);
 
-      return SuccessResult.success(loginCheckResponseDto);
-    } else {
-      throw new DockingException(ErrorCode.USER_NOT_FOUND);
-    }
-
-  }
-
-  private List<Long> getRequestedPostList(User user) {
-    List<FosterForm> fosterFormList = fosterFormRepository.findAllByUser(user);
-    List<Long> requestedPostList = new ArrayList();
-    for (FosterForm form : fosterFormList) {
-      Long requestedPostId = form.getPost().getPostId();
-      requestedPostList.add(requestedPostId);
-    }
-    return requestedPostList;
-  }
-
-  private int getUserAlarmCount(User user) {
-    return alarmRepository.findAllByUserAndCheckedTrueOrderByCreatedAtDesc(user).size();
+	  return SuccessResult.success(loginCheckResponseDto);
+	} else {
+	  throw new DockingException(ErrorCode.USER_NOT_FOUND);
+	}
   }
 
   @Transactional
   public TokenDto reissue(TokenRequestDto tokenRequestDto) {
 
-    System.out.println("리이슈 도착!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    if (jwtTokenProvider.validateToken(tokenRequestDto.getRefreshToken()) != JwtReturn.SUCCESS) {
-      throw new DockingException(ErrorCode.LOGIN_TOKEN_EXPIRE);
-    }
+	if (jwtTokenProvider.validateToken(tokenRequestDto.getRefreshToken()) != JwtReturn.SUCCESS) {
+	  throw new DockingException(ErrorCode.LOGIN_TOKEN_EXPIRE);
+	}
 
-    String username = jwtTokenProvider.getAccessTokenPayload(tokenRequestDto.getAccessToken());
+	String username = jwtTokenProvider.getAccessTokenPayload(tokenRequestDto.getAccessToken());
 
-    RefreshToken refreshToken = refreshTokenRepository.findByKey(username).orElseThrow(
-        () -> new DockingException(ErrorCode.LOGIN_REQUIRED));
+	RefreshToken refreshToken = refreshTokenRepository.findByKey(username).orElseThrow(
+		() -> new DockingException(ErrorCode.LOGIN_REQUIRED));
 
-    if (!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {
-      throw new DockingException(ErrorCode.LOGIN_REQUIRED);
-    }
-    TokenDto tokenDto = jwtTokenProvider.createToken(username, username);
+	if (!refreshToken.getValue().equals(tokenRequestDto.getRefreshToken())) {
+	  throw new DockingException(ErrorCode.LOGIN_REQUIRED);
+	}
+	TokenDto tokenDto = jwtTokenProvider.createToken(username, username);
 
-    RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
-    refreshTokenRepository.save(newRefreshToken);
+	RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
+	refreshTokenRepository.save(newRefreshToken);
 
-    System.out.println("없데이트한 리프레시 토큰" + tokenDto.getRefreshToken());
-
-    return tokenDto;
+	return tokenDto;
 
   }
 
 
-  //아이디 중복 체크
   public Map<String, Object> idDoubleCheck(String username) {
 
-    Map<String, Object> data = new HashMap<>();
-    Optional<User> found = userRepository.findByUsername(username);
-    usernameEmptyCheck(username);
+	Map<String, Object> data = new HashMap<>();
+	Optional<User> found = userRepository.findByUsername(username);
+	usernameEmptyCheck(username);
 
-    if (!found.isPresent()) {
-      data.put("msg", "아이디 중복 확인 완료");
-    } else {
-      throw new DockingException(ErrorCode.USERNAME_DUPLICATE);
-    }
-    return SuccessResult.success(data);
+	if (!found.isPresent()) {
+	  data.put("msg", "아이디 중복 확인 완료");
+	} else {
+	  throw new DockingException(ErrorCode.USERNAME_DUPLICATE);
+	}
+	return SuccessResult.success(data);
   }
 
 
-  //닉네임 중복 체크
   public Map<String, Object> nicknameDoubleCheck(String nickname) {
-    Map<String, Object> data = new HashMap<>();
-    Optional<User> found = userRepository.findByNickname(nickname);
-    nicknameEmptyCheck(nickname);
+	Map<String, Object> data = new HashMap<>();
+	Optional<User> found = userRepository.findByNickname(nickname);
+	nicknameEmptyCheck(nickname);
 
-    if (!found.isPresent()) {
-      data.put("msg", "닉네임 중복 확인 완료");
-    } else {
-      throw new DockingException(ErrorCode.NICKNAME_DUPLICATE);
-    }
-    return SuccessResult.success(data);
+	if (!found.isPresent()) {
+	  data.put("msg", "닉네임 중복 확인 완료");
+	} else {
+	  throw new DockingException(ErrorCode.NICKNAME_DUPLICATE);
+	}
+	return SuccessResult.success(data);
   }
 
 
-  //아이디찾기
-  public Map<String, Object> findUserId(UserInquriryRequestDto userInquriryRequestDto) {
-    String email = userInquriryRequestDto.getEmail();
-    User findUser = userRepository.findByEmail(email).orElseThrow(
-        () -> new DockingException(ErrorCode.EMAIL_NOT_FOUND)
-    );
+ public Map<String, Object> findUserId(UserInquriryRequestDto userInquriryRequestDto) {
+	String email = userInquriryRequestDto.getEmail();
+	User findUser = userRepository.findByEmail(email).orElseThrow(
+		() -> new DockingException(ErrorCode.EMAIL_NOT_FOUND)
+	);
 
-    Map<String, String> data = new HashMap<>();
-    data.put("username", findUser.getUsername());
-    return SuccessResult.success(data);
+	Map<String, String> data = new HashMap<>();
+	data.put("username", findUser.getUsername());
+	return SuccessResult.success(data);
   }
 
 
-  //비밀번호찾기
   @Transactional
   public Map<String, Object> findUserPw(UserInquriryRequestDto userInquriryRequestDto,
-      String tempPw) {
-    String username = userInquriryRequestDto.getUsername();
-    User user = userRepository.findByUsername(username).orElseThrow(
-        () -> new DockingException(ErrorCode.USER_NOT_FOUND)
-    );
-    user.setPassword(tempPw);
+	  String tempPw) {
+	String username = userInquriryRequestDto.getUsername();
+	User user = userRepository.findByUsername(username).orElseThrow(
+		() -> new DockingException(ErrorCode.USER_NOT_FOUND)
+	);
+	user.setPassword(tempPw);
 
-    Map<String, String> data = new HashMap<>();
-    data.put("msg", "임시 비밀번호를 해당 이메일로 보냈습니다.");
-    return SuccessResult.success(data);
+	Map<String, String> data = new HashMap<>();
+	data.put("msg", "임시 비밀번호를 해당 이메일로 보냈습니다.");
+	return SuccessResult.success(data);
   }
 
 
   private void validateUser(SignupRequestDto requestDto) {
-    String username = requestDto.getUsername();
-    String password = requestDto.getPassword();
-    String pwcheck = requestDto.getPwcheck();
-    String nickname = requestDto.getNickname();
-    String email = requestDto.getEmail();
-    Integer randomNumber = requestDto.getRandomNumber();
+	String username = requestDto.getUsername();
+	String password = requestDto.getPassword();
+	String pwcheck = requestDto.getPwcheck();
+	String nickname = requestDto.getNickname();
+	String email = requestDto.getEmail();
 
+	usernameEmptyCheck(username);
+	nicknameEmptyCheck(nickname);
+	passwordEmptyCheck(password);
+	passwordEmptyCheck(pwcheck);
+	isEamil(email);
 
-    usernameEmptyCheck(username);
-    nicknameEmptyCheck(nickname);
-    passwordEmptyCheck(password);
-    passwordEmptyCheck(pwcheck);
-    isEamil(email);
+	Optional<User> findUser = userRepository.findByUsername(username);
+	if (findUser.isPresent()) {
+	  throw new DockingException(ErrorCode.USERNAME_DUPLICATE);
+	}
 
+	Optional<User> findUser2 = userRepository.findByNickname(nickname);
+	if (findUser2.isPresent()) {
+	  throw new DockingException(ErrorCode.NICKNAME_DUPLICATE);
+	}
 
-    Optional<User> findUser = userRepository.findByUsername(username);
-    if (findUser.isPresent()) {
-      throw new DockingException(ErrorCode.USERNAME_DUPLICATE);
-    }
+	Optional<User> findUser3 = userRepository.findByEmail(requestDto.getEmail());
+	if (findUser3.isPresent()) {
+	  throw new DockingException(ErrorCode.EMAIL_DUPLICATE);
+	}
 
-    Optional<User> findUser2 = userRepository.findByNickname(nickname);
-    if (findUser2.isPresent()) {
-      throw new DockingException(ErrorCode.NICKNAME_DUPLICATE);
-    }
+	if (!password.equals(pwcheck)) {
+	  throw new DockingException(ErrorCode.PASSWORD_MISS_MATCH);
+	}
 
-    Optional<User> findUser3 = userRepository.findByEmail(requestDto.getEmail());
-    if (findUser3.isPresent()) {
-      throw new DockingException(ErrorCode.EMAIL_DUPLICATE);
-    }
+	if (isEamil(email) == false) {
+	  throw new DockingException(ErrorCode.EMAIL_NO_AVAILABILITY);
+	}
 
-    if (!password.equals(pwcheck)) {
-      throw new DockingException(ErrorCode.PASSWORD_MISS_MATCH);
-    }
-
-
-    if(isEamil(email)==false) {
-      throw new DockingException(ErrorCode.EMAIL_NO_AVAILABILITY);
-    }
-
-    if(isPassword(password)==false) {
-      throw new DockingException(ErrorCode.PASSWORD_NOT_AVALABILITY);
-    }
+	if (isPassword(password) == false) {
+	  throw new DockingException(ErrorCode.PASSWORD_NOT_AVALABILITY);
+	}
 
   }
 
-
-  public boolean isEamil(String email){
-    return Pattern.matches("^[a-z0-9A-Z._-]*@[a-z0-9A-Z]*.[a-zA-Z.]*$", email);
-  }
-
-  public boolean isPassword(String password) {
-    return Pattern.matches("^(?=.*[0-9])(?=.*[a-z]).{8,20}$", password);
-  }
 
   private void validateLogin(UserRequestDto requestDto, User user) {
-    usernameEmptyCheck(requestDto.getUsername());
-    passwordEmptyCheck(requestDto.getPassword());
+	usernameEmptyCheck(requestDto.getUsername());
+	passwordEmptyCheck(requestDto.getPassword());
 
-    if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
-      throw new DockingException(ErrorCode.PASSWORD_NOT_FOUND);
-    }
+	if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
+	  throw new DockingException(ErrorCode.PASSWORD_NOT_FOUND);
+	}
   }
 
 
   private void usernameEmptyCheck(String username) {
-    if (username.isEmpty()) {
-      throw new DockingException(ErrorCode.USERNAME_EMPTY);
-    }
+	if (username.isEmpty()) {
+	  throw new DockingException(ErrorCode.USERNAME_EMPTY);
+	}
   }
 
   private void nicknameEmptyCheck(String nickname) {
-    if (nickname.isEmpty()) {
-      throw new DockingException(ErrorCode.NICKNAME_EMPTY);
-    }
+	if (nickname.isEmpty()) {
+	  throw new DockingException(ErrorCode.NICKNAME_EMPTY);
+	}
   }
 
   private void passwordEmptyCheck(String password) {
-    if (password.isEmpty()) {
-      throw new DockingException(ErrorCode.PASSWORD_EMPTY);
-    }
+	if (password.isEmpty()) {
+	  throw new DockingException(ErrorCode.PASSWORD_EMPTY);
+	}
+  }
+
+  public boolean isEamil(String email) {
+	return Pattern.matches("^[a-z0-9A-Z._-]*@[a-z0-9A-Z]*.[a-zA-Z.]*$", email);
+  }
+
+  public boolean isPassword(String password) {
+	return Pattern.matches("^(?=.*[0-9])(?=.*[a-z]).{8,20}$", password);
   }
 
   private void saveRefreshToken(UserRequestDto requestDto, TokenDto tokenDto) {
-    RefreshToken refreshToken = RefreshToken.builder()
-        .key(requestDto.getUsername())
-        .value(tokenDto.getRefreshToken())
-        .build();
+	RefreshToken refreshToken = RefreshToken.builder()
+		.key(requestDto.getUsername())
+		.value(tokenDto.getRefreshToken())
+		.build();
 
-    refreshTokenRepository.save(refreshToken);
+	refreshTokenRepository.save(refreshToken);
+  }
+
+  private List<Map<String, Object>> getEduList(User user) {
+	Education education = educationRepository.findByUser(user).orElse(null);
+	List<Map<String, Object>> eduList = new ArrayList<>();
+	Map<String, Object> edu = new HashMap<>();
+	edu.put("필수지식", education.getBasic());
+	edu.put("심화지식", education.getAdvanced());
+	edu.put("심화지식2", education.getCore());
+	eduList.add(edu);
+	return eduList;
+  }
+
+  private List<Long> getRequestedPostList(User user) {
+	List<FosterForm> fosterFormList = fosterFormRepository.findAllByUser(user);
+	List<Long> requestedPostList = new ArrayList();
+	for (FosterForm form : fosterFormList) {
+	  Long requestedPostId = form.getPost().getPostId();
+	  requestedPostList.add(requestedPostId);
+	}
+	return requestedPostList;
+  }
+
+  private int getUserAlarmCount(User user) {
+	return alarmRepository.findAllByUserAndCheckedTrueOrderByCreatedAtDesc(user).size();
   }
 
 
-  private List<Map<String, Object>> getEduList(User user) {
-    Education education = educationRepository.findByUser(user).orElse(null);
-    List<Map<String, Object>> eduList = new ArrayList<>();
-    Map<String, Object> edu = new HashMap<>();
-    edu.put("필수지식", education.getBasic());
-    edu.put("심화지식", education.getAdvanced());
-    edu.put("심화지식2", education.getCore());
-    eduList.add(edu);
-    return eduList;
+  private List<String> findUserAlarms(User user) {
+	List<Alarm> allAlarms = alarmRepository
+		.findAllByUserOrderByCreatedAtDesc(user);
+
+	List<String> alarmContents = new ArrayList<>();
+	for (Alarm alarm : allAlarms) {
+	  alarmContents.add(alarm.getAlarmContent());
+	}
+
+	return alarmContents;
   }
 }
 
