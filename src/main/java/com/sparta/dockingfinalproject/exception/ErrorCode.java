@@ -19,7 +19,7 @@ public enum ErrorCode {
   NICKNAME_NOT_FOUND(BAD_REQUEST, "닉네임 중복확인을 먼저 해주세요."),
   NICKNAME_EMPTY(BAD_REQUEST, "닉네임을 입력해주세요"),
 
-
+  EMAIL_NO_AVAILABILITY(BAD_REQUEST, "이메일 형식에 맞게 입력해주세요"),
   EMAIL_DUPLICATE(BAD_REQUEST, "중복된 이메일이 존재합니다."),
   IMAGE_NOT_FOUND(BAD_REQUEST, "이미지가 없습니다."),
   CODE_NOT_FOUND(BAD_REQUEST, "카카오 사용자를 찾을 수 없습니다."),
@@ -27,7 +27,9 @@ public enum ErrorCode {
   PASSWORD_EMPTY(BAD_REQUEST, "비밀번호를 입력해주세요."),
   PASSWORD_MISS_MATCH(BAD_REQUEST, "비밀번호와 비밀번호 확인이 일치하지 않습니다."),
   PASSWORD_NOT_FOUND(BAD_REQUEST, "비밀번호를 다시 입력해주세요"),
+  PASSWORD_NOT_AVALABILITY(BAD_REQUEST, "비밀번호는 숫자와 영문자를 1개 이상 포함, 8자 이상이여야 합니다."),
 
+  RANDOMNUMVER_EMPTY(BAD_REQUEST,"인증 번호를 입력해주세요."),
   NUMBER_MISS_MATCH(BAD_REQUEST, "인증번호가 맞지 않습니다."),
   NUMBER_REQUIRED(BAD_REQUEST, "핸드폰번호를 입력해주세요."),
 
