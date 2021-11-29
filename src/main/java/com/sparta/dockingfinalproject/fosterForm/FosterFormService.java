@@ -82,7 +82,7 @@ public class FosterFormService {
 
   private void checkDuplicateRequest(User user, Post findPost) {
     if (user.validateUser(findPost.getUser().getUserId())) {
-      throw new DockingException(ErrorCode.REQUEST_DUPLICATE);
+      throw new DockingException(ErrorCode.NOT_AVAILABLE_FOR_MINE);
     } else {
       List<FosterForm> fosterForms = findPost.getFormList();
       for (FosterForm fosterform : fosterForms) {

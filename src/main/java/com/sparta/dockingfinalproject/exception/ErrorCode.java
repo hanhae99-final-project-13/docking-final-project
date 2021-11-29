@@ -43,6 +43,7 @@ public enum ErrorCode {
   NO_DIFFERENCE(BAD_REQUEST, "변경된 사항이 없습니다."),
   NO_AVAILABILITY(BAD_REQUEST, "신청 가능 대상이 아닙니다."),
   REQUEST_DUPLICATE(BAD_REQUEST, "이미 신청 완료 하였습니다."),
+  NOT_AVAILABLE_FOR_MINE(BAD_REQUEST, "본인 글에 신청할 수 없습니다."),
 
   POST_NOT_FOUND(BAD_REQUEST, "해당 게시글을 찾을 수 없습니다."),
   COMMENT_NOT_FOUND(BAD_REQUEST, "해당 댓글을 찾을 수 없습니다."),
