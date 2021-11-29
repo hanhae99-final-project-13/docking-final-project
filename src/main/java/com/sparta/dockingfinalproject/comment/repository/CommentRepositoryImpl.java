@@ -1,6 +1,6 @@
-package com.sparta.dockingfinalproject.comment;
+package com.sparta.dockingfinalproject.comment.repository;
 
-import static com.sparta.dockingfinalproject.comment.QComment.comment1;
+import static com.sparta.dockingfinalproject.comment.model.QComment.comment1;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.dockingfinalproject.comment.dto.CommentResultDto;
