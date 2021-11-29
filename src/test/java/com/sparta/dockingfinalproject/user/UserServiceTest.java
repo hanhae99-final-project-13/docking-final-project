@@ -59,39 +59,39 @@ class UserServiceTest {
 	private RefreshToken refreshToken;
 	private TokenDto tokenDto;
 	private UserDetailsImpl userDetails;
-//	private Object ErrorCode;
+//	
 
 
 	@BeforeEach
 	public void init() {
-		user = new User(1L, "user1", "aa1234", "홍길동", "sss@naver.com", "", "umgurl", 0L, "");
+		user = new User(1L, "user1", "aaa12345", "홍길동", "sss@naver.com", "", "umgurl", 0L, "");
 		tokenDto = new TokenDto("accessToken", "refreshToken", 18000L);
 		userDetails = new UserDetailsImpl(user);
 	}
 
-//	@Test
-//	@DisplayName("회원가입")
-//	void registerUser() {
-//
-//		SignupRequestDto requestDto = new SignupRequestDto("user1", "aa1234", "aa1234", "sss@naver.com",
-//				"홍길동", "https://gorokke.shop/image/profileDefaultImg.jpg", 1234, "");
-//		User user = new User(requestDto, requestDto.getPassword());
-//
-//		when(passwordEncoder.encode(requestDto.getPassword())).thenReturn("aa1234");
-//
-//		userService.registerUser(requestDto);
-//
-//		assertEquals(user.getUsername(), requestDto.getUsername());
-//		assertEquals(user.getPassword(), requestDto.getPassword());
-//		assertEquals(user.getUserImgUrl(), requestDto.getUserImgUrl());
-//
-//	}
+	@Test
+	@DisplayName("회원가입")
+	void registerUser() {
+
+		SignupRequestDto requestDto = new SignupRequestDto("user1", "aaa12345", "aaa12345", "sss@naver.com",
+				"홍길동", "https://gorokke.shop/image/profileDefaultImg.jpg", 1234, "");
+		User user = new User(requestDto, requestDto.getPassword());
+
+		when(passwordEncoder.encode(requestDto.getPassword())).thenReturn("aa1234");
+
+		userService.registerUser(requestDto);
+
+		assertEquals(user.getUsername(), requestDto.getUsername());
+		assertEquals(user.getPassword(), requestDto.getPassword());
+		assertEquals(user.getUserImgUrl(), requestDto.getUserImgUrl());
+
+	}
 
 	@Test
 	@DisplayName("회원가입 유저네임이 중복된경우")
 	void registerUser1() {
 
-		SignupRequestDto requestDto = new SignupRequestDto("user1", "aa1234", "aa1234", "sss@naver.com",
+		SignupRequestDto requestDto = new SignupRequestDto("user1", "aaa12345", "aaa12345", "sss@naver.com",
 				"홍길동", "https://gorokke.shop/image/profileDefaultImg.jpg", 1234, "");
 		User user = new User(requestDto, requestDto.getPassword());
 
@@ -110,7 +110,7 @@ class UserServiceTest {
 	@DisplayName("회원가입 닉네임이 중복된경우")
 	void registerUser2() {
 
-		SignupRequestDto requestDto = new SignupRequestDto("user1", "aa1234", "aa1234", "sss@naver.com",
+		SignupRequestDto requestDto = new SignupRequestDto("user1", "aaa12345", "aaa12345", "sss@naver.com",
 				"홍길동", "https://gorokke.shop/image/profileDefaultImg.jpg", 1234, "");
 		User user = new User(requestDto, requestDto.getPassword());
 
@@ -129,7 +129,7 @@ class UserServiceTest {
 	@Test
 	@DisplayName("로그인")
 	void login() {
-		UserRequestDto requestDto = new UserRequestDto("user1", "aa1234");
+		UserRequestDto requestDto = new UserRequestDto("user1", "aaa12345");
 
 		refreshToken = RefreshToken.builder()
 				.key(requestDto.getUsername())
