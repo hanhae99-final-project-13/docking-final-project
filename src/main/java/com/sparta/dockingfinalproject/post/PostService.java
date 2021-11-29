@@ -16,7 +16,6 @@ import com.sparta.dockingfinalproject.post.dto.PostSearchRequestDto;
 import com.sparta.dockingfinalproject.post.dto.PostSearchResponseDto;
 import com.sparta.dockingfinalproject.post.dto.StatusDto;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
-import com.sparta.dockingfinalproject.wish.WishRepository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,51 +31,29 @@ import org.springframework.stereotype.Service;
 public class PostService {
 
   private final PostRepository postRepository;
-  private final WishRepository wishRepository;
   private final PetRepository petRepository;
   private final CommentRepository commentRepository;
   private final AlarmRepository alarmRepository;
 
-  public PostService(PostRepository postRepository, WishRepository wishRepository,
-      PetRepository petRepository, CommentRepository commentRepository,
+  public PostService(PostRepository postRepository, PetRepository petRepository, CommentRepository commentRepository,
       AlarmRepository alarmRepository) {
     this.postRepository = postRepository;
-    this.wishRepository = wishRepository;
     this.petRepository = petRepository;
     this.commentRepository = commentRepository;
     this.alarmRepository = alarmRepository;
   }
 
   public Map<String, Object> home(UserDetailsImpl userDetails) {
-    List<Post> posts = getPagePostSix();
-
     Map<String, Object> data = new HashMap<>();
-    data.put("postList", getPostList(posts));
+    data.put("postList", getHomePosts());
     data.put("alarmCount", getAlarmCount(userDetails));
 
     return SuccessResult.success(data);
   }
 
-  private List<Post> getPagePostSix() {
+  private List<PostPreviewDto> getHomePosts() {
     Pageable pageable = PageRequest.of(0, 6);
-    Page<Pet> pets = petRepository.findAllByOrderByCreatedAtDesc(pageable);
-    List<Post> posts = new ArrayList<>();
-    for (Pet pet : pets.getContent()) {
-      Post post = postRepository.findAllByPet(pet).orElseThrow(
-          () -> new DockingException(ErrorCode.PET_NOT_FOUND)
-      );
-      posts.add(post);
-    }
-    return posts;
-  }
-
-  private List<PostPreviewDto> getPostList(List<Post> posts) {
-    List<PostPreviewDto> postList = new ArrayList<>();
-    for (Post post : posts) {
-      PostPreviewDto postPreviewDto = PostPreviewDto.of(post);
-      postList.add(postPreviewDto);
-    }
-    return postList;
+    return postRepository.findHomePosts(pageable);
   }
 
   private int getAlarmCount(UserDetailsImpl userDetails) {
