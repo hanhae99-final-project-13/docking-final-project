@@ -3,7 +3,6 @@ package com.sparta.dockingfinalproject.exception;
 public class ErrorMessage {
 
   public final static String NAME_REQUIRED = "이름은 필수 입력 값입니다.";
-  public final static String CHECK_AGE_LENGTH = "2~8글자 사이로 입력해주세요.";
   public final static String FOSTER_AGE_REQUIRED = "나이는 필수 입력 값입니다.";
   public final static String CHECK_AGE = "0이상의 숫자를 입력해주세요.";
   public final static String GENDER_REQUIRED = "'F' 혹은 'M' 으로 성별을 입력해주세요.";
@@ -25,5 +24,7 @@ public class ErrorMessage {
   public final static String MEDICAL_BUDGET_REQUIRED = "백신예산은 필수 입력 값입니다.";
   public final static String MONTHLY_BUDGET_REQUIRED = "한달예산은 필수 입력 값입니다.";
   public final static String SIGN_URL_REQUIRED = "동의서명은 필수 입력 값입니다.";
+  public final static String POST_ID_REQUIRED = "POST_ID는 필수 입력 값입니다.";
+  public final static String COMMENT_REQUIRED = "COMMENT_CONTENT는 필수 입력 값입니다.";
 
 }
