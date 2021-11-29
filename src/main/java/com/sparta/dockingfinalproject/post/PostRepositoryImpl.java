@@ -96,6 +96,10 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
       String address = city.trim() + " " + district.trim();
       return post.pet.address.eq(address);
     }
+
+    if (hasText(city)) {
+      return post.pet.address.startsWith(city.trim());
+    }
     return null;
   }
 
