@@ -125,7 +125,9 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             post.pet.url,
             post.pet.img.as("imgs"),
             post.pet.extra,
-            post.pet.isAdopted
+            post.pet.isAdopted,
+            post.pet.createdAt,
+            post.pet.modifiedAt
 
         ))
         .from(post)

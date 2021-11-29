@@ -3,6 +3,7 @@ package com.sparta.dockingfinalproject.post.dto;
 import com.querydsl.core.annotations.QueryProjection;
 import com.sparta.dockingfinalproject.pet.IsAdopted;
 import com.sparta.dockingfinalproject.pet.Sex;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -25,12 +26,14 @@ public class PostDetailResponseDto {
   private List<String> img = new ArrayList<>();
   private String extra;
   private IsAdopted isAdopted;
+  private LocalDateTime createdAt;
+  private LocalDateTime modifiedAt;
   private boolean heart;
 
   @QueryProjection
   public PostDetailResponseDto(Long userId, String nickname, Long postId, String breed, Sex sex, int age, double weight,
       String lostLocation, String ownerType, String phone, String address, String tag, String url, String imgs, String extra,
-      IsAdopted isAdopted) {
+      IsAdopted isAdopted, LocalDateTime createdAt, LocalDateTime modifiedAt) {
     this.userId = userId;
     this.nickname = nickname;
     this.postId = postId;
@@ -46,6 +49,8 @@ public class PostDetailResponseDto {
     this.url = url;
     this.extra = extra;
     this.isAdopted = isAdopted;
+    this.createdAt = createdAt;
+    this.modifiedAt = modifiedAt;
     this.heart = false;
 
     String[] str = imgs.split(" ## ");
