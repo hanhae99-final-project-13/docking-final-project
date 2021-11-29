@@ -85,6 +85,9 @@ public class FosterForm extends Timestamped {
   @Column(nullable = false)
   private String signUrl;
 
+  @Column(length = 3000)
+  private String etc;
+
   @Enumerated(value = EnumType.STRING)
   @Column(nullable = false)
   private Acceptance acceptance;
@@ -118,6 +121,7 @@ public class FosterForm extends Timestamped {
     this.monthlyBudget = fosterFormRequestDto.getMonthlyBudget();
     this.roomUrl = fosterFormRequestDto.getRoomUrl();
     this.signUrl = fosterFormRequestDto.getSignUrl();
+    this.etc = fosterFormRequestDto.getEtc();
     this.acceptance = acceptance;
     this.user = user;
     this.post = post;
