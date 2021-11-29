@@ -27,8 +27,8 @@ public class PostPreviewDto {
     Pet pet = post.getPet();
     return PostPreviewDto.builder()
         .postId(post.getPostId())
-        .createdAt(post.getCreatedAt())
-        .modifiedAt(post.getModifiedAt())
+        .createdAt(pet.getCreatedAt())
+        .modifiedAt(pet.getModifiedAt())
         .postId(post.getPostId())
         .breed(pet.getBreed())
         .sex(pet.getSex())
