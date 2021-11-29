@@ -149,11 +149,11 @@ public class KakaoUserService {
     String userImgUrl = "https://gorokke.shop/image/profileDefaultImg.jpg";
 
     //여기가 안불러와짐
-    try {
-      userImgUrl = jsonNode.get("properties")
-          .get("profile_image").asText();
-    } catch (Exception ignored) {
-    }
+//    try {
+//      userImgUrl = jsonNode.get("properties")
+//          .get("profile_image").asText();
+//    } catch (Exception ignored) {
+//    }
 
     System.out.println("카카오 사용자 정보: " + id + ", " + nickname + ", " + email + "," + userImgUrl);
 
