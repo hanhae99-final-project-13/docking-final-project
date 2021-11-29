@@ -155,24 +155,16 @@ class PostServiceTest {
   @Test
   @DisplayName("home 화면 6개 게시글 조회")
   void getHomePosts() {
-    List<Pet> pets = new ArrayList<>();
-    pets.add(pet);
-    pets.add(pet1);
-    pets.add(pet2);
-    pets.add(pet3);
-    pets.add(pet4);
-    pets.add(pet5);
-
-    Page<Pet> pages = new PageImpl<>(pets);
     Pageable pageable = PageRequest.of(0, 6);
+    List<PostPreviewDto> postPreviewDtoList = new ArrayList<>();
+    postPreviewDtoList.add(PostPreviewDto.of(post));
+    postPreviewDtoList.add(PostPreviewDto.of(post1));
+    postPreviewDtoList.add(PostPreviewDto.of(post2));
+    postPreviewDtoList.add(PostPreviewDto.of(post3));
+    postPreviewDtoList.add(PostPreviewDto.of(post4));
+    postPreviewDtoList.add(PostPreviewDto.of(post5));
 
-    when(petRepository.findAllByOrderByCreatedAtDesc(pageable)).thenReturn(pages);
-    when(postRepository.findAllByPet(pet)).thenReturn(Optional.of(post));
-    when(postRepository.findAllByPet(pet1)).thenReturn(Optional.of(post1));
-    when(postRepository.findAllByPet(pet2)).thenReturn(Optional.of(post2));
-    when(postRepository.findAllByPet(pet3)).thenReturn(Optional.of(post3));
-    when(postRepository.findAllByPet(pet4)).thenReturn(Optional.of(post4));
-    when(postRepository.findAllByPet(pet5)).thenReturn(Optional.of(post5));
+    when(postRepository.findHomePosts(pageable)).thenReturn(postPreviewDtoList);
 
     Map<String, Object> home = postService.home(userDetails);
     Map<String, Object> data = (Map<String, Object>) home.get("data");
