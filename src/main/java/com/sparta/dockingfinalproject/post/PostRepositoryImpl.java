@@ -1,15 +1,19 @@
 package com.sparta.dockingfinalproject.post;
 
 import static com.sparta.dockingfinalproject.post.QPost.post;
+import static com.sparta.dockingfinalproject.wish.QWish.wish;
 import static org.springframework.util.StringUtils.hasText;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.sparta.dockingfinalproject.post.dto.PostDetailResponseDto;
 import com.sparta.dockingfinalproject.post.dto.PostSearchRequestDto;
 import com.sparta.dockingfinalproject.post.dto.PostSearchResponseDto;
+import com.sparta.dockingfinalproject.post.dto.QPostDetailResponseDto;
 import com.sparta.dockingfinalproject.post.dto.QPostSearchResponseDto;
+import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -68,31 +72,87 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
   }
 
   private LocalDateTime getStartDt(String startDt) {
-    String[] starts = startDt.split("-");
-    return LocalDateTime.of(Integer.parseInt(starts[0]), Integer.parseInt(starts[1]), Integer.parseInt(starts[2]), 0, 0);
+    if (hasText(startDt)) {
+      String[] starts = startDt.trim().split("-");
+      return LocalDateTime.of(Integer.parseInt(starts[0]), Integer.parseInt(starts[1]), Integer.parseInt(starts[2]), 0, 0);
+    }
+    return null;
   }
 
   private LocalDateTime getEndDt(String endDt) {
-    String[] ends = endDt.split("-");
-    return LocalDateTime.of(Integer.parseInt(ends[0]), Integer.parseInt(ends[1]), Integer.parseInt(ends[2]), 23,59);
+    if (hasText(endDt)) {
+      String[] ends = endDt.trim().split("-");
+      return LocalDateTime.of(Integer.parseInt(ends[0]), Integer.parseInt(ends[1]), Integer.parseInt(ends[2]), 23,59);
+    }
+    return null;
   }
 
   private BooleanExpression ownerTypeContains(String ownerType) {
-    return hasText(ownerType) ? post.pet.ownerType.contains(ownerType) : null;
+    return hasText(ownerType) ? post.pet.ownerType.trim().contains(ownerType) : null;
   }
 
   private BooleanExpression addressEq(String city, String district) {
     if (hasText(city) && hasText(district)) {
-      String address = city + " " + district;
+      String address = city.trim() + " " + district.trim();
       return post.pet.address.eq(address);
     }
     return null;
   }
 
   private OrderSpecifier<?> sortCreateAt(String sort) {
-    if (sort.equalsIgnoreCase("new")) {
+    if (sort.trim().equalsIgnoreCase("new")) {
       return post.pet.createdAt.desc();
     }
     return post.pet.createdAt.asc();
+  }
+
+  @Override
+  public PostDetailResponseDto findPostDetail(Long postId, UserDetailsImpl userDetails) {
+    PostDetailResponseDto postDetailResponseDto = queryFactory
+        .select(new QPostDetailResponseDto(
+            post.user.userId,
+            post.user.nickname,
+            post.postId,
+            post.pet.breed,
+            post.pet.sex,
+            post.pet.age,
+            post.pet.weight,
+            post.pet.lostLocation,
+            post.pet.ownerType,
+            post.pet.phone,
+            post.pet.address,
+            post.pet.tag,
+            post.pet.url,
+            post.pet.img.as("imgs"),
+            post.pet.extra,
+            post.pet.isAdopted
+
+        ))
+        .from(post)
+        .where(
+            post.postId.eq(postId)
+        )
+        .fetchOne();
+
+    Long wishId = null;
+    if (userDetails != null) {
+      wishId = queryFactory
+          .select(wish.wishId)
+          .from(wish)
+          .where(
+              wish.post.postId.eq(postId),
+              wish.user.userId.eq(userDetails.getUser().getUserId())
+          ).fetchOne();
+    }
+
+    if (wishId != null) {
+      postDetailResponseDto.addHeart(true);
+    }
+    return postDetailResponseDto;
+  }
+
+  private BooleanExpression wishEqUser(Long postId, UserDetailsImpl userDetails) {
+    return userDetails != null ? wish.post.postId.eq(postId)
+        .and(wish.user.userId.eq(userDetails.getUser().getUserId())) : null;
   }
 }

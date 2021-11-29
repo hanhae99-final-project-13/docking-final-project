@@ -1,14 +1,11 @@
 package com.sparta.dockingfinalproject.comment.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import com.sparta.dockingfinalproject.comment.Comment;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
-@AllArgsConstructor
 public class CommentResultDto {
 
   private Long commentId;
@@ -18,14 +15,18 @@ public class CommentResultDto {
   private LocalDateTime createdAt;
   private LocalDateTime modifiedAt;
 
+  @QueryProjection
+  public CommentResultDto(Long commentId, String comment, String nickname, String userImgUrl, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    this.commentId = commentId;
+    this.comment = comment;
+    this.nickname = nickname;
+    this.userImgUrl = userImgUrl;
+    this.createdAt = createdAt;
+    this.modifiedAt = modifiedAt;
+  }
+
   public static CommentResultDto of(Comment comment) {
-    return CommentResultDto.builder()
-        .commentId(comment.getCommentId())
-        .comment(comment.getComment())
-        .nickname(comment.getUser().getNickname())
-        .userImgUrl(comment.getUser().getUserImgUrl())
-        .createdAt(comment.getCreatedAt())
-        .modifiedAt(comment.getModifiedAt())
-        .build();
+    return new CommentResultDto(comment.getCommentId(), comment.getComment(), comment.getUser().getNickname(),
+        comment.getUser().getUserImgUrl(), comment.getCreatedAt(), comment.getModifiedAt());
   }
 }

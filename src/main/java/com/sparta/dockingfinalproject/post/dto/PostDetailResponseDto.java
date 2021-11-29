@@ -1,16 +1,13 @@
 package com.sparta.dockingfinalproject.post.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import com.sparta.dockingfinalproject.pet.IsAdopted;
-import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.pet.Sex;
-import com.sparta.dockingfinalproject.post.Post;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
 public class PostDetailResponseDto {
   private Long userId;
   private String nickname;
@@ -25,62 +22,39 @@ public class PostDetailResponseDto {
   private String address;
   private String tag;
   private String url;
-  private List<String> img;
+  private List<String> img = new ArrayList<>();
   private String extra;
   private IsAdopted isAdopted;
   private boolean heart;
 
-  public static PostDetailResponseDto getPostDetailResponseDto(Post post, boolean heart) {
-    Pet pet = post.getPet();
-    return PostDetailResponseDto.builder()
-            .userId(post.getUser().getUserId())
-            .nickname(post.getUser().getNickname())
-            .postId(post.getPostId())
-            .breed(pet.getBreed())
-            .sex(pet.getSex())
-            .age(pet.getAge())
-            .weight(pet.getWeight())
-            .lostLocation(pet.getLostLocation())
-            .ownerType(pet.getOwnerType())
-            .phone(pet.getPhone())
-            .address(pet.getAddress())
-            .tag(pet.getTag())
-            .url(pet.getUrl())
-            .img(getImgs(pet.getImg()))
-            .extra(pet.getExtra())
-            .isAdopted(pet.getIsAdopted())
-            .heart(heart)
-            .build();
-  }
+  @QueryProjection
+  public PostDetailResponseDto(Long userId, String nickname, Long postId, String breed, Sex sex, int age, double weight,
+      String lostLocation, String ownerType, String phone, String address, String tag, String url, String imgs, String extra,
+      IsAdopted isAdopted) {
+    this.userId = userId;
+    this.nickname = nickname;
+    this.postId = postId;
+    this.breed = breed;
+    this.sex = sex;
+    this.age = age;
+    this.weight = weight;
+    this.lostLocation = lostLocation;
+    this.ownerType = ownerType;
+    this.phone = phone;
+    this.address = address;
+    this.tag = tag;
+    this.url = url;
+    this.extra = extra;
+    this.isAdopted = isAdopted;
+    this.heart = false;
 
-  public static PostDetailResponseDto getPostDetailResponseDto(Post post) {
-    Pet pet = post.getPet();
-
-    return PostDetailResponseDto.builder()
-        .userId(post.getUser().getUserId())
-        .nickname(post.getUser().getNickname())
-        .postId(post.getPostId())
-        .breed(pet.getBreed())
-        .sex(pet.getSex())
-        .age(pet.getAge())
-        .weight(pet.getWeight())
-        .lostLocation(pet.getLostLocation())
-        .ownerType(pet.getOwnerType())
-        .phone(pet.getPhone())
-        .tag(pet.getTag())
-        .url(pet.getUrl())
-        .img(getImgs(pet.getImg()))
-        .extra(pet.getExtra())
-        .isAdopted(pet.getIsAdopted())
-        .build();
-  }
-
-  private static List<String> getImgs(String data) {
-    List<String> imgs = new ArrayList<>();
-    String[] str = data.split(" ## ");
+    String[] str = imgs.split(" ## ");
     for (String x : str) {
-      imgs.add(x);
+      this.img.add(x);
     }
-    return imgs;
+  }
+
+  public void addHeart(boolean heart) {
+    this.heart = heart;
   }
 }

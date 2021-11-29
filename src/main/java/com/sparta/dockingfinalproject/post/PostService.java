@@ -2,7 +2,6 @@ package com.sparta.dockingfinalproject.post;
 
 import com.sparta.dockingfinalproject.alarm.AlarmRepository;
 import com.sparta.dockingfinalproject.comment.CommentRepository;
-import com.sparta.dockingfinalproject.comment.dto.CommentResponseDto;
 import com.sparta.dockingfinalproject.comment.dto.CommentResultDto;
 import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.exception.DockingException;
@@ -17,14 +16,11 @@ import com.sparta.dockingfinalproject.post.dto.PostSearchRequestDto;
 import com.sparta.dockingfinalproject.post.dto.PostSearchResponseDto;
 import com.sparta.dockingfinalproject.post.dto.StatusDto;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
-import com.sparta.dockingfinalproject.wish.Wish;
 import com.sparta.dockingfinalproject.wish.WishRepository;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -92,50 +88,19 @@ public class PostService {
 
   @Transactional
   public Map<String, Object> getPost(Long postId, UserDetailsImpl userDetails) {
+    PostDetailResponseDto postDetail = postRepository.findPostDetail(postId, userDetails);
     Post findPost = bringPost(postId);
-    boolean heart = getHeart(userDetails, findPost);
-
     findPost.addViewCount();
 
-    PostDetailResponseDto postResponseDto = PostDetailResponseDto.getPostDetailResponseDto(findPost, heart);
-
     Map<String, Object> data = new HashMap<>();
-    data.put("post", postResponseDto);
+    data.put("post", postDetail);
     data.put("commentList", getCommentList(findPost));
 
     return SuccessResult.success(data);
   }
 
-  private boolean getHeart(UserDetailsImpl userDetails, Post findPost) {
-    if (userDetails != null) {
-      Optional<Wish> findWish = wishRepository.findAllByUserAndPost(userDetails.getUser(), findPost);
-      if (findWish.isPresent()) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private ArrayList<CommentResultDto> getCommentList(Post findPost) {
-    ArrayList<CommentResultDto> commentDtoList = new ArrayList<>();
-
-    List<CommentResponseDto> commentResponseDto = commentRepository.findAllByPostOrderByCreatedAtDesc(findPost);
-    for (CommentResponseDto crd : commentResponseDto) {
-      CommentResultDto commentResultDto = getCommentResult(crd);
-      commentDtoList.add(commentResultDto);
-    }
-    return commentDtoList;
-  }
-
-  private CommentResultDto getCommentResult(CommentResponseDto crd) {
-    Long commentId = crd.getCommentId();
-    String comment = crd.getComment();
-    LocalDateTime createdAt = crd.getCreatedAt();
-    LocalDateTime modifiedAt = crd.getModifiedAt();
-    String nickname = crd.getUser().getNickname();
-    String userImgUrl = crd.getUser().getUserImgUrl();
-
-    return new CommentResultDto(commentId, comment, nickname, userImgUrl, createdAt, modifiedAt);
+  private List<CommentResultDto> getCommentList(Post findPost) {
+    return commentRepository.findAllPostInComment(findPost);
   }
 
   @Transactional
