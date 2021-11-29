@@ -77,4 +77,5 @@ public class FosterFormRequestDto {
   @NotBlank(message = ErrorMessage.SIGN_URL_REQUIRED)
   private String signUrl;
 
+  private String etc;
 }
