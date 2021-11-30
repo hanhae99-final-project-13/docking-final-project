@@ -15,6 +15,8 @@ import com.sparta.dockingfinalproject.post.dto.PostPreviewDto;
 import com.sparta.dockingfinalproject.post.dto.PostSearchRequestDto;
 import com.sparta.dockingfinalproject.post.dto.PostSearchResponseDto;
 import com.sparta.dockingfinalproject.post.dto.StatusDto;
+import com.sparta.dockingfinalproject.post.model.Post;
+import com.sparta.dockingfinalproject.post.repository.PostRepository;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import java.util.ArrayList;
 import java.util.HashMap;

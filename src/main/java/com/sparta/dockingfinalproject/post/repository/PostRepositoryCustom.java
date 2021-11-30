@@ -1,4 +1,4 @@
-package com.sparta.dockingfinalproject.post;
+package com.sparta.dockingfinalproject.post.repository;
 
 import com.sparta.dockingfinalproject.post.dto.PostDetailResponseDto;
 import com.sparta.dockingfinalproject.post.dto.PostPreviewDto;

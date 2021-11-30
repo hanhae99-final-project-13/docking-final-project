@@ -1,4 +1,4 @@
-package com.sparta.dockingfinalproject.post;
+package com.sparta.dockingfinalproject.post.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;

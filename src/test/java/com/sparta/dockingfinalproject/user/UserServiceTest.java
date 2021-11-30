@@ -8,7 +8,7 @@ import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.fosterForm.FosterFormRepository;
 import com.sparta.dockingfinalproject.fosterForm.dto.FosterFormRequestDto;
 import com.sparta.dockingfinalproject.fosterForm.model.FosterForm;
-import com.sparta.dockingfinalproject.post.Post;
+import com.sparta.dockingfinalproject.post.model.Post;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
 import com.sparta.dockingfinalproject.security.jwt.TokenDto;

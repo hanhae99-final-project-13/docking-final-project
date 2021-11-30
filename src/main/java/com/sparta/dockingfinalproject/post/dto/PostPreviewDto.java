@@ -3,7 +3,7 @@ package com.sparta.dockingfinalproject.post.dto;
 import com.querydsl.core.annotations.QueryProjection;
 import com.sparta.dockingfinalproject.pet.IsAdopted;
 import com.sparta.dockingfinalproject.pet.Sex;
-import com.sparta.dockingfinalproject.post.Post;
+import com.sparta.dockingfinalproject.post.model.Post;
 import java.time.LocalDateTime;
 import lombok.Getter;
 
