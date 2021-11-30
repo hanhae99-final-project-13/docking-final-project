@@ -1,4 +1,4 @@
-package com.sparta.dockingfinalproject.comment;
+package com.sparta.dockingfinalproject.comment.model;
 
 import com.sparta.dockingfinalproject.comment.dto.CommentEditRequestDto;
 import com.sparta.dockingfinalproject.comment.dto.CommentRequestDto;

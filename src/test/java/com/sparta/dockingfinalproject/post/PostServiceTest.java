@@ -5,14 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import com.sparta.dockingfinalproject.alarm.AlarmRepository;
-import com.sparta.dockingfinalproject.comment.CommentRepository;
+import com.sparta.dockingfinalproject.comment.repository.CommentRepository;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.pet.IsAdopted;
 import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.pet.PetRepository;
 import com.sparta.dockingfinalproject.pet.Sex;
 import com.sparta.dockingfinalproject.pet.dto.PetRequestDto;
-import com.sparta.dockingfinalproject.post.dto.PostDetailResponseDto;
 import com.sparta.dockingfinalproject.post.dto.PostPreviewDto;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.User;

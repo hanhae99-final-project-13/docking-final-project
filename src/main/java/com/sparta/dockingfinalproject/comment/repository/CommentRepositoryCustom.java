@@ -1,4 +1,4 @@
-package com.sparta.dockingfinalproject.comment;
+package com.sparta.dockingfinalproject.comment.repository;
 
 import com.sparta.dockingfinalproject.comment.dto.CommentResultDto;
 import com.sparta.dockingfinalproject.post.Post;

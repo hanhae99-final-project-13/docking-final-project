@@ -1,7 +1,7 @@
 package com.sparta.dockingfinalproject.comment.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.sparta.dockingfinalproject.comment.Comment;
+import com.sparta.dockingfinalproject.comment.model.Comment;
 import java.time.LocalDateTime;
 import lombok.Getter;
 

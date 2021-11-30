@@ -1,7 +1,7 @@
 package com.sparta.dockingfinalproject.post;
 
 import com.sparta.dockingfinalproject.alarm.AlarmRepository;
-import com.sparta.dockingfinalproject.comment.CommentRepository;
+import com.sparta.dockingfinalproject.comment.repository.CommentRepository;
 import com.sparta.dockingfinalproject.comment.dto.CommentResultDto;
 import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.exception.DockingException;
