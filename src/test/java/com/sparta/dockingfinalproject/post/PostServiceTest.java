@@ -18,7 +18,7 @@ import com.sparta.dockingfinalproject.post.repository.PostRepository;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.User;
 import com.sparta.dockingfinalproject.user.UserRepository;
-import com.sparta.dockingfinalproject.wish.WishRepository;
+import com.sparta.dockingfinalproject.wish.repository.WishRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
