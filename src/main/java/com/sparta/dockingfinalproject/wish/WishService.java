@@ -12,6 +12,7 @@ import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.User;
 import com.sparta.dockingfinalproject.wish.dto.WishResponseDto;
 import com.sparta.dockingfinalproject.wish.dto.WishResultDto;
+import com.sparta.dockingfinalproject.wish.repository.WishRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;

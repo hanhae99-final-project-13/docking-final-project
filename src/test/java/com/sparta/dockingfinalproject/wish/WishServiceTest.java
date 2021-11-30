@@ -15,6 +15,7 @@ import com.sparta.dockingfinalproject.user.User;
 import com.sparta.dockingfinalproject.user.UserRepository;
 import com.sparta.dockingfinalproject.wish.dto.WishResponseDto;
 import com.sparta.dockingfinalproject.wish.dto.WishResultDto;
+import com.sparta.dockingfinalproject.wish.repository.WishRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
