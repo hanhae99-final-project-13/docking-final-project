@@ -1,4 +1,4 @@
-package com.sparta.dockingfinalproject.alarm;
+package com.sparta.dockingfinalproject.alarm.repository;
 
 import com.sparta.dockingfinalproject.alarm.model.Alarm;
 import com.sparta.dockingfinalproject.alarm.model.AlarmType;

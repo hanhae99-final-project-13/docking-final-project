@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import com.sparta.dockingfinalproject.alarm.dto.AlarmResponseDto;
 import com.sparta.dockingfinalproject.alarm.model.Alarm;
 import com.sparta.dockingfinalproject.alarm.model.AlarmType;
+import com.sparta.dockingfinalproject.alarm.repository.AlarmRepository;
 import com.sparta.dockingfinalproject.comment.model.Comment;
 import com.sparta.dockingfinalproject.comment.repository.CommentRepository;
 import com.sparta.dockingfinalproject.post.model.Post;
