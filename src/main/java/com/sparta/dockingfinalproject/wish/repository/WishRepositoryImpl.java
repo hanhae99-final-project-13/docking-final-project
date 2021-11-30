@@ -1,7 +1,10 @@
 package com.sparta.dockingfinalproject.wish.repository;
 
+import static com.sparta.dockingfinalproject.wish.QWish.wish;
+
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.dockingfinalproject.user.User;
+import com.sparta.dockingfinalproject.wish.dto.QWishResultDto;
 import com.sparta.dockingfinalproject.wish.dto.WishResultDto;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -16,6 +19,22 @@ public class WishRepositoryImpl implements WishRepositoryCustom {
 
   @Override
   public List<WishResultDto> findAllMyWishs(User user) {
-    return null;
+    return queryFactory
+        .select(new QWishResultDto(
+            wish.wishId,
+            wish.post.postId,
+            wish.post.createdAt,
+            wish.post.modifiedAt,
+            wish.post.pet.breed,
+            wish.post.pet.sex,
+            wish.post.pet.age,
+            wish.post.pet.ownerType,
+            wish.post.pet.address,
+            wish.post.pet.img.as("imgs"),
+            wish.post.pet.isAdopted
+        ))
+        .from(wish)
+        .where(wish.user.userId.eq(user.getUserId()))
+        .fetch();
   }
 }

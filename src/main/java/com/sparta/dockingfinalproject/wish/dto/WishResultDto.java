@@ -1,5 +1,6 @@
 package com.sparta.dockingfinalproject.wish.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import com.sparta.dockingfinalproject.pet.IsAdopted;
 import com.sparta.dockingfinalproject.pet.Sex;
 import java.time.LocalDateTime;
@@ -22,8 +23,9 @@ public class WishResultDto {
   private String img;
   private IsAdopted isAdopted;
 
+  @QueryProjection
   public WishResultDto(Long wishId, Long postId, LocalDateTime createdAt, LocalDateTime modifiedAt,
-      String breed, Sex sex, int age, String ownerType, String address, String img,
+      String breed, Sex sex, int age, String ownerType, String address, String imgs,
       IsAdopted isAdopted) {
     this.wishId = wishId;
     this.postId = postId;
@@ -34,7 +36,9 @@ public class WishResultDto {
     this.age = age;
     this.ownerType = ownerType;
     this.address = address;
-    this.img = img;
     this.isAdopted = isAdopted;
+
+    String[] str = imgs.split(" ## ");
+    this.img = str[0];
   }
 }
