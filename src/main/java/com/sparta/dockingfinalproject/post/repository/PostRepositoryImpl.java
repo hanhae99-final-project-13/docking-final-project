@@ -1,6 +1,7 @@
-package com.sparta.dockingfinalproject.post;
+package com.sparta.dockingfinalproject.post.repository;
 
-import static com.sparta.dockingfinalproject.post.QPost.post;
+
+import static com.sparta.dockingfinalproject.post.model.QPost.post;
 import static com.sparta.dockingfinalproject.wish.QWish.wish;
 import static org.springframework.util.StringUtils.hasText;
 

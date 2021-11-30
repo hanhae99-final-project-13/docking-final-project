@@ -3,7 +3,7 @@ package com.sparta.dockingfinalproject.comment;
 import com.sparta.dockingfinalproject.comment.dto.CommentEditRequestDto;
 import com.sparta.dockingfinalproject.comment.dto.CommentRequestDto;
 import com.sparta.dockingfinalproject.common.Timestamped;
-import com.sparta.dockingfinalproject.post.Post;
+import com.sparta.dockingfinalproject.post.model.Post;
 import com.sparta.dockingfinalproject.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

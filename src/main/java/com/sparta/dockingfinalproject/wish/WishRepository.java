@@ -1,6 +1,6 @@
 package com.sparta.dockingfinalproject.wish;
 
-import com.sparta.dockingfinalproject.post.Post;
+import com.sparta.dockingfinalproject.post.model.Post;
 import com.sparta.dockingfinalproject.user.User;
 import com.sparta.dockingfinalproject.wish.dto.WishResponseDto;
 import java.util.List;

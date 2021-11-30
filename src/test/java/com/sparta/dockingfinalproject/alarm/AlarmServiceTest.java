@@ -8,7 +8,7 @@ import com.sparta.dockingfinalproject.alarm.model.Alarm;
 import com.sparta.dockingfinalproject.alarm.model.AlarmType;
 import com.sparta.dockingfinalproject.comment.Comment;
 import com.sparta.dockingfinalproject.comment.CommentRepository;
-import com.sparta.dockingfinalproject.post.Post;
+import com.sparta.dockingfinalproject.post.model.Post;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.User;
 import java.util.ArrayList;

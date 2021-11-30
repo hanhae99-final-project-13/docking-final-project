@@ -3,6 +3,7 @@ package com.sparta.dockingfinalproject.post;
 import com.sparta.dockingfinalproject.pet.IsAdopted;
 import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.pet.PetRepository;
+import com.sparta.dockingfinalproject.post.repository.PostRepository;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;

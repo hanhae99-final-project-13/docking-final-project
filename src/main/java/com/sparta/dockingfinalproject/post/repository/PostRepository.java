@@ -1,6 +1,7 @@
-package com.sparta.dockingfinalproject.post;
+package com.sparta.dockingfinalproject.post.repository;
 
 import com.sparta.dockingfinalproject.pet.Pet;
+import com.sparta.dockingfinalproject.post.model.Post;
 import com.sparta.dockingfinalproject.user.User;
 import java.util.List;
 import java.util.Optional;
