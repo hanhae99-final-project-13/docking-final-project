@@ -13,7 +13,6 @@ import com.sparta.dockingfinalproject.post.repository.PostRepository;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.User;
 import com.sparta.dockingfinalproject.user.UserRepository;
-import com.sparta.dockingfinalproject.wish.dto.WishResponseDto;
 import com.sparta.dockingfinalproject.wish.dto.WishResultDto;
 import com.sparta.dockingfinalproject.wish.repository.WishRepository;
 import java.util.ArrayList;
@@ -100,45 +99,23 @@ class WishServiceTest {
   @Test
   @DisplayName("로그인 유저 관심목록 조회")
   void getUserWishs() {
-	List<WishResponseDto> wishList = new ArrayList<>();
+	List<WishResultDto> wishList = new ArrayList<>();
+		wishList.add(new WishResultDto(wish.getWishId(), wish.getPost().getPostId(),
+				wish.getPost().getCreatedAt(), wish.getPost().getModifiedAt(), wish.getPost().getPet().getBreed(),
+				wish.getPost().getPet().getSex(), wish.getPost().getPet().getAge(), wish.getPost().getPet().getOwnerType(),
+				wish.getPost().getPet().getAddress(), wish.getPost().getPet().getImg(), wish.getPost().getPet().getIsAdopted()));
 
-	wishList.add(new WishResponseDto() {
-	  @Override
-	  public Long getWishId() {
-		return wish.getWishId();
-	  }
+		wishList.add(new WishResultDto(wish1.getWishId(), wish1.getPost().getPostId(),
+				wish1.getPost().getCreatedAt(), wish1.getPost().getModifiedAt(), wish1.getPost().getPet().getBreed(),
+				wish1.getPost().getPet().getSex(), wish1.getPost().getPet().getAge(), wish1.getPost().getPet().getOwnerType(),
+				wish1.getPost().getPet().getAddress(), wish1.getPost().getPet().getImg(), wish1.getPost().getPet().getIsAdopted()));
 
-	  @Override
-	  public Post getPost() {
-		return wish.getPost();
-	  }
-	});
+		wishList.add(new WishResultDto(wish2.getWishId(), wish2.getPost().getPostId(),
+				wish2.getPost().getCreatedAt(), wish2.getPost().getModifiedAt(), wish2.getPost().getPet().getBreed(),
+				wish2.getPost().getPet().getSex(), wish2.getPost().getPet().getAge(), wish2.getPost().getPet().getOwnerType(),
+				wish2.getPost().getPet().getAddress(), wish2.getPost().getPet().getImg(), wish2.getPost().getPet().getIsAdopted()));
 
-	wishList.add(new WishResponseDto() {
-	  @Override
-	  public Long getWishId() {
-		return wish1.getWishId();
-	  }
-
-	  @Override
-	  public Post getPost() {
-		return wish1.getPost();
-	  }
-	});
-
-	wishList.add(new WishResponseDto() {
-	  @Override
-	  public Long getWishId() {
-		return wish2.getWishId();
-	  }
-
-	  @Override
-	  public Post getPost() {
-		return wish2.getPost();
-	  }
-	});
-
-	when(wishRepository.findAllByUser(user)).thenReturn(wishList);
+	when(wishRepository.findAllMyWishs(user)).thenReturn(wishList);
 
 	Map<String, Object> data = (Map<String, Object>) wishService.getWishes(user).get("data");
 	List<WishResultDto> wishResultDtos = (List<WishResultDto>) data.get("wishList");
