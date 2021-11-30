@@ -1,4 +1,4 @@
-package com.sparta.dockingfinalproject.common;
+package com.sparta.dockingfinalproject.common.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,7 +10,7 @@ import javax.validation.Payload;
 @Constraint(validatedBy = {EnumValidator.class})
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Enum {
+public @interface EnumTypeValid {
 
   String message() default "유효한 값을 입력해주세요.";
   Class<?>[] groups() default {};

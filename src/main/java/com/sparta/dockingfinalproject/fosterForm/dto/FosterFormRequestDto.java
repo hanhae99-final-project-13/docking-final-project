@@ -1,6 +1,6 @@
 package com.sparta.dockingfinalproject.fosterForm.dto;
 
-import com.sparta.dockingfinalproject.common.Enum;
+import com.sparta.dockingfinalproject.common.annotation.EnumTypeValid;
 import com.sparta.dockingfinalproject.exception.ErrorMessage;
 import com.sparta.dockingfinalproject.pet.Sex;
 import javax.validation.constraints.NotBlank;
@@ -24,7 +24,7 @@ public class FosterFormRequestDto {
   @NotNull(message = ErrorMessage.FOSTER_AGE_REQUIRED)
   private Long fosterAge;
 
-  @Enum(enumClass = Sex.class, message = ErrorMessage.GENDER_REQUIRED)
+  @EnumTypeValid(enumClass = Sex.class, message = ErrorMessage.GENDER_REQUIRED)
   private String gender;
 
   @Pattern(regexp = "^\\d{2,3}\\d{3,4}\\d{4}$", message = ErrorMessage.CHECK_PHONE_LENGTH)
