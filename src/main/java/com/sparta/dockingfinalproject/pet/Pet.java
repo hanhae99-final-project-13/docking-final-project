@@ -3,7 +3,7 @@ package com.sparta.dockingfinalproject.pet;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sparta.dockingfinalproject.common.Timestamped;
 import com.sparta.dockingfinalproject.pet.dto.PetRequestDto;
-import com.sparta.dockingfinalproject.post.Post;
+import com.sparta.dockingfinalproject.post.model.Post;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;

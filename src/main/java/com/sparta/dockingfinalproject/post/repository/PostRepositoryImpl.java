@@ -1,6 +1,7 @@
-package com.sparta.dockingfinalproject.post;
+package com.sparta.dockingfinalproject.post.repository;
 
-import static com.sparta.dockingfinalproject.post.QPost.post;
+
+import static com.sparta.dockingfinalproject.post.model.QPost.post;
 import static com.sparta.dockingfinalproject.wish.QWish.wish;
 import static org.springframework.util.StringUtils.hasText;
 
@@ -9,9 +10,11 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.dockingfinalproject.post.dto.PostDetailResponseDto;
+import com.sparta.dockingfinalproject.post.dto.PostPreviewDto;
 import com.sparta.dockingfinalproject.post.dto.PostSearchRequestDto;
 import com.sparta.dockingfinalproject.post.dto.PostSearchResponseDto;
 import com.sparta.dockingfinalproject.post.dto.QPostDetailResponseDto;
+import com.sparta.dockingfinalproject.post.dto.QPostPreviewDto;
 import com.sparta.dockingfinalproject.post.dto.QPostSearchResponseDto;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import java.time.LocalDateTime;
@@ -96,6 +99,10 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
       String address = city.trim() + " " + district.trim();
       return post.pet.address.eq(address);
     }
+
+    if (hasText(city)) {
+      return post.pet.address.startsWith(city.trim());
+    }
     return null;
   }
 
@@ -104,6 +111,28 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
       return post.pet.createdAt.desc();
     }
     return post.pet.createdAt.asc();
+  }
+
+  @Override
+  public List<PostPreviewDto> findHomePosts(Pageable pageable) {
+    return queryFactory
+        .select(new QPostPreviewDto(
+            post.postId,
+            post.pet.createdAt,
+            post.pet.modifiedAt,
+            post.pet.breed,
+            post.pet.sex,
+            post.pet.age,
+            post.pet.ownerType,
+            post.pet.address,
+            post.pet.img.as("imgs"),
+            post.pet.isAdopted
+        ))
+        .from(post)
+        .orderBy(post.pet.createdAt.desc())
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize())
+        .fetch();
   }
 
   @Override

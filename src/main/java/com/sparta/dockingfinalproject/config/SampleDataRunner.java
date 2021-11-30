@@ -2,8 +2,8 @@ package com.sparta.dockingfinalproject.config;
 
 import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.pet.PetRepository;
-import com.sparta.dockingfinalproject.post.Post;
-import com.sparta.dockingfinalproject.post.PostRepository;
+import com.sparta.dockingfinalproject.post.model.Post;
+import com.sparta.dockingfinalproject.post.repository.PostRepository;
 import com.sparta.dockingfinalproject.user.User;
 import com.sparta.dockingfinalproject.user.UserRepository;
 import com.sparta.dockingfinalproject.user.UserService;

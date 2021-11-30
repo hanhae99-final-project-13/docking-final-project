@@ -5,7 +5,7 @@ import static com.sparta.dockingfinalproject.comment.model.QComment.comment1;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.dockingfinalproject.comment.dto.CommentResultDto;
 import com.sparta.dockingfinalproject.comment.dto.QCommentResultDto;
-import com.sparta.dockingfinalproject.post.Post;
+import com.sparta.dockingfinalproject.post.model.Post;
 import java.util.List;
 import javax.persistence.EntityManager;
 

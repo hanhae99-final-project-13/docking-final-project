@@ -6,9 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PetRepository extends JpaRepository<Pet, Long> {
-
-  Page<Pet> findAllByOrderByCreatedAtDesc(Pageable pageable);
-
   List<Pet> findAllByIsAdoptedOrderByModifiedAtDesc(IsAdopted isAdopted);
 
   Pet findByPetNo(String petNo);
