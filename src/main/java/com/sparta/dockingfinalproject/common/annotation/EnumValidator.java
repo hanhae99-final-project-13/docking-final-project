@@ -1,16 +1,16 @@
-package com.sparta.dockingfinalproject.common;
+package com.sparta.dockingfinalproject.common.annotation;
 
 import static org.springframework.util.StringUtils.hasText;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class EnumValidator implements ConstraintValidator<Enum, String> {
+public class EnumValidator implements ConstraintValidator<EnumTypeValid, String> {
 
-  private Enum annotation;
+  private EnumTypeValid annotation;
 
   @Override
-  public void initialize(Enum constraintAnnotation) {
+  public void initialize(EnumTypeValid constraintAnnotation) {
     this.annotation = constraintAnnotation;
   }
 
