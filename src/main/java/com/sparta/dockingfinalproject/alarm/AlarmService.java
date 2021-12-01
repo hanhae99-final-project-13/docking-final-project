@@ -3,13 +3,13 @@ package com.sparta.dockingfinalproject.alarm;
 import com.sparta.dockingfinalproject.alarm.dto.AlarmResponseDto;
 import com.sparta.dockingfinalproject.alarm.model.Alarm;
 import com.sparta.dockingfinalproject.alarm.model.AlarmType;
+import com.sparta.dockingfinalproject.alarm.repository.AlarmRepository;
 import com.sparta.dockingfinalproject.comment.model.Comment;
 import com.sparta.dockingfinalproject.comment.repository.CommentRepository;
 import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.user.User;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,18 +31,9 @@ public class AlarmService {
     List<Alarm> alarms = alarmRepository.findAllByUserOrderByCreatedAtDesc(user);
 
     Map<String, Object> data = new HashMap<>();
-    data.put("data", getResponseAlarms(alarms));
+    data.put("data", alarmRepository.findAllUserAlarm(user));
     data.put("alarmCount", getAlarmCount(user));
     return SuccessResult.success(data);
-  }
-
-  private List<AlarmResponseDto> getResponseAlarms(List<Alarm> alarms) {
-    List<AlarmResponseDto> dataAlarms = new ArrayList<>();
-    for (Alarm alarm : alarms) {
-      AlarmResponseDto alarmResponseDto = getAlarmResponseDto(alarm);
-      dataAlarms.add(alarmResponseDto);
-    }
-    return dataAlarms;
   }
 
   public int getAlarmCount(User user) {
@@ -99,18 +90,4 @@ public class AlarmService {
     return commentRepository.findById(commentId).orElseThrow(
         () -> new DockingException(ErrorCode.COMMENT_NOT_FOUND));
   }
-
-//  private String validAlarmType(Alarm alarm, AlarmType alarmType) {
-//    String contentDetail;
-//    if (alarmType == AlarmType.COMMENT) {
-//      Long commentId = alarm.getContentId();
-//      Comment comment = commentRepository.findById(commentId).orElseThrow(
-//          () -> new DockingException(ErrorCode.COMMENT_NOT_FOUND));
-//      Long postId = comment.getPost().getPostId();
-//      contentDetail = "[postId:" + postId + "] [comment:" + comment.getComment() + "]";
-//    } else {
-//      contentDetail = null;
-//    }
-//    return contentDetail;
-//  }
 }

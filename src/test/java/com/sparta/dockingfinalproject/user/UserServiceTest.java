@@ -1,6 +1,6 @@
 package com.sparta.dockingfinalproject.user;
 
-import com.sparta.dockingfinalproject.alarm.AlarmRepository;
+import com.sparta.dockingfinalproject.alarm.repository.AlarmRepository;
 import com.sparta.dockingfinalproject.education.Education;
 import com.sparta.dockingfinalproject.education.EducationRepository;
 import com.sparta.dockingfinalproject.exception.DockingException;

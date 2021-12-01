@@ -1,6 +1,6 @@
 package com.sparta.dockingfinalproject.fosterForm;
 
-import com.sparta.dockingfinalproject.alarm.AlarmRepository;
+import com.sparta.dockingfinalproject.alarm.repository.AlarmRepository;
 import com.sparta.dockingfinalproject.alarm.model.Alarm;
 import com.sparta.dockingfinalproject.alarm.model.AlarmType;
 import com.sparta.dockingfinalproject.common.SuccessResult;
