@@ -144,22 +144,25 @@ public class KakaoUserService {
     Long id = jsonNode.get("id").asLong();
     String nickname = jsonNode.get("properties")
         .get("nickname").asText();
-    String email = jsonNode.get("kakao_account")
-        .get("email").asText();
-    String userImgUrl = "https://gorokke.shop/image/profileDefaultImg.jpg";
+	String email;
+	if (jsonNode.get("kakao_account").get("email") == null) {
+	  email = UUID.randomUUID().toString() + "@getting.co.kr";
+	} else {
+	  email = jsonNode.get("kakao_account")
+		  .get("email").asText();
+	}
 
-    //여기가 안불러와짐
-//    try {
-//      userImgUrl = jsonNode.get("properties")
-//          .get("profile_image").asText();
-//    } catch (Exception ignored) {
-//    }
+	JsonNode profile = jsonNode.get("properties").get("profile_image");
+	String userImgUrl = "https://gorokke.shop/image/profileDefaultImg.jpg";
+	if (profile != null) {
+	  userImgUrl = profile.asText();
+	}
 
-    System.out.println("카카오 사용자 정보: " + id + ", " + nickname + ", " + email + "," + userImgUrl);
+	System.out.println("카카오 사용자 정보: " + id + ", " + nickname + ", " + email + "," + userImgUrl);
 
-    String username = email;
+	String username = email;
 
-    return new KakaoUserInfoDto(id, nickname, email, username, userImgUrl);
+	return new KakaoUserInfoDto(id, nickname, email, username, userImgUrl);
 
   }
 
