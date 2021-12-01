@@ -148,7 +148,9 @@ public class UserService {
 	  throw new DockingException(ErrorCode.LOGIN_TOKEN_EXPIRE);
 	}
 
-	String username = jwtTokenProvider.getAccessTokenPayload(tokenRequestDto.getAccessToken());
+//	String username = jwtTokenProvider.getAccessTokenPayload(tokenRequestDto.getAccessToken());
+	User user = userRepository.findById(tokenRequestDto.getUserId()).orElse(null);
+	String username = user.getUsername();
 
 	RefreshToken refreshToken = refreshTokenRepository.findByKey(username).orElseThrow(
 		() -> new DockingException(ErrorCode.LOGIN_REQUIRED));
