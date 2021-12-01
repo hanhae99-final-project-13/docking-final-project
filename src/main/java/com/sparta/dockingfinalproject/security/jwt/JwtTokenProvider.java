@@ -40,7 +40,7 @@ public class JwtTokenProvider {
   }
 
   // 토큰 생성
-  public TokenDto createToken(String userPk, String username) {
+   public TokenDto createToken(String userPk, String username) {
 
 	Claims claims = Jwts.claims().setSubject(userPk);
 	claims.put("username", username);
