@@ -28,7 +28,7 @@ public class JwtTokenProvider {
 
   private String secretKey = "docking";
 
-  private Long acessTokenValidTime = 30 * 60 * 1000L;//30분
+  private Long acessTokenValidTime = 30 *60 * 1000L;//30분
 
   private Long refreshTokenValidTime = 14 * 24 * 60 * 60 * 1000L;//2주
 
