@@ -12,7 +12,6 @@ import com.sparta.dockingfinalproject.comment.repository.CommentRepository;
 import com.sparta.dockingfinalproject.post.model.Post;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.user.User;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -92,6 +91,10 @@ class AlarmServiceTest {
   @Test
   @DisplayName("알람 단건 상세 조회")
   void getAlarm() {
+    AlarmResponseDto alarmResponseDto1 = new AlarmResponseDto(alarm1.getAlarmId(),
+        alarm1.getAlarmContent(), alarm1.isChecked(), alarm1.getAlarmType(),
+        alarm1.getContentId(), null, null, alarm1.getCreatedAt());
+    when(alarmRepository.findUserAlarm(10L)).thenReturn(Optional.of(alarmResponseDto1));
     when(alarmRepository.findById(10L)).thenReturn(Optional.of(alarm1));
 
     Map<String, Object> alarm = (Map<String, Object>) alarmService.getAlarm(10L, user).get("data");
@@ -103,6 +106,10 @@ class AlarmServiceTest {
   @Test
   @DisplayName("알람 단건 조회시 상태 false 변환")
   void modifyAlarmStatus() {
+    AlarmResponseDto alarmResponseDto1 = new AlarmResponseDto(alarm1.getAlarmId(),
+        alarm1.getAlarmContent(), alarm1.isChecked(), alarm1.getAlarmType(),
+        alarm1.getContentId(), null, null, alarm1.getCreatedAt());
+    when(alarmRepository.findUserAlarm(10L)).thenReturn(Optional.of(alarmResponseDto1));
     when(alarmRepository.findById(10L)).thenReturn(Optional.of(alarm1));
 
     Map<String, Object> alarm = (Map<String, Object>) alarmService.getAlarm(10L, user).get("data");
