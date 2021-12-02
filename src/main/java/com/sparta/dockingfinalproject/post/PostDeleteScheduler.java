@@ -22,7 +22,7 @@ public class PostDeleteScheduler {
   }
 
   @Scheduled(cron = "0 0 3 * * *")
-  public void adoptedPostDelete() {
+  public void deleteAdoptedPosts() {
     System.out.println("입양완료 3일 경과 Post 삭제");
     List<Pet> petList = petRepository.findAllByIsAdoptedOrderByModifiedAtDesc(IsAdopted.ADOPTED);
 
@@ -35,6 +35,18 @@ public class PostDeleteScheduler {
         postRepository.deleteById(pet.getPost().getPostId());
         petRepository.deleteById(pet.getPetId());
       }
+    }
+
+  }
+
+  @Scheduled(cron = "0 0 3 * * *")
+  public void deleteExpiredPosts() {
+    System.out.println("보호종료 Post 삭제");
+    List<Pet> petList = petRepository.findAllByIsAdoptedOrderByModifiedAtDesc(IsAdopted.EXPIRED);
+
+    for (Pet pet : petList) {
+      postRepository.deleteById(pet.getPost().getPostId());
+      petRepository.deleteById(pet.getPetId());
     }
   }
 
