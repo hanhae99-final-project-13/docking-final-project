@@ -1,16 +1,14 @@
 package com.sparta.dockingfinalproject.user;
 
 
-import com.sparta.dockingfinalproject.alarm.repository.AlarmRepository;
 import com.sparta.dockingfinalproject.alarm.model.Alarm;
 import com.sparta.dockingfinalproject.alarm.model.AlarmType;
+import com.sparta.dockingfinalproject.alarm.repository.AlarmRepository;
 import com.sparta.dockingfinalproject.common.SuccessResult;
-import com.sparta.dockingfinalproject.education.Education;
 import com.sparta.dockingfinalproject.education.EducationRepository;
+import com.sparta.dockingfinalproject.education.model.Education;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
-import com.sparta.dockingfinalproject.fosterForm.FosterFormRepository;
-import com.sparta.dockingfinalproject.fosterForm.model.FosterForm;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.security.jwt.JwtReturn;
 import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
@@ -18,12 +16,14 @@ import com.sparta.dockingfinalproject.security.jwt.TokenDto;
 import com.sparta.dockingfinalproject.security.jwt.TokenRequestDto;
 import com.sparta.dockingfinalproject.token.RefreshToken;
 import com.sparta.dockingfinalproject.token.RefreshTokenRepository;
-import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
-import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
-import com.sparta.dockingfinalproject.user.dto.UserInquriryRequestDto;
-import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
+import com.sparta.dockingfinalproject.user.dto.request.SignupRequestDto;
+import com.sparta.dockingfinalproject.user.dto.request.UpdateRequestDto;
+import com.sparta.dockingfinalproject.user.dto.request.UserInquriryRequestDto;
+import com.sparta.dockingfinalproject.user.dto.request.UserRequestDto;
 import com.sparta.dockingfinalproject.user.dto.response.LoginCheckResponseDto;
 import com.sparta.dockingfinalproject.user.dto.response.LoginResponseDto;
+import com.sparta.dockingfinalproject.user.model.User;
+import com.sparta.dockingfinalproject.user.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

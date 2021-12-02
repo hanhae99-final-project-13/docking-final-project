@@ -1,7 +1,7 @@
 package com.sparta.dockingfinalproject.fosterForm;
 
 import com.sparta.dockingfinalproject.fosterForm.model.FosterForm;
-import com.sparta.dockingfinalproject.user.User;
+import com.sparta.dockingfinalproject.user.model.User;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;

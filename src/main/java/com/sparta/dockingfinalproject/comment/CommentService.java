@@ -14,7 +14,7 @@ import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.post.model.Post;
 import com.sparta.dockingfinalproject.post.repository.PostRepository;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
-import com.sparta.dockingfinalproject.user.User;
+import com.sparta.dockingfinalproject.user.model.User;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;

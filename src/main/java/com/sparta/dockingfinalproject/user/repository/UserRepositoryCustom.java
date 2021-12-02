@@ -1,5 +1,6 @@
-package com.sparta.dockingfinalproject.user;
+package com.sparta.dockingfinalproject.user.repository;
 
+import com.sparta.dockingfinalproject.user.model.User;
 import java.util.List;
 
 public interface UserRepositoryCustom {

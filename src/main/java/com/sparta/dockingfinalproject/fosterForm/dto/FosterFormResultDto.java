@@ -2,7 +2,7 @@ package com.sparta.dockingfinalproject.fosterForm.dto;
 
 import com.sparta.dockingfinalproject.fosterForm.model.Acceptance;
 import com.sparta.dockingfinalproject.fosterForm.model.FosterForm;
-import com.sparta.dockingfinalproject.pet.Sex;
+import com.sparta.dockingfinalproject.post.pet.model.Sex;
 import java.util.Map;
 import lombok.Builder;
 import lombok.Getter;

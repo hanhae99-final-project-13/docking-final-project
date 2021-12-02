@@ -1,4 +1,4 @@
-package com.sparta.dockingfinalproject.pet;
+package com.sparta.dockingfinalproject.post.pet.model;
 
 public enum Sex {
   M("m"),

@@ -1,8 +1,8 @@
 package com.sparta.dockingfinalproject.post.repository;
 
-import com.sparta.dockingfinalproject.pet.Pet;
 import com.sparta.dockingfinalproject.post.model.Post;
-import com.sparta.dockingfinalproject.user.User;
+import com.sparta.dockingfinalproject.post.pet.model.Pet;
+import com.sparta.dockingfinalproject.user.model.User;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

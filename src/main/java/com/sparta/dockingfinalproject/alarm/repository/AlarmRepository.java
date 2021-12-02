@@ -2,7 +2,7 @@ package com.sparta.dockingfinalproject.alarm.repository;
 
 import com.sparta.dockingfinalproject.alarm.model.Alarm;
 import com.sparta.dockingfinalproject.alarm.model.AlarmType;
-import com.sparta.dockingfinalproject.user.User;
+import com.sparta.dockingfinalproject.user.model.User;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

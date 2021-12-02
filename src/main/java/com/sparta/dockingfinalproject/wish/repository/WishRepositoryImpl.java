@@ -1,9 +1,9 @@
 package com.sparta.dockingfinalproject.wish.repository;
 
-import static com.sparta.dockingfinalproject.wish.QWish.wish;
+import static com.sparta.dockingfinalproject.wish.model.QWish.wish;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sparta.dockingfinalproject.user.User;
+import com.sparta.dockingfinalproject.user.model.User;
 import com.sparta.dockingfinalproject.wish.dto.QWishResultDto;
 import com.sparta.dockingfinalproject.wish.dto.WishResultDto;
 import java.util.List;

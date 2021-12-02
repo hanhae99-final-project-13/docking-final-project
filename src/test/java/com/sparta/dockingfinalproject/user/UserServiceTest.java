@@ -1,8 +1,11 @@
 package com.sparta.dockingfinalproject.user;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 import com.sparta.dockingfinalproject.alarm.repository.AlarmRepository;
-import com.sparta.dockingfinalproject.education.Education;
 import com.sparta.dockingfinalproject.education.EducationRepository;
+import com.sparta.dockingfinalproject.education.model.Education;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
 import com.sparta.dockingfinalproject.fosterForm.FosterFormRepository;
@@ -14,9 +17,14 @@ import com.sparta.dockingfinalproject.security.jwt.JwtTokenProvider;
 import com.sparta.dockingfinalproject.security.jwt.TokenDto;
 import com.sparta.dockingfinalproject.token.RefreshToken;
 import com.sparta.dockingfinalproject.token.RefreshTokenRepository;
-import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
-import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
-import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
+import com.sparta.dockingfinalproject.user.dto.request.SignupRequestDto;
+import com.sparta.dockingfinalproject.user.dto.request.UpdateRequestDto;
+import com.sparta.dockingfinalproject.user.dto.request.UserRequestDto;
+import com.sparta.dockingfinalproject.user.model.User;
+import com.sparta.dockingfinalproject.user.repository.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,14 +33,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)//진짜 Mock 객체를 만들어줌
 class UserServiceTest {

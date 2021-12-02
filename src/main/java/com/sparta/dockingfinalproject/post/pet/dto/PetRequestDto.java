@@ -1,4 +1,4 @@
-package com.sparta.dockingfinalproject.pet.dto;
+package com.sparta.dockingfinalproject.post.pet.dto;
 
 import java.util.List;
 import lombok.AllArgsConstructor;

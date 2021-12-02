@@ -1,8 +1,9 @@
 package com.sparta.dockingfinalproject.wish.repository;
 
+
 import com.sparta.dockingfinalproject.post.model.Post;
-import com.sparta.dockingfinalproject.user.User;
-import com.sparta.dockingfinalproject.wish.Wish;
+import com.sparta.dockingfinalproject.user.model.User;
+import com.sparta.dockingfinalproject.wish.model.Wish;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

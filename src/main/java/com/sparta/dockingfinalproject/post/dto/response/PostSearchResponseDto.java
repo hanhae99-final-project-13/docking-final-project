@@ -1,12 +1,11 @@
-package com.sparta.dockingfinalproject.post.dto;
+package com.sparta.dockingfinalproject.post.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.sparta.dockingfinalproject.pet.IsAdopted;
-import com.sparta.dockingfinalproject.pet.Sex;
+import com.sparta.dockingfinalproject.post.pet.model.IsAdopted;
+import com.sparta.dockingfinalproject.post.pet.model.Sex;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter

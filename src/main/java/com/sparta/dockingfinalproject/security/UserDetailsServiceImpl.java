@@ -1,8 +1,8 @@
 package com.sparta.dockingfinalproject.security;
 
 
-import com.sparta.dockingfinalproject.user.User;
-import com.sparta.dockingfinalproject.user.UserRepository;
+import com.sparta.dockingfinalproject.user.model.User;
+import com.sparta.dockingfinalproject.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

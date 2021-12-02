@@ -1,6 +1,6 @@
 package com.sparta.dockingfinalproject.fosterForm.dto;
 
-import com.sparta.dockingfinalproject.post.dto.PostPreviewDto;
+import com.sparta.dockingfinalproject.post.dto.response.PostPreviewDto;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
