@@ -10,6 +10,7 @@ import com.sparta.dockingfinalproject.alarm.dto.QAlarmResponseDto;
 import com.sparta.dockingfinalproject.alarm.model.AlarmType;
 import com.sparta.dockingfinalproject.user.User;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 
 public class AlarmRepositoryImpl implements AlarmRepositoryCustom {
@@ -37,24 +38,44 @@ public class AlarmRepositoryImpl implements AlarmRepositoryCustom {
         .fetch();
 
     for (AlarmResponseDto alarmResponseDto : alarmResponseDtos) {
-      System.out.println(alarmResponseDto.getAlarmType());
-      if (alarmResponseDto.getAlarmType() == AlarmType.COMMENT) {
-        System.out.println("실행");
-        Tuple commentTuple = queryFactory
-            .select(
-                comment1.post.postId,
-                comment1.comment
-            )
-            .from(comment1)
-            .where(comment1.commentId.eq(alarmResponseDto.getContentId()))
-            .fetchOne();
-
-        String comment = commentTuple.get(comment1.comment);
-        Long postId = commentTuple.get(comment1.post.postId);
-        alarmResponseDto.addComment(comment, postId);
-      }
+      commentEqgetPostIdAndComment(alarmResponseDto);
     }
     return alarmResponseDtos;
   }
 
+  @Override
+  public Optional<AlarmResponseDto> findUserAlarm(Long alarmId) {
+    AlarmResponseDto alarmResponseDto = queryFactory
+        .select(new QAlarmResponseDto(
+            alarm.alarmId,
+            alarm.alarmContent,
+            alarm.checked,
+            alarm.alarmType,
+            alarm.contentId,
+            alarm.createdAt
+        ))
+        .from(alarm)
+        .where(alarm.alarmId.eq(alarmId))
+        .fetchOne();
+    commentEqgetPostIdAndComment(alarmResponseDto);
+    return Optional.of(alarmResponseDto);
+  }
+
+  private AlarmResponseDto commentEqgetPostIdAndComment(AlarmResponseDto alarmResponseDto) {
+    if (alarmResponseDto.getAlarmType() == AlarmType.COMMENT) {
+      Tuple commentTuple = queryFactory
+          .select(
+              comment1.post.postId,
+              comment1.comment
+          )
+          .from(comment1)
+          .where(comment1.commentId.eq(alarmResponseDto.getContentId()))
+          .fetchOne();
+
+      String comment = commentTuple.get(comment1.comment);
+      Long postId = commentTuple.get(comment1.post.postId);
+      alarmResponseDto.addComment(comment, postId);
+    }
+    return alarmResponseDto;
+  }
 }

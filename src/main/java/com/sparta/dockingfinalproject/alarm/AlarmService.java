@@ -2,10 +2,7 @@ package com.sparta.dockingfinalproject.alarm;
 
 import com.sparta.dockingfinalproject.alarm.dto.AlarmResponseDto;
 import com.sparta.dockingfinalproject.alarm.model.Alarm;
-import com.sparta.dockingfinalproject.alarm.model.AlarmType;
 import com.sparta.dockingfinalproject.alarm.repository.AlarmRepository;
-import com.sparta.dockingfinalproject.comment.model.Comment;
-import com.sparta.dockingfinalproject.comment.repository.CommentRepository;
 import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
@@ -20,16 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class AlarmService {
 
   private final AlarmRepository alarmRepository;
-  private final CommentRepository commentRepository;
 
-  public AlarmService(AlarmRepository alarmRepository, CommentRepository commentRepository) {
+  public AlarmService(AlarmRepository alarmRepository) {
     this.alarmRepository = alarmRepository;
-    this.commentRepository = commentRepository;
   }
 
   public Map<String, Object> getAlarms(User user) {
-    List<Alarm> alarms = alarmRepository.findAllByUserOrderByCreatedAtDesc(user);
-
     Map<String, Object> data = new HashMap<>();
     data.put("data", alarmRepository.findAllUserAlarm(user));
     data.put("alarmCount", getAlarmCount(user));
@@ -55,8 +48,12 @@ public class AlarmService {
     Alarm alarm = findAlarm(alarmId);
     modifyAlarmStatus(alarm);
 
+    AlarmResponseDto alarmResponseDto = alarmRepository.findUserAlarm(alarmId).orElseThrow(
+        () -> new DockingException(ErrorCode.ALARM_NOT_FOUND)
+    );
+
     Map<String, Object> data = new HashMap<>();
-    data.put("data", getAlarmResponseDto(alarm));
+    data.put("data", alarmResponseDto);
     data.put("alarmCount", getAlarmCount(user));
     return SuccessResult.success(data);
   }
@@ -70,24 +67,5 @@ public class AlarmService {
   private void modifyAlarmStatus(Alarm alarm) {
     alarm.updateIsRead();
     alarmRepository.save(alarm);
-  }
-
-  private AlarmResponseDto getAlarmResponseDto(Alarm alarm) {
-    AlarmType alarmType = alarm.getAlarmType();
-
-    String commentContent = null;
-    Long postId = null;
-    if (alarmType == AlarmType.COMMENT) {
-      Comment comment = getComment(alarm.getContentId());
-      commentContent = comment.getComment();
-      postId = comment.getPost().getPostId();
-    }
-
-    return AlarmResponseDto.of(alarm, postId, commentContent);
-  }
-
-  private Comment getComment(Long commentId) {
-    return commentRepository.findById(commentId).orElseThrow(
-        () -> new DockingException(ErrorCode.COMMENT_NOT_FOUND));
   }
 }
