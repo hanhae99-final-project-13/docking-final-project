@@ -1,7 +1,7 @@
 package com.sparta.dockingfinalproject.user.dto.response;
 
 import com.sparta.dockingfinalproject.security.jwt.TokenDto;
-import com.sparta.dockingfinalproject.user.User;
+import com.sparta.dockingfinalproject.user.model.User;
 import java.util.List;
 import java.util.Map;
 import lombok.Builder;

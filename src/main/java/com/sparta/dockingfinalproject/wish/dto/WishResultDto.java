@@ -1,8 +1,8 @@
 package com.sparta.dockingfinalproject.wish.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.sparta.dockingfinalproject.pet.IsAdopted;
-import com.sparta.dockingfinalproject.pet.Sex;
+import com.sparta.dockingfinalproject.post.pet.model.IsAdopted;
+import com.sparta.dockingfinalproject.post.pet.model.Sex;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,6 @@
-package com.sparta.dockingfinalproject.education;
+package com.sparta.dockingfinalproject.education.model;
 
-import com.sparta.dockingfinalproject.user.User;
+import com.sparta.dockingfinalproject.user.model.User;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -38,13 +38,10 @@ public class Education {
   @Column
   private Boolean core;
 
-public Education(User user){
-  this.user = user;
-  this.basic = false;
-  this.advanced = false;
-  this.core = false;
-}
-
-
-
+  public Education(User user){
+    this.user = user;
+    this.basic = false;
+    this.advanced = false;
+    this.core = false;
+  }
 }

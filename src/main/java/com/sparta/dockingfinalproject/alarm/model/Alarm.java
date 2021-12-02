@@ -2,7 +2,7 @@ package com.sparta.dockingfinalproject.alarm.model;
 
 
 import com.sparta.dockingfinalproject.common.Timestamped;
-import com.sparta.dockingfinalproject.user.User;
+import com.sparta.dockingfinalproject.user.model.User;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

@@ -1,4 +1,4 @@
-package com.sparta.dockingfinalproject.pet;
+package com.sparta.dockingfinalproject.post.pet.model;
 
 public enum IsAdopted {
   ABANDONED("abandoned"),
@@ -12,7 +12,8 @@ public enum IsAdopted {
   }
 
   public static IsAdopted of(String isAdopted) {
-    for (IsAdopted isAdopt : IsAdopted.values()) {
+    for (IsAdopted isAdopt : IsAdopted
+        .values()) {
       if (isAdopted.equalsIgnoreCase(isAdopt.toString())) {
         return isAdopt;
       }

@@ -1,9 +1,9 @@
-package com.sparta.dockingfinalproject.pet;
+package com.sparta.dockingfinalproject.post.pet.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sparta.dockingfinalproject.common.Timestamped;
-import com.sparta.dockingfinalproject.pet.dto.PetRequestDto;
 import com.sparta.dockingfinalproject.post.model.Post;
+import com.sparta.dockingfinalproject.post.pet.dto.PetRequestDto;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -79,7 +79,8 @@ public class Pet extends Timestamped {
   @Builder
   public Pet(String breed, String sex, String age, String weight, String lostLocation,
       String ownerType,
-      String address,String phone, String tag, String img, String extra, String isAdopted, String petNo) {
+      String address, String phone, String tag, String img, String extra, String isAdopted,
+      String petNo) {
     this.breed = breed;
     this.sex = Sex.of(sex);
     this.age = Integer.parseInt(age.replaceAll("[^0-9]", ""));

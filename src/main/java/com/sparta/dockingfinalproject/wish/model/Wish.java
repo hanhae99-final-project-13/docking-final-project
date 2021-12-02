@@ -1,7 +1,7 @@
-package com.sparta.dockingfinalproject.wish;
+package com.sparta.dockingfinalproject.wish.model;
 
 import com.sparta.dockingfinalproject.post.model.Post;
-import com.sparta.dockingfinalproject.user.User;
+import com.sparta.dockingfinalproject.user.model.User;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;

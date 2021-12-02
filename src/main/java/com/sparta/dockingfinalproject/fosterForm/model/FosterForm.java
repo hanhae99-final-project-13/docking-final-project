@@ -2,9 +2,9 @@ package com.sparta.dockingfinalproject.fosterForm.model;
 
 import com.sparta.dockingfinalproject.common.Timestamped;
 import com.sparta.dockingfinalproject.fosterForm.dto.FosterFormRequestDto;
-import com.sparta.dockingfinalproject.pet.Sex;
+import com.sparta.dockingfinalproject.post.pet.model.Sex;
 import com.sparta.dockingfinalproject.post.model.Post;
-import com.sparta.dockingfinalproject.user.User;
+import com.sparta.dockingfinalproject.user.model.User;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

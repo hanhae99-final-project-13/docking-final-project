@@ -1,14 +1,14 @@
 package com.sparta.dockingfinalproject.api;
 
-import com.sparta.dockingfinalproject.pet.Pet;
-import com.sparta.dockingfinalproject.pet.PetRepository;
 import com.sparta.dockingfinalproject.post.model.Post;
+import com.sparta.dockingfinalproject.post.pet.PetRepository;
+import com.sparta.dockingfinalproject.post.pet.model.Pet;
 import com.sparta.dockingfinalproject.post.repository.PostRepository;
-import com.sparta.dockingfinalproject.user.User;
-import com.sparta.dockingfinalproject.user.UserRepository;
 import com.sparta.dockingfinalproject.user.UserService;
-import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
-import com.sparta.dockingfinalproject.user.dto.UserRequestDto;
+import com.sparta.dockingfinalproject.user.dto.request.SignupRequestDto;
+import com.sparta.dockingfinalproject.user.dto.request.UserRequestDto;
+import com.sparta.dockingfinalproject.user.model.User;
+import com.sparta.dockingfinalproject.user.repository.UserRepository;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

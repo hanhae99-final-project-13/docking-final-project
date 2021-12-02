@@ -2,7 +2,7 @@ package com.sparta.dockingfinalproject.fosterForm.dto;
 
 import com.sparta.dockingfinalproject.common.annotation.EnumTypeValid;
 import com.sparta.dockingfinalproject.exception.ErrorMessage;
-import com.sparta.dockingfinalproject.pet.Sex;
+import com.sparta.dockingfinalproject.post.pet.model.Sex;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;

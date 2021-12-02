@@ -11,7 +11,7 @@ import com.sparta.dockingfinalproject.comment.model.Comment;
 import com.sparta.dockingfinalproject.comment.repository.CommentRepository;
 import com.sparta.dockingfinalproject.post.model.Post;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
-import com.sparta.dockingfinalproject.user.User;
+import com.sparta.dockingfinalproject.user.model.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

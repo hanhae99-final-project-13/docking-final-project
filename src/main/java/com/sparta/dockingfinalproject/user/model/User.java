@@ -1,7 +1,7 @@
-package com.sparta.dockingfinalproject.user;
+package com.sparta.dockingfinalproject.user.model;
 
-import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
-import com.sparta.dockingfinalproject.user.dto.UpdateRequestDto;
+import com.sparta.dockingfinalproject.user.dto.request.SignupRequestDto;
+import com.sparta.dockingfinalproject.user.dto.request.UpdateRequestDto;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

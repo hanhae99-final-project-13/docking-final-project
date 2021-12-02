@@ -1,7 +1,7 @@
 package com.sparta.dockingfinalproject.api;
 
-import com.sparta.dockingfinalproject.pet.Pet;
-import com.sparta.dockingfinalproject.pet.PetRepository;
+import com.sparta.dockingfinalproject.post.pet.PetRepository;
+import com.sparta.dockingfinalproject.post.pet.model.Pet;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;

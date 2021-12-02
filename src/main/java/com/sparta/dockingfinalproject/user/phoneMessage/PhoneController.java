@@ -3,7 +3,7 @@ package com.sparta.dockingfinalproject.user.phoneMessage;
 import com.sparta.dockingfinalproject.common.SuccessResult;
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.exception.ErrorCode;
-import com.sparta.dockingfinalproject.user.dto.SignupRequestDto;
+import com.sparta.dockingfinalproject.user.dto.request.SignupRequestDto;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,8 +1,8 @@
 package com.sparta.dockingfinalproject.post;
 
-import com.sparta.dockingfinalproject.pet.dto.PetRequestDto;
-import com.sparta.dockingfinalproject.post.dto.PostSearchRequestDto;
-import com.sparta.dockingfinalproject.post.dto.StatusDto;
+import com.sparta.dockingfinalproject.post.dto.request.PostSearchRequestDto;
+import com.sparta.dockingfinalproject.post.dto.request.StatusDto;
+import com.sparta.dockingfinalproject.post.pet.dto.PetRequestDto;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import java.util.Map;
 import org.springframework.data.domain.PageRequest;

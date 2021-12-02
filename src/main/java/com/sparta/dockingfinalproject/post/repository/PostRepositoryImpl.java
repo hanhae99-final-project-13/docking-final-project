@@ -2,20 +2,20 @@ package com.sparta.dockingfinalproject.post.repository;
 
 
 import static com.sparta.dockingfinalproject.post.model.QPost.post;
-import static com.sparta.dockingfinalproject.wish.QWish.wish;
+import static com.sparta.dockingfinalproject.wish.model.QWish.wish;
 import static org.springframework.util.StringUtils.hasText;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sparta.dockingfinalproject.post.dto.PostDetailResponseDto;
-import com.sparta.dockingfinalproject.post.dto.PostPreviewDto;
-import com.sparta.dockingfinalproject.post.dto.PostSearchRequestDto;
-import com.sparta.dockingfinalproject.post.dto.PostSearchResponseDto;
-import com.sparta.dockingfinalproject.post.dto.QPostDetailResponseDto;
-import com.sparta.dockingfinalproject.post.dto.QPostPreviewDto;
-import com.sparta.dockingfinalproject.post.dto.QPostSearchResponseDto;
+import com.sparta.dockingfinalproject.post.dto.request.PostSearchRequestDto;
+import com.sparta.dockingfinalproject.post.dto.response.PostDetailResponseDto;
+import com.sparta.dockingfinalproject.post.dto.response.PostPreviewDto;
+import com.sparta.dockingfinalproject.post.dto.response.PostSearchResponseDto;
+import com.sparta.dockingfinalproject.post.dto.response.QPostDetailResponseDto;
+import com.sparta.dockingfinalproject.post.dto.response.QPostPreviewDto;
+import com.sparta.dockingfinalproject.post.dto.response.QPostSearchResponseDto;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import java.time.LocalDateTime;
 import java.util.List;
