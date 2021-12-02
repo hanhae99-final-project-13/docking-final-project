@@ -3,6 +3,7 @@ package com.sparta.dockingfinalproject.user;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
+
 import com.sparta.dockingfinalproject.alarm.repository.AlarmRepository;
 import com.sparta.dockingfinalproject.education.EducationRepository;
 import com.sparta.dockingfinalproject.education.model.Education;
@@ -34,7 +35,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@ExtendWith(MockitoExtension.class)//진짜 Mock 객체를 만들어줌
+@ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
   @InjectMocks
@@ -59,7 +60,6 @@ class UserServiceTest {
   private RefreshToken refreshToken;
   private TokenDto tokenDto;
   private UserDetailsImpl userDetails;
-//
 
 
   @BeforeEach
@@ -73,7 +73,8 @@ class UserServiceTest {
   @DisplayName("회원가입")
   void registerUser() {
 
-	SignupRequestDto requestDto = new SignupRequestDto("user1", "aaa12345", "aaa12345", "sss@naver.com",
+	SignupRequestDto requestDto = new SignupRequestDto("user1", "aaa12345", "aaa12345",
+		"sss@naver.com",
 		"홍길동", "https://gorokke.shop/image/profileDefaultImg.jpg", 1234, "");
 	User user = new User(requestDto, requestDto.getPassword());
 
@@ -91,13 +92,13 @@ class UserServiceTest {
   @DisplayName("회원가입 유저네임이 중복된경우")
   void registerUser1() {
 
-	SignupRequestDto requestDto = new SignupRequestDto("user1", "aaa12345", "aaa12345", "sss@naver.com",
+	SignupRequestDto requestDto = new SignupRequestDto("user1", "aaa12345", "aaa12345",
+		"sss@naver.com",
 		"홍길동", "https://gorokke.shop/image/profileDefaultImg.jpg", 1234, "");
 	User user = new User(requestDto, requestDto.getPassword());
 
 	when(userRepository.findByUsername("user1"))
 		.thenReturn(Optional.of(user));
-
 
 	DockingException exception = assertThrows(DockingException.class, () -> {
 	  userService.registerUser(requestDto);
@@ -110,13 +111,13 @@ class UserServiceTest {
   @DisplayName("회원가입 닉네임이 중복된경우")
   void registerUser2() {
 
-	SignupRequestDto requestDto = new SignupRequestDto("user1", "aaa12345", "aaa12345", "sss@naver.com",
+	SignupRequestDto requestDto = new SignupRequestDto("user1", "aaa12345", "aaa12345",
+		"sss@naver.com",
 		"홍길동", "https://gorokke.shop/image/profileDefaultImg.jpg", 1234, "");
 	User user = new User(requestDto, requestDto.getPassword());
 
 	when(userRepository.findByUsername("user1"))
 		.thenReturn(Optional.of(user));
-
 
 	DockingException exception = assertThrows(DockingException.class, () -> {
 	  userService.registerUser(requestDto);
@@ -138,12 +139,15 @@ class UserServiceTest {
 
 	Education education = new Education(user);
 
+	FosterFormRequestDto fosterFormRequestDto = new FosterFormRequestDto("", 1L, "m", "", "", "",
+		"", "", "", "", "", "", "", "", "", "", "", "", "", "");
 
-	FosterFormRequestDto fosterFormRequestDto = new FosterFormRequestDto("", 1L, "m", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "","");
-
-	Post post = new Post(100L, 0L, null, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-	Post post1 = new Post(101L, 0L, null, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-	Post post2 = new Post(102L, 0L, null, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+	Post post = new Post(100L, 0L, null, user, new ArrayList<>(), new ArrayList<>(),
+		new ArrayList<>());
+	Post post1 = new Post(101L, 0L, null, user, new ArrayList<>(), new ArrayList<>(),
+		new ArrayList<>());
+	Post post2 = new Post(102L, 0L, null, user, new ArrayList<>(), new ArrayList<>(),
+		new ArrayList<>());
 	FosterForm fosterForm = new FosterForm(post, fosterFormRequestDto, null, null);
 	FosterForm fosterForm1 = new FosterForm(post1, fosterFormRequestDto, null, null);
 	FosterForm fosterForm2 = new FosterForm(post2, fosterFormRequestDto, null, null);
@@ -157,17 +161,13 @@ class UserServiceTest {
 	postIdList.add(fosterForm.getPost().getPostId());
 	postIdList.add(fosterForm1.getPost().getPostId());
 
-
-
 	when(passwordEncoder.matches(requestDto.getPassword(), user.getPassword())).thenReturn(true);
 	when(userRepository.findByUsername(requestDto.getUsername())).thenReturn(Optional.of(user));
 	when(jwtTokenProvider.createToken(requestDto.getUsername(),
 		requestDto.getUsername())).thenReturn(tokenDto);
 	when(educationRepository.findByUser(user)).thenReturn(Optional.of(education));
-
-//		when(fosterFormRepository.findAllByUser(user)).thenReturn(fosterFormList);
-
 	when(userRepository.getPostIdFromFosterForm(user)).thenReturn(postIdList);
+
 	userService.login(requestDto);
 
 	assertEquals(requestDto.getUsername(), user.getUsername());
@@ -215,48 +215,5 @@ class UserServiceTest {
 	assertEquals(userDetails.getUser().getNickname(), "지은짱");
 	assertEquals(userDetails.getUser().getUserImgUrl(), "imgurl2");
   }
-
-
-  //
-//    @Test
-//    @Disabled
-//    @DisplayName("로그인체크")
-//    public void loginCheck() {
-//        User user = userDetails.getUser();
-//
-//        List<Alarm> alarms = new ArrayList<>();
-//        Alarm alarm1 = new Alarm();
-//        Alarm alarm2 = new Alarm();
-//        alarms.add(alarm1);
-//        alarms.add(alarm2);
-//
-//
-//        Education education = new Education(1L, user, false, false, false);
-//        FosterFormRequestDto fosterFormRequestDto = new FosterFormRequestDto("", 1L, "m", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
-//
-//
-//        Post post = new Post(100L, 0L, null, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-//        Post post1 = new Post(101L, 0L, null, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-//        Post post2 = new Post(102L, 0L, null, user, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-//        FosterForm fosterForm = new FosterForm(post, fosterFormRequestDto, null, null);
-//        FosterForm fosterForm1 = new FosterForm(post1, fosterFormRequestDto, null, null);
-//        FosterForm fosterForm2 = new FosterForm(post2, fosterFormRequestDto, null, null);
-//        List<FosterForm> fosterFormList = new ArrayList<>();
-//        fosterFormList.add(fosterForm);
-//        fosterFormList.add(fosterForm1);
-//        fosterFormList.add(fosterForm2);
-//
-//
-//        userService.loginCheck(userDetails);
-//        when(alarmRepository.findAllByUserAndCheckedTrueOrderByCreatedAtDesc(user)).thenReturn(alarms);
-//        when(educationRepository.findByUser(any(User.class))).thenReturn(Optional.of(education));
-//        when(fosterFormRepository.findAllByUser(user)).thenReturn(fosterFormList);
-//
-//        Map<String, Object> data = (Map<String, Object>) userService.loginCheck(userDetails).get("data");
-//
-//        assertEquals(education.getAdvanced(), false);
-//
-//    }
-
 
 }

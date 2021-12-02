@@ -45,7 +45,6 @@ public class UserService {
   private final RefreshTokenRepository refreshTokenRepository;
 
 
-
   public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,
 	  JwtTokenProvider jwtTokenProvider,
 	  EducationRepository educationRepository, AlarmRepository alarmRepository,
@@ -80,7 +79,6 @@ public class UserService {
 
 	Map<String, Object> data = new HashMap<>();
 	data.put("msg", "회원가입 축하합니다!");
-
 	return SuccessResult.success(data);
   }
 
@@ -100,7 +98,6 @@ public class UserService {
 
 	List<Map<String, Object>> eduList = getEduList(user);
 	List<String> alarmContents = findUserAlarms(user);
-//	List<Long> requestedPostList = getRequestedPostList(user);
 	List<Long> requestedPostList = userRepository.getPostIdFromFosterForm(user);
 
 	LoginResponseDto loginResponseDto = LoginResponseDto.of(
@@ -109,7 +106,6 @@ public class UserService {
 
 	return SuccessResult.success(loginResponseDto);
   }
-
 
 
   @Transactional
@@ -132,7 +128,6 @@ public class UserService {
 	  User user = userDetails.getUser();
 	  int alarmCount = getUserAlarmCount(user);
 	  List<Map<String, Object>> eduList = getEduList(user);
-//	  List<Long> requestedPostList = getRequestedPostList(user);
 	  List<Long> requestedPostList = userRepository.getPostIdFromFosterForm(user);
 
 	  LoginCheckResponseDto loginCheckResponseDto = LoginCheckResponseDto.of(
@@ -151,7 +146,6 @@ public class UserService {
 	  throw new DockingException(ErrorCode.LOGIN_TOKEN_EXPIRE);
 	}
 
-//	String username = jwtTokenProvider.getAccessTokenPayload(tokenRequestDto.getAccessToken());
 	User user = userRepository.findById(tokenRequestDto.getUserId()).orElse(null);
 	String username = user.getUsername();
 
@@ -200,7 +194,7 @@ public class UserService {
   }
 
 
- public Map<String, Object> findUserId(UserInquriryRequestDto userInquriryRequestDto) {
+  public Map<String, Object> findUserId(UserInquriryRequestDto userInquriryRequestDto) {
 	String email = userInquriryRequestDto.getEmail();
 	User findUser = userRepository.findByEmail(email).orElseThrow(
 		() -> new DockingException(ErrorCode.EMAIL_NOT_FOUND)
@@ -279,7 +273,6 @@ public class UserService {
 	}
   }
 
-
   private void usernameEmptyCheck(String username) {
 	if (username.isEmpty()) {
 	  throw new DockingException(ErrorCode.USERNAME_EMPTY);
@@ -326,16 +319,6 @@ public class UserService {
 	return eduList;
   }
 
-//  private List<Long> getRequestedPostList(User user) {
-//	List<FosterForm> fosterFormList = fosterFormRepository.findAllByUser(user);
-//	List<Long> requestedPostList = new ArrayList();
-//	for (FosterForm form : fosterFormList) {
-//	  Long requestedPostId = form.getPost().getPostId();
-//	  requestedPostList.add(requestedPostId);
-//	}
-//	return requestedPostList;
-//  }
-
   private int getUserAlarmCount(User user) {
 	return alarmRepository.findAllByUserAndCheckedTrueOrderByCreatedAtDesc(user).size();
   }
@@ -349,7 +332,6 @@ public class UserService {
 	for (Alarm alarm : allAlarms) {
 	  alarmContents.add(alarm.getAlarmContent());
 	}
-
 	return alarmContents;
   }
 }
