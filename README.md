@@ -28,6 +28,17 @@ Getting your family
 |<img src = "https://user-images.githubusercontent.com/80088918/141507977-bfd22590-af0f-4e9e-bca0-e1d4f1aa9581.gif" width="200" >|<img src = "https://user-images.githubusercontent.com/80088918/141508027-5c43efea-d180-49b7-8077-af8c81016e9d.gif" width="200" >|
 
 
+-------------------------------------------------------------------------------------
+
+
+
+|                                                                                                           필수교육:closed_lock_with_key: |필수퀴즈:key:|
+|--------------------------------------------------------------------------------------------------------------------------------|---|
+|<img src = "https://user-images.githubusercontent.com/80088918/144418551-da874de4-b635-46af-9a3f-cdcd3b313d8d.gif" width="200" >|<img src = "https://user-images.githubusercontent.com/80088918/144418674-07ac232e-5756-4ad1-be79-210dd4021998.gif" width="200" >|
+
+-------------------------------------------------------------------------------------
+
+
 
 
 |                                                                                                           교육이수:mortar_board: |
