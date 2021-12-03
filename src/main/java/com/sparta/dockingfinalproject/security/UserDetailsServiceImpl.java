@@ -1,6 +1,5 @@
 package com.sparta.dockingfinalproject.security;
 
-
 import com.sparta.dockingfinalproject.user.model.User;
 import com.sparta.dockingfinalproject.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,19 +10,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    @Autowired
-    public UserDetailsServiceImpl(UserRepository userRepository) {
+  @Autowired
+  public UserDetailsServiceImpl(UserRepository userRepository) {
 
-        this.userRepository = userRepository;
-    }
+    this.userRepository = userRepository;
+  }
 
-    public UserDetailsImpl loadUserByUsername(String username) throws UsernameNotFoundException {
+  public UserDetailsImpl loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Can't find " + username));
+    User user = userRepository.findByUsername(username)
+        .orElseThrow(() -> new UsernameNotFoundException("Can't find " + username));
 
-        return new UserDetailsImpl(user);
-    }
+    return new UserDetailsImpl(user);
+  }
 }

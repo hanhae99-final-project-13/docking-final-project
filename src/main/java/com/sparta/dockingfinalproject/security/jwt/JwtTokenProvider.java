@@ -1,6 +1,5 @@
 package com.sparta.dockingfinalproject.security.jwt;
 
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
