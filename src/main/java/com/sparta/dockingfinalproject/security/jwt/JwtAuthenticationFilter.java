@@ -17,31 +17,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-	  FilterChain filterChain) throws ServletException, IOException {
+      FilterChain filterChain) throws ServletException, IOException {
 
-	String token = jwtTokenProvider.resolveToken(request);
+    String token = jwtTokenProvider.resolveToken(request);
 
-	if (token != null && !token.isEmpty()) {
-	  token = token.replaceAll("Bearer", "");
-	}
+    if (token != null && !token.isEmpty()) {
+      token = token.replaceAll("Bearer", "");
+    }
 
-	if (token != null && jwtTokenProvider.validateToken(token) == JwtReturn.EXPIRED) {
-	  response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);//401
+    if (token != null && jwtTokenProvider.validateToken(token) == JwtReturn.EXPIRED) {
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);//401
 
-	  return;
-	}
-	if (token != null && jwtTokenProvider.validateToken(token) == JwtReturn.FAIL) {
-	  response.setStatus(HttpServletResponse.SC_FORBIDDEN); //403
+      return;
+    }
+    if (token != null && jwtTokenProvider.validateToken(token) == JwtReturn.FAIL) {
+      response.setStatus(HttpServletResponse.SC_FORBIDDEN); //403
 
-	  return;
-	}
+      return;
+    }
 
-	if (token != null && jwtTokenProvider.validateToken(token) == JwtReturn.SUCCESS) {
-	  Authentication authentication = jwtTokenProvider.getAuthentication(token);
-	  SecurityContextHolder.getContext().setAuthentication(authentication);
-	}
+    if (token != null && jwtTokenProvider.validateToken(token) == JwtReturn.SUCCESS) {
+      Authentication authentication = jwtTokenProvider.getAuthentication(token);
+      SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
 
-	filterChain.doFilter(request, response);
+    filterChain.doFilter(request, response);
 
   }
 }

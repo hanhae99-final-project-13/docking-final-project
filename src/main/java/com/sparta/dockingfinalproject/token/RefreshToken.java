@@ -20,15 +20,15 @@ public class RefreshToken {
   private String value;
 
   public RefreshToken updateValue(String token) {
-	this.value = token;
-	return this;
+    this.value = token;
+    return this;
   }
 
   @Builder
   public RefreshToken(String key, String value) {
 
-	this.key = key;
-	this.value = value;
+    this.key = key;
+    this.value = value;
   }
 
 }
