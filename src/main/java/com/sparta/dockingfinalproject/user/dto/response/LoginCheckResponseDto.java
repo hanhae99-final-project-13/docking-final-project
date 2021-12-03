@@ -21,18 +21,18 @@ public class LoginCheckResponseDto {
 
 
   public static LoginCheckResponseDto of(UserDetailsImpl userDetails,
-	  List<Map<String, Object>> eduList, int alarmCount, List<Long>requestedPostList) {
+      List<Map<String, Object>> eduList, int alarmCount, List<Long> requestedPostList) {
 
-	return LoginCheckResponseDto.builder()
-		.userId(userDetails.getUser().getUserId())
-		.nickname(userDetails.getUser().getNickname())
-		.email(userDetails.getUser().getEmail())
-		.userImgUrl(userDetails.getUser().getUserImgUrl())
-		.phone(userDetails.getUser().getPhoneNumber())
-		.eduList(eduList)
-		.alarmCount(alarmCount)
-		.requestedPostList(requestedPostList)
-		.build();
+    return LoginCheckResponseDto.builder()
+        .userId(userDetails.getUser().getUserId())
+        .nickname(userDetails.getUser().getNickname())
+        .email(userDetails.getUser().getEmail())
+        .userImgUrl(userDetails.getUser().getUserImgUrl())
+        .phone(userDetails.getUser().getPhoneNumber())
+        .eduList(eduList)
+        .alarmCount(alarmCount)
+        .requestedPostList(requestedPostList)
+        .build();
   }
 
 }

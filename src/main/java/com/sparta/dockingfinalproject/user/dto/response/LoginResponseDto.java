@@ -23,7 +23,8 @@ public class LoginResponseDto {
   private List<Long> requestedPostList;
 
 
-  public static LoginResponseDto of(User user, TokenDto token, List<Map<String, Object>> eduList, List<String> alarmContents, List<Long> requestedPostList) {
+  public static LoginResponseDto of(User user, TokenDto token, List<Map<String, Object>> eduList,
+      List<String> alarmContents, List<Long> requestedPostList) {
     return LoginResponseDto.builder()
         .userId(user.getUserId())
         .nickname(user.getNickname())

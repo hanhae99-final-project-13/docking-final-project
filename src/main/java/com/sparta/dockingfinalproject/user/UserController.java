@@ -1,6 +1,5 @@
 package com.sparta.dockingfinalproject.user;
 
-
 import com.sparta.dockingfinalproject.exception.DockingException;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.security.jwt.TokenDto;
@@ -29,66 +28,66 @@ public class UserController {
 
   public UserController(UserService userService, MailSendService mailSendService) {
 
-	this.userService = userService;
-	this.mailSendService = mailSendService;
+    this.userService = userService;
+    this.mailSendService = mailSendService;
 
   }
 
   @PostMapping("/signup")
   public Map<String, Object> registerUser(@RequestBody SignupRequestDto requestDto) {
-	return userService.registerUser(requestDto);
+    return userService.registerUser(requestDto);
   }
 
 
   @PostMapping("/user/login")
   public Map<String, Object> login(@RequestBody UserRequestDto requestDto)
-	  throws DockingException {
-	return userService.login(requestDto);
+      throws DockingException {
+    return userService.login(requestDto);
   }
 
   @PatchMapping("/user")
   public Map<String, Object> updateUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
-	  @RequestBody UpdateRequestDto requestDto) {
-	return userService.updateUser(userDetails, requestDto);
+      @RequestBody UpdateRequestDto requestDto) {
+    return userService.updateUser(userDetails, requestDto);
   }
 
 
   @GetMapping("/user/check")
   public Map<String, Object> loginCheck(@AuthenticationPrincipal UserDetailsImpl userDetails)
-	  throws DockingException {
-	return userService.loginCheck(userDetails);
+      throws DockingException {
+    return userService.loginCheck(userDetails);
   }
 
 
   @GetMapping("/signup/checkid")
   public Map<String, Object> idDoubleCheck(@RequestParam String username) throws DockingException {
-	return userService.idDoubleCheck(username);
+    return userService.idDoubleCheck(username);
   }
 
 
   @GetMapping("/signup/checknickname")
   public Map<String, Object> nicknameDoubleCheck(@RequestParam String nickname)
-	  throws DockingException {
-	return userService.nicknameDoubleCheck(nickname);
+      throws DockingException {
+    return userService.nicknameDoubleCheck(nickname);
   }
 
   @PostMapping("/idInquiry")
   public Map<String, Object> findUserId(
-	  @RequestBody UserInquriryRequestDto userInquriryRequestDto) {
-	return userService.findUserId(userInquriryRequestDto);
+      @RequestBody UserInquriryRequestDto userInquriryRequestDto) {
+    return userService.findUserId(userInquriryRequestDto);
   }
 
   @PostMapping("/pwInquiry")
   public Map<String, Object> findUserPw(
-	  @RequestBody UserInquriryRequestDto userInquriryRequestDto) {
-	String tempPw = mailSendService.sendSimpleMessage(userInquriryRequestDto.getEmail());
-	Map<String, Object> result = userService.findUserPw(userInquriryRequestDto, tempPw);
-	return result;
+      @RequestBody UserInquriryRequestDto userInquriryRequestDto) {
+    String tempPw = mailSendService.sendSimpleMessage(userInquriryRequestDto.getEmail());
+    Map<String, Object> result = userService.findUserPw(userInquriryRequestDto, tempPw);
+    return result;
   }
 
   @PostMapping("/reissue")
   public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
-	return ResponseEntity.ok(userService.reissue(tokenRequestDto));
+    return ResponseEntity.ok(userService.reissue(tokenRequestDto));
   }
 
 }
