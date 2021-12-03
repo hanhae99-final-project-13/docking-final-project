@@ -3,6 +3,7 @@ package com.sparta.dockingfinalproject.home;
 import com.sparta.dockingfinalproject.post.PostService;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import java.util.Map;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +18,7 @@ public class HomeController {
   }
 
   @GetMapping("/posts")
-  public Map<String, Object> home(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return postService.home(userDetails);
+  public ResponseEntity<Map<String, Object>> home(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    return ResponseEntity.ok().body(postService.home(userDetails));
   }
 }

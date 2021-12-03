@@ -6,6 +6,7 @@ import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -21,33 +22,33 @@ public class FosterFormController {
   private final FosterFormService fosterFormService;
 
   @PostMapping("posts/{postId}/adoptions")
-  public Map<String, Object> addFosterForm(@PathVariable Long postId,
+  public ResponseEntity<Map<String, Object>> addFosterForm(@PathVariable Long postId,
       @Valid @RequestBody FosterFormRequestDto formRequestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return fosterFormService.addFosterForm(postId, formRequestDto, userDetails);
+    return ResponseEntity.ok().body(fosterFormService.addFosterForm(postId, formRequestDto, userDetails));
   }
 
   @GetMapping("foster_forms/{fosterFormId}")
-  public Map<String, Object> getFosterForm(@PathVariable Long fosterFormId,
+  public ResponseEntity<Map<String, Object>> getFosterForm(@PathVariable Long fosterFormId,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return fosterFormService.getFosterForm(fosterFormId, userDetails);
+    return ResponseEntity.ok().body(fosterFormService.getFosterForm(fosterFormId, userDetails));
   }
 
   @GetMapping("/user/requests")
-  public Map<String, Object> getMyFosterForms(
+  public ResponseEntity<Map<String, Object>> getMyFosterForms(
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return fosterFormService.getMyFosterForms(userDetails);
+    return ResponseEntity.ok().body(fosterFormService.getMyFosterForms(userDetails));
   }
 
   @GetMapping("/user/posts")
-  public Map<String, Object> getMyPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return fosterFormService.getMyPosts(userDetails);
+  public ResponseEntity<Map<String, Object>> getMyPosts(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    return ResponseEntity.ok().body(fosterFormService.getMyPosts(userDetails));
   }
 
   @PatchMapping("/foster_forms/{fosterFormId}/acceptance")
-  public Map<String, Object> acceptForms(@PathVariable Long fosterFormId,
+  public ResponseEntity<Map<String, Object>> acceptForms(@PathVariable Long fosterFormId,
       @Valid @RequestBody AcceptanceRequestDto acceptanceRequestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return fosterFormService.acceptForms(fosterFormId, acceptanceRequestDto, userDetails);
+    return ResponseEntity.ok().body(fosterFormService.acceptForms(fosterFormId, acceptanceRequestDto, userDetails));
   }
 }

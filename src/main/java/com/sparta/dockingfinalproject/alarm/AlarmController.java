@@ -2,6 +2,7 @@ package com.sparta.dockingfinalproject.alarm;
 
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import java.util.Map;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -23,18 +24,18 @@ public class AlarmController {
   }
 
   @GetMapping("/alarms")
-  public Map<String, Object> getAlarms(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return alarmService.getAlarms(userDetails.getUser());
+  public ResponseEntity<Map<String, Object>> getAlarms(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    return ResponseEntity.ok().body(alarmService.getAlarms(userDetails.getUser()));
   }
 
   @DeleteMapping("/alarms")
-  public Map<String, Object> deleteAlarms(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return alarmService.deleteAlarms(userDetails.getUser());
+  public ResponseEntity<Map<String, Object>> deleteAlarms(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    return ResponseEntity.ok().body(alarmService.deleteAlarms(userDetails.getUser()));
   }
 
   @GetMapping("/alarms/{alarmId}")
-  public Map<String, Object> getAlarm(@PathVariable Long alarmId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return alarmService.getAlarm(alarmId, userDetails.getUser());
+  public ResponseEntity<Map<String, Object>> getAlarm(@PathVariable Long alarmId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    return ResponseEntity.ok().body(alarmService.getAlarm(alarmId, userDetails.getUser()));
   }
 
   @MessageMapping("/{userId}")

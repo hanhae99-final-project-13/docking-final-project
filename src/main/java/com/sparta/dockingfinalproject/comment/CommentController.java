@@ -5,6 +5,7 @@ import com.sparta.dockingfinalproject.comment.dto.CommentRequestDto;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
@@ -16,21 +17,21 @@ public class CommentController {
   private final CommentService commentService;
 
   @PostMapping("/comments")
-  public Map<String, Object> addComment(@Valid @RequestBody CommentRequestDto commentRequestDto,
+  public ResponseEntity<Map<String, Object>> addComment(@Valid @RequestBody CommentRequestDto commentRequestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return commentService.addComment(commentRequestDto, userDetails);
+    return ResponseEntity.ok().body(commentService.addComment(commentRequestDto, userDetails));
   }
 
   @PatchMapping("/comments/{commentId}")
-  public Map<String, Object> updateComment(@PathVariable Long commentId,
+  public ResponseEntity<Map<String, Object>> updateComment(@PathVariable Long commentId,
       @Valid @RequestBody CommentEditRequestDto requestDto,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return commentService.updateComment(commentId, requestDto, userDetails);
+    return ResponseEntity.ok().body(commentService.updateComment(commentId, requestDto, userDetails));
   }
 
   @DeleteMapping("/comments/{commentId}")
-  public Map<String, Object> deleteComment(@PathVariable Long commentId,
+  public ResponseEntity<Map<String, Object>> deleteComment(@PathVariable Long commentId,
       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return commentService.deleteComment(commentId, userDetails);
+    return ResponseEntity.ok().body(commentService.deleteComment(commentId, userDetails));
   }
 }
