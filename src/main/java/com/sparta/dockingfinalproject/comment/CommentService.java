@@ -19,11 +19,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
-
 
 @RequiredArgsConstructor
 @Service
@@ -34,7 +32,7 @@ public class CommentService {
   private final AlarmRepository alarmRepository;
   private final SimpMessageSendingOperations simpMessageSendingOperations;
 
-  //Comment 등록
+
   @Transactional
   public Map<String, Object> addComment(CommentRequestDto commentRequestDto,
       UserDetailsImpl userDetails) {
@@ -73,7 +71,6 @@ public class CommentService {
     simpMessageSendingOperations.convertAndSend("/sub/" + user.getUserId(), result);
   }
 
-  //Comment 수정
   public Map<String, Object> updateComment(Long commentId, CommentEditRequestDto requestDto,
       UserDetailsImpl userDetails) {
     Long userId = bringUser(userDetails).getUserId();
@@ -97,7 +94,7 @@ public class CommentService {
     return SuccessResult.success(data);
   }
 
-  //Comment 삭제
+
   @Transactional
   public Map<String, Object> deleteComment(Long commentId, UserDetailsImpl userDetails) {
     Long userId = bringUser(userDetails).getUserId();
@@ -115,7 +112,6 @@ public class CommentService {
     return SuccessResult.success(data);
   }
 
-  //로그인 체크 & User 가져오기
   private User bringUser(UserDetailsImpl userDetails) {
     if (userDetails != null) {
       return userDetails.getUser();
@@ -124,14 +120,12 @@ public class CommentService {
     }
   }
 
-  //해당 Post 가져오기
   private Post bringPost(CommentRequestDto commentRequestDto) {
     return postRepository.findById(commentRequestDto.getPostId()).orElseThrow(
         () -> new DockingException(ErrorCode.POST_NOT_FOUND)
     );
   }
 
-  //해당 Comment 가져오기
   private Comment bringComment(Long commentId) {
     return commentRepository.findById(commentId).orElseThrow(
         () -> new DockingException(ErrorCode.COMMENT_NOT_FOUND)
