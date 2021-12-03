@@ -7,10 +7,9 @@ import lombok.Getter;
 @Getter
 public class KakaoUserInfoDto {
 
-    private Long id;
-    private String nickname;
-    private String email;
-    private String username;
-    private String userImgUrl;
-
+  private Long id;
+  private String nickname;
+  private String email;
+  private String username;
+  private String userImgUrl;
 }

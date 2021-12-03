@@ -29,7 +29,7 @@ public enum ErrorCode {
   PASSWORD_NOT_FOUND(BAD_REQUEST, "비밀번호를 다시 입력해주세요"),
   PASSWORD_NOT_AVALABILITY(BAD_REQUEST, "비밀번호는 숫자와 영문자를 1개 이상 포함, 8자 이상이여야 합니다."),
 
-  RANDOMNUMVER_EMPTY(BAD_REQUEST,"인증 번호를 입력해주세요."),
+  RANDOMNUMVER_EMPTY(BAD_REQUEST, "인증 번호를 입력해주세요."),
   NUMBER_MISS_MATCH(BAD_REQUEST, "인증번호가 맞지 않습니다."),
   NUMBER_REQUIRED(BAD_REQUEST, "핸드폰번호를 입력해주세요."),
 
@@ -55,7 +55,6 @@ public enum ErrorCode {
   BASIC_EDUCATION_REQUIRED(BAD_REQUEST, "필수지식 이수를 완료해주세요."),
 
   CLASSNUMBER_NOT_FOUND(BAD_REQUEST, "해당 페이지에 대한 정보가 없습니다.");
-
 
 
   private final HttpStatus httpStatus;

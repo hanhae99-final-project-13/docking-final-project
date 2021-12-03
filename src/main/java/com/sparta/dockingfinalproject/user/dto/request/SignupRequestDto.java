@@ -11,14 +11,12 @@ import lombok.Setter;
 @Setter
 public class SignupRequestDto {
 
-
-    private String username;
-    private String password;
-    private String pwcheck;
-    private String email;
-    private String nickname;
-    private String userImgUrl;
-    private Integer randomNumber;
-    private String phoneNumber;
-
+  private String username;
+  private String password;
+  private String pwcheck;
+  private String email;
+  private String nickname;
+  private String userImgUrl;
+  private Integer randomNumber;
+  private String phoneNumber;
 }

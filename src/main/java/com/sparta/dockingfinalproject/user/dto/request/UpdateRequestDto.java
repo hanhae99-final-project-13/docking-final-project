@@ -11,12 +11,6 @@ import lombok.Setter;
 @Setter
 public class UpdateRequestDto {
 
-private String nickname;
-private String userImgUrl;
-
-
-
-
-
-
+  private String nickname;
+  private String userImgUrl;
 }

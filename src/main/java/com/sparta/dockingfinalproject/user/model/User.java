@@ -21,7 +21,6 @@ import lombok.ToString;
 @Entity
 public class User {
 
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long userId;
@@ -53,54 +52,54 @@ public class User {
   private String phoneNumber;
 
   public User(String username, String password, String nickname, String email, String userImgUrl,
-	  String phoneNumber) {
+      String phoneNumber) {
 
-	this.username = username;
-	this.password = password;
-	this.nickname = nickname;
-	this.email = email;
-	this.userImgUrl = userImgUrl;
-	this.kakaoId = null;
-	this.phoneNumber = phoneNumber;
+    this.username = username;
+    this.password = password;
+    this.nickname = nickname;
+    this.email = email;
+    this.userImgUrl = userImgUrl;
+    this.kakaoId = null;
+    this.phoneNumber = phoneNumber;
 
 
   }
 
   public User(String username, String password, String nickname, String email, Long kakaoId,
-	  String userImgUrl) {
-	this.username = username;
-	this.password = password;
-	this.nickname = nickname;
-	this.email = email;
-	this.kakaoId = kakaoId;
-	this.userImgUrl = userImgUrl;
-	this.phoneNumber = "";
+      String userImgUrl) {
+    this.username = username;
+    this.password = password;
+    this.nickname = nickname;
+    this.email = email;
+    this.kakaoId = kakaoId;
+    this.userImgUrl = userImgUrl;
+    this.phoneNumber = "";
 
   }
 
 
   public User(String password, String nickname, String email, Long kakaoId) {
-	this.password = password;
-	this.nickname = nickname;
-	this.email = email;
-	this.kakaoId = kakaoId;
+    this.password = password;
+    this.nickname = nickname;
+    this.email = email;
+    this.kakaoId = kakaoId;
 
   }
 
   public User(SignupRequestDto requestDto, String password) {
-	this.username = requestDto.getUsername();
-	this.password = password;
-	this.nickname = requestDto.getNickname();
-	this.email = requestDto.getEmail();
-	this.userImgUrl = "https://gorokke.shop/image/profileDefaultImg.jpg";
-	this.kakaoId = null;
-	this.phoneNumber = requestDto.getPhoneNumber();
+    this.username = requestDto.getUsername();
+    this.password = password;
+    this.nickname = requestDto.getNickname();
+    this.email = requestDto.getEmail();
+    this.userImgUrl = "https://gorokke.shop/image/profileDefaultImg.jpg";
+    this.kakaoId = null;
+    this.phoneNumber = requestDto.getPhoneNumber();
 
   }
 
   public void update(UpdateRequestDto requestDto) {
-	this.nickname = requestDto.getNickname();
-	this.userImgUrl = requestDto.getUserImgUrl();
+    this.nickname = requestDto.getNickname();
+    this.userImgUrl = requestDto.getUserImgUrl();
 
   }
 
