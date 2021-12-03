@@ -78,18 +78,22 @@
 
 ---
 
-## 🧰 사용 패키지
+## 🧰 기술 스택
 
-+ aws-sdk
-+ axios
-+ lodash
-+ react-device-detect
-+ react-slick
-+ redux
-+ sockjs
-+ stompjs
-+ styled-components
-+ sweetalert2
+Backend
+
++ java 8
++ Gradle
++ Spring Boot 2.5.2
++ Spring Security
++ JPA
++ QueryDSL
++ MySQL
++ Web Socket
++ Redis
+
+
+
 
 ---
 
