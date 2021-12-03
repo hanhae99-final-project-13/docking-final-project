@@ -3,6 +3,7 @@ package com.sparta.dockingfinalproject.wish;
 import com.sparta.dockingfinalproject.security.UserDetailsImpl;
 import com.sparta.dockingfinalproject.wish.dto.WishRequestDto;
 import java.util.Map;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,12 +20,12 @@ public class WishController {
   }
 
   @PostMapping("/wishes")
-  public Map<String, Object> addWish(@RequestBody WishRequestDto wishRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return wishService.addWishAndDeleteWish(wishRequestDto.getPostId(), userDetails);
+  public ResponseEntity<Map<String, Object>> addWish(@RequestBody WishRequestDto wishRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    return ResponseEntity.ok().body(wishService.addWishAndDeleteWish(wishRequestDto.getPostId(), userDetails));
   }
 
   @GetMapping("/user/wishes")
-  public Map<String, Object> getWishes(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return wishService.getWishes(userDetails.getUser());
+  public ResponseEntity<Map<String, Object>> getWishes(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    return ResponseEntity.ok().body(wishService.getWishes(userDetails.getUser()));
   }
 }
