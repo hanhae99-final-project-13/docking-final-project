@@ -70,7 +70,7 @@
 
 |                                                                                                      댓글 | 알람  |
 |--------------------------------------------------------------------------------------------------------------------------------|---|
-|<img src = "https://user-images.githubusercontent.com/80088918/144443534-6daf3fcd-d4a0-4c63-897e-1e269a84ae98.gif" width="200" >|<img src = "https://user-images.githubusercontent.com/80088918/144435979-195f40da-2335-48e6-b8a7-4a96259197a3.gif" width="200" >|
+|<img src = "https://user-images.githubusercontent.com/80088918/144493177-8dc2d8b4-db48-49f1-a831-5017b12b4350.gif" width="200" >|<img src = "https://user-images.githubusercontent.com/80088918/144435979-195f40da-2335-48e6-b8a7-4a96259197a3.gif" width="200" >|
 
 ## 🧩 프로젝트 구조(아키텍쳐)
 <br>
