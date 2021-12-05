@@ -2,8 +2,11 @@ package com.sparta.dockingfinalproject.user;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.sparta.dockingfinalproject.alarm.model.Alarm;
+import com.sparta.dockingfinalproject.alarm.model.AlarmType;
 import com.sparta.dockingfinalproject.alarm.repository.AlarmRepository;
 import com.sparta.dockingfinalproject.education.EducationRepository;
 import com.sparta.dockingfinalproject.education.model.Education;
@@ -28,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -60,84 +64,17 @@ class UserServiceTest {
   private RefreshToken refreshToken;
   private TokenDto tokenDto;
   private UserDetailsImpl userDetails;
+  private List<Long> postIdList;
 
 
   @BeforeEach
   public void init() {
+
 	user = new User(1L, "user1", "aaa12345", "홍길동", "sss@naver.com", "", "umgurl", 0L, "");
 	tokenDto = new TokenDto("accessToken", "refreshToken", 18000L);
 	userDetails = new UserDetailsImpl(user);
-  }
-
-  @Test
-  @DisplayName("회원가입")
-  void registerUser() {
-
-	SignupRequestDto requestDto = new SignupRequestDto("user1", "aaa12345", "aaa12345",
-		"sss@naver.com",
-		"홍길동", "https://gorokke.shop/image/profileDefaultImg.jpg", 1234, "");
-	User user = new User(requestDto, requestDto.getPassword());
-
-	when(passwordEncoder.encode(requestDto.getPassword())).thenReturn("aa1234");
-
-	userService.registerUser(requestDto);
-
-	assertEquals(user.getUsername(), requestDto.getUsername());
-	assertEquals(user.getPassword(), requestDto.getPassword());
-	assertEquals(user.getUserImgUrl(), requestDto.getUserImgUrl());
-
-  }
-
-  @Test
-  @DisplayName("회원가입 유저네임이 중복된경우")
-  void registerUser1() {
-
-	SignupRequestDto requestDto = new SignupRequestDto("user1", "aaa12345", "aaa12345",
-		"sss@naver.com",
-		"홍길동", "https://gorokke.shop/image/profileDefaultImg.jpg", 1234, "");
-	User user = new User(requestDto, requestDto.getPassword());
-
-	when(userRepository.findByUsername("user1"))
-		.thenReturn(Optional.of(user));
-
-	DockingException exception = assertThrows(DockingException.class, () -> {
-	  userService.registerUser(requestDto);
-	});
-
-	assertEquals(exception.getErrorCode(), ErrorCode.USERNAME_DUPLICATE);
-  }
-
-  @Test
-  @DisplayName("회원가입 닉네임이 중복된경우")
-  void registerUser2() {
-
-	SignupRequestDto requestDto = new SignupRequestDto("user1", "aaa12345", "aaa12345",
-		"sss@naver.com",
-		"홍길동", "https://gorokke.shop/image/profileDefaultImg.jpg", 1234, "");
-	User user = new User(requestDto, requestDto.getPassword());
-
-	when(userRepository.findByUsername("user1"))
-		.thenReturn(Optional.of(user));
-
-	DockingException exception = assertThrows(DockingException.class, () -> {
-	  userService.registerUser(requestDto);
-	});
-
-	assertEquals(exception.getErrorCode(), ErrorCode.USERNAME_DUPLICATE);
-  }
 
 
-  @Test
-  @DisplayName("로그인")
-  void login() {
-	UserRequestDto requestDto = new UserRequestDto("user1", "aaa12345");
-
-	refreshToken = RefreshToken.builder()
-		.key(requestDto.getUsername())
-		.value("refreshToken")
-		.build();
-
-	Education education = new Education(user);
 
 	FosterFormRequestDto fosterFormRequestDto = new FosterFormRequestDto("", 1L, "m", "", "", "",
 		"", "", "", "", "", "", "", "", "", "", "", "", "", "");
@@ -161,45 +98,185 @@ class UserServiceTest {
 	postIdList.add(fosterForm.getPost().getPostId());
 	postIdList.add(fosterForm1.getPost().getPostId());
 
-	when(passwordEncoder.matches(requestDto.getPassword(), user.getPassword())).thenReturn(true);
-	when(userRepository.findByUsername(requestDto.getUsername())).thenReturn(Optional.of(user));
-	when(jwtTokenProvider.createToken(requestDto.getUsername(),
-		requestDto.getUsername())).thenReturn(tokenDto);
-	when(educationRepository.findByUser(user)).thenReturn(Optional.of(education));
-	when(userRepository.getPostIdFromFosterForm(user)).thenReturn(postIdList);
 
-	userService.login(requestDto);
-
-	assertEquals(requestDto.getUsername(), user.getUsername());
-	assertEquals(requestDto.getPassword(), user.getPassword());
   }
 
-  @Test
-  @DisplayName("로그인 실패 - 비밀번호가 틀릴경우")
-  void login_pw() {
-	UserRequestDto requestDto = new UserRequestDto("user1", "bb1234");
+  @Nested
+  @DisplayName("회원가입 테스트")
+  class	registerUser{
+	@Test
+	@DisplayName("회원가입_정상")
+	void registerUser_Normal() {
 
-	when(passwordEncoder.matches(requestDto.getPassword(), user.getPassword())).thenReturn(false);
-	when(userRepository.findByUsername(requestDto.getUsername())).thenReturn(Optional.of(user));
+	  SignupRequestDto requestDto = new SignupRequestDto("user1", "aaa12345", "aaa12345",
+		  "sss@naver.com",
+		  "홍길동", "umgurl", 1234, "");
 
-	DockingException exception = assertThrows(DockingException.class, () -> {
-	  userService.login(requestDto);
-	});
+	  when(passwordEncoder.encode(requestDto.getPassword())).thenReturn("aa1234");
+	  when(userRepository.save(any())).thenReturn(user);
 
-	assertEquals(exception.getErrorCode(), ErrorCode.PASSWORD_NOT_FOUND);
+	  userService.registerUser(requestDto);
+
+	  assertEquals(user.getUsername(), requestDto.getUsername());
+	  assertEquals(user.getPassword(), requestDto.getPassword());
+	  assertEquals(user.getUserImgUrl(), requestDto.getUserImgUrl());
+
+	}
+
+	@Test
+	@DisplayName("회원가입_유저네임이 중복된경우")
+	void registerUser_usernameDuplicate() {
+
+	  SignupRequestDto requestDto = new SignupRequestDto("user1", "aaa12345", "aaa12345",
+		  "sss@naver.com",
+		  "홍길동2", "umgurl", 1234, "");
+
+	  when(userRepository.findByUsername("user1"))
+		  .thenReturn(Optional.of(user));
+
+	  DockingException exception = assertThrows(DockingException.class, () -> {
+		userService.registerUser(requestDto);
+	  });
+
+	  assertEquals(exception.getErrorCode(), ErrorCode.USERNAME_DUPLICATE);
+	}
+
+	@Test
+	@DisplayName("회원가입_닉네임이 중복된 경우")
+	void registerUser_nicknameDuplicate() {
+
+	  SignupRequestDto requestDto = new SignupRequestDto("user2", "aaa12345", "aaa12345",
+		  "sss@naver.com",
+		  "홍길동", "umgurl", 1234, "");
+
+	  when(userRepository.findByNickname("홍길동"))
+		  .thenReturn(Optional.of(user));
+
+	  DockingException exception = assertThrows(DockingException.class, () -> {
+		userService.registerUser(requestDto);
+	  });
+
+	  assertEquals(exception.getErrorCode(), ErrorCode.NICKNAME_DUPLICATE);
+	}
+
+	@Test
+	@DisplayName("회원가입_이메일이 중복된 경우")
+	void registerUser_emailDuplicate() {
+	  SignupRequestDto requestDto = new SignupRequestDto("user2", "aaa12345", "aaa12345",
+		  "sss@naver.com", "홍길동2", "umgurl", 1234, "");
+
+	  when(userRepository.findByEmail(requestDto.getEmail())).thenReturn(Optional.of(user));
+
+	  DockingException exception = assertThrows(DockingException.class, () -> {
+		userService.registerUser(requestDto);
+	  });
+	  assertEquals(exception.getErrorCode(), ErrorCode.EMAIL_DUPLICATE);
+	}
+
+
+	@Test
+	@DisplayName("회원가입_비밀번호 중복체크 실패일 경우")
+	void registerUser_pw_NotEqual() {
+	  SignupRequestDto requestDto = new SignupRequestDto("user1", "aaa12345", "bbb12345",
+		  "sss@naver.com", "홍길동", "umgurl", 123
+		  , "");
+
+	  DockingException exception = assertThrows(DockingException.class, () -> {
+		userService.registerUser(requestDto);
+	  });
+
+	  assertEquals(exception.getErrorCode(), ErrorCode.PASSWORD_MISS_MATCH);
+	}
+
+	@Test
+	@DisplayName("회원가입_이메일 양식이 틀릴 경우")
+	void registerUser_emailValid() {
+	  SignupRequestDto requestDto = new SignupRequestDto("user1", "aaa12345", "aaa12345",
+		  "sssnaver.com", "홍길동", "umgurl", 123, "");
+	  DockingException exception = assertThrows(DockingException.class, () -> {
+		userService.registerUser(requestDto);
+	  });
+
+	  assertEquals(exception.getErrorCode(), ErrorCode.EMAIL_NO_AVAILABILITY);
+	}
+
+	@Test
+	@DisplayName("회원가입_비밀번호 양식이 틀릴 경우")
+	void registerUser_pwValid() {
+	  SignupRequestDto requestDto = new SignupRequestDto("user1", "aaa", "aaa", "sss@naver.com",
+		  "홍길동", "umgurl", 123, "");
+
+	  DockingException exception = assertThrows(DockingException.class, () -> {
+		userService.registerUser(requestDto);
+	  });
+
+	  assertEquals(exception.getErrorCode(), ErrorCode.PASSWORD_NOT_AVALABILITY);
+
+	}
+
+
+
+
   }
 
-  @Test
-  @DisplayName("로그인실패 - 아이디가 틀린경우")
-  void login_username() {
-	UserRequestDto requestDto = new UserRequestDto("user2", "aa1234");
-	when(userRepository.findByUsername(requestDto.getUsername()))
-		.thenThrow(new DockingException(ErrorCode.USERNAME_NOT_FOUND));
 
-	DockingException exception = assertThrows(DockingException.class, () -> {
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Nested
+@DisplayName("로그인 테스트")
+  class login{
+
+	@Test
+	@DisplayName("로그인_정상")
+	void login_Normal() {
+	  UserRequestDto requestDto = new UserRequestDto("user1", "aaa12345");
+
+	  refreshToken = RefreshToken.builder()
+		  .key(requestDto.getUsername())
+		  .value("refreshToken")
+		  .build();
+	  Education education = new Education(1L,user,false,false,false);
+
+	  when(passwordEncoder.matches(requestDto.getPassword(), user.getPassword())).thenReturn(true);
+	  when(userRepository.findByUsername(requestDto.getUsername())).thenReturn(Optional.of(user));
+	  when(jwtTokenProvider.createToken(requestDto.getUsername(),
+		  requestDto.getUsername())).thenReturn(tokenDto);
+	  when(educationRepository.findByUser(user)).thenReturn(Optional.of(education));
+	  when(userRepository.getPostIdFromFosterForm(user)).thenReturn(postIdList);
+
 	  userService.login(requestDto);
-	});
-	assertEquals(exception.getErrorCode(), ErrorCode.USERNAME_NOT_FOUND);
+
+	  assertEquals(requestDto.getUsername(), user.getUsername());
+	  assertEquals(requestDto.getPassword(), user.getPassword());
+	}
+
+	@Test
+	@DisplayName("로그인 실패_비밀번호가 틀릴경우")
+	void login_pw() {
+	  UserRequestDto requestDto = new UserRequestDto("user1", "bb1234");
+
+	  when(passwordEncoder.matches(requestDto.getPassword(), user.getPassword())).thenReturn(false);
+	  when(userRepository.findByUsername(requestDto.getUsername())).thenReturn(Optional.of(user));
+
+	  DockingException exception = assertThrows(DockingException.class, () -> {
+		userService.login(requestDto);
+	  });
+
+	  assertEquals(exception.getErrorCode(), ErrorCode.PASSWORD_NOT_FOUND);
+	}
+
+	@Test
+	@DisplayName("로그인실패_아이디가 틀린경우")
+	void login_username() {
+	  UserRequestDto requestDto = new UserRequestDto("user2", "aa1234");
+	  when(userRepository.findByUsername(requestDto.getUsername()))
+		  .thenThrow(new DockingException(ErrorCode.USERNAME_NOT_FOUND));
+
+	  DockingException exception = assertThrows(DockingException.class, () -> {
+		userService.login(requestDto);
+	  });
+	  assertEquals(exception.getErrorCode(), ErrorCode.USERNAME_NOT_FOUND);
+
+	}
 
   }
 
@@ -215,5 +292,6 @@ class UserServiceTest {
 	assertEquals(userDetails.getUser().getNickname(), "지은짱");
 	assertEquals(userDetails.getUser().getUserImgUrl(), "imgurl2");
   }
+
 
 }

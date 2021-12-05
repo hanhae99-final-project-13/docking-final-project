@@ -222,24 +222,19 @@ public class UserService {
 
 
   private void validateUser(SignupRequestDto requestDto) {
-    String username = requestDto.getUsername();
-    String password = requestDto.getPassword();
-    String pwcheck = requestDto.getPwcheck();
-    String nickname = requestDto.getNickname();
-    String email = requestDto.getEmail();
 
-    usernameEmptyCheck(username);
-    nicknameEmptyCheck(nickname);
-    passwordEmptyCheck(password);
-    passwordEmptyCheck(pwcheck);
-    isEamil(email);
+    usernameEmptyCheck(requestDto.getUsername());
+    nicknameEmptyCheck(requestDto.getNickname());
+    passwordEmptyCheck(requestDto.getPassword());
+    passwordEmptyCheck( requestDto.getPwcheck());
+    isEamil(requestDto.getEmail());
 
-    Optional<User> findUser = userRepository.findByUsername(username);
+    Optional<User> findUser = userRepository.findByUsername(requestDto.getUsername());
     if (findUser.isPresent()) {
       throw new DockingException(ErrorCode.USERNAME_DUPLICATE);
     }
 
-    Optional<User> findUser2 = userRepository.findByNickname(nickname);
+    Optional<User> findUser2 = userRepository.findByNickname(requestDto.getNickname());
     if (findUser2.isPresent()) {
       throw new DockingException(ErrorCode.NICKNAME_DUPLICATE);
     }
@@ -249,15 +244,15 @@ public class UserService {
       throw new DockingException(ErrorCode.EMAIL_DUPLICATE);
     }
 
-    if (!password.equals(pwcheck)) {
+    if (!requestDto.getPassword().equals(requestDto.getPwcheck())) {
       throw new DockingException(ErrorCode.PASSWORD_MISS_MATCH);
     }
 
-    if (isEamil(email) == false) {
+    if (isEamil(requestDto.getEmail()) == false) {
       throw new DockingException(ErrorCode.EMAIL_NO_AVAILABILITY);
     }
 
-    if (isPassword(password) == false) {
+    if (isPassword(requestDto.getPassword()) == false) {
       throw new DockingException(ErrorCode.PASSWORD_NOT_AVALABILITY);
     }
 
@@ -272,6 +267,7 @@ public class UserService {
       throw new DockingException(ErrorCode.PASSWORD_NOT_FOUND);
     }
   }
+
 
   private void usernameEmptyCheck(String username) {
     if (username.isEmpty()) {
