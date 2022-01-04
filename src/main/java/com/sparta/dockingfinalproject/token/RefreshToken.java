@@ -24,7 +24,6 @@ public class RefreshToken {
     return this;
   }
 
-  @Builder
   public RefreshToken(String key, String value) {
 
     this.key = key;

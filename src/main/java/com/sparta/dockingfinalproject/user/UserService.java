@@ -302,11 +302,8 @@ public class UserService {
   }
 
   private void saveRefreshToken(UserRequestDto requestDto, TokenDto tokenDto) {
-	RefreshToken refreshToken = RefreshToken.builder()
-		.key(requestDto.getUsername())
-		.value(tokenDto.getRefreshToken())
-		.build();
-
+	RefreshToken refreshToken = new RefreshToken(requestDto.getUsername(),
+		tokenDto.getRefreshToken());
 	authRedisSave(refreshToken.getKey(), refreshToken.getValue());
 //    refreshTokenRepository.save(refreshToken);
   }
